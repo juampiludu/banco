@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as do_logout
+from django.contrib.auth import login as do_login
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from .form import RegistroForm
 
 def welcome(request):
     if request.user.is_authenticated:
@@ -9,9 +11,9 @@ def welcome(request):
     return redirect('/login')
 
 def register(request):
-    form = UserCreationForm()
+    form = RegistroForm()
     if request.method == "POST":
-        form = UserCreationForm(data=request.POST)
+        form = RegistroForm(data=request.POST)
         if form.is_valid():
             user = form.save()
 
