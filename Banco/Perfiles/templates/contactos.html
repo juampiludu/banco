@@ -11,27 +11,47 @@
     <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">BMendiolaza</a>
+      <a class="navbar-brand" href="/">BMendiolaza</a>
     </div>
     <ul class="nav navbar-nav">
       <li><a href="/">Inicio</a></li>
       <li><a href="/saldo">Saldo</a></li>
-      <li><a href="/contactos">Contactos</a></li>
-      <li class="active"><a href="/info">Información</a></li>
+      <li class="active"><a href="/contactos">Contactos</a></li>
+      <li><a href="/info">Información</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li class="nav-item"><p class="navbar-text">Bienvenido, {{request.user.first_name}}</p></li>
-      <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Cerrar Sesión</a></li>
+      <li><a href="logout"><span class="glyphicon glyphicon-log-out"></span> Cerrar Sesión</a></li>
     </ul>
   </div>
 </nav>
 
 <div class="container">
-  <center>
-    <h2>Conozca nuestra sucursal</h2>
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1705.4046075792023!2d-64.26132274194912!3d-31.253704402400892!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9432834c09dc08ff%3A0x9e2822f279e84a44!2sAv.+Mart%C3%ADn+Tissera+3701-3799%2C+X5108BXW+Mendiolaza%2C+C%C3%B3rdoba%2C+Argentina!5e0!3m2!1ses-419!2sus!4v1542909911624" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
-    <p>Av. Martín Tissera 3701-3799, X5108BXW Mendiolaza, Córdoba, Argentina</p>
-  </center>
+  <h1 id="skere">Contactos</h1>
+  <h2 id="mod">Atención telefónica</h2>
+  <div id="text">
+    <ul>
+      <li>BM Hola</li>
+    </ul>
+  </div>
+  <div id="text2">
+    Encontrá el asesoramiento que necesitás:
+    <br>
+    <br>
+    Desde tu celular (351) 6594342
+    <br>
+    <br>
+    Atención de lunes a viernes de 8 a 20 horas.
+    <br>
+  </div>
+  <div id="text">
+    <br>
+    <h2 id="mod">Contacto por e-mail</h2>
+  </div>
+  <div id="text2">
+    <br>
+    juanzakka@gmail.com
+  </div>
 </div>
   </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

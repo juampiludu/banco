@@ -50,4 +50,10 @@ def logout(request):
 def info(request):
     return render(request, "info.html")
 
+def contactos(request):
+    return render(request, "contactos.html")
+
+def saldo(request):
+    return render(request, "saldo.html")
+
 
