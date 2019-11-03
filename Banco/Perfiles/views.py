@@ -47,4 +47,7 @@ def logout(request):
     do_logout(request)
     return redirect('/')
 
+def info(request):
+    return render(request, "info.html")
+
 
