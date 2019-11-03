@@ -1,0 +1,51 @@
+hr{
+  border-width: 2px;
+  border-color: black;
+}
+
+#titulo {
+  font-family: 'Courier', arial;
+  font-size: 48px;
+  text-shadow: 4px 4px 4px #aaa;
+}
+
+#skere {
+  font-family: 'Courier', arial;
+  font-size: 48px;
+}
+
+#saldo, #signo {
+  font-family: 'Arial', arial;
+  font-size: 58px;
+  color: green;
+  float: left;
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+
+#divhome {
+  background-color: black;
+  width: 50%;
+}
+
+#subtit {
+  color: white;
+}
+
+#text {
+  color: gray;
+  font-weight: bold;
+}
+
+#mod {
+  color: red;
+}
+
+#text2 {
+  color: gray;
+}
+
+#div1 {
+  margin-top: 120px;
+  margin-bottom: 30px;
+}

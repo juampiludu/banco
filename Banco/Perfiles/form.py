@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
+from .models import Cuenta
 
 class RegistroForm(UserCreationForm):
 
@@ -13,7 +13,7 @@ class RegistroForm(UserCreationForm):
     direction = forms.CharField(label="Dirección", max_length=140, required=False)
 
     class Meta:
-        model = User
+        model = Cuenta
         fields = (
             'username',
             'email',    
