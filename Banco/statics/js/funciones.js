@@ -65,10 +65,6 @@ function abrir2() {
   window.location='template/home.html';
 }
 
-function ir() {
-  window.location='../template/saldo.html';
-}
-
 function valida(e){
     tecla = (document.all) ? e.keyCode : e.which;
 

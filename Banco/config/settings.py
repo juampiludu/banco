@@ -72,6 +72,10 @@ AUTH_USER_MODEL = 'Perfiles.Cuenta'
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+ALLOWED_HOSTS = ['127.0.0.1']
+
+
+
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
