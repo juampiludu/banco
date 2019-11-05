@@ -2,7 +2,7 @@
 <html lang="es-AR" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Banco de Mendiolaza - Iniciar Sesión</title>
+    <title>Iniciar Sesión / Banco de Mendiolaza</title>
     <link rel="shortcut icon" href="{% static 'icon.png' %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
@@ -16,16 +16,20 @@
       </div>
     </center>
     <div class="container">
-      <form method="POST">
-            {{ form.as_p }}
-            {% csrf_token %}
-            <button type="submit" class="btn btn-default">Login</button>
-        </form>
+      <div id="form">
+          <form method="POST">
+              {{ form.as_p }}
+              {% csrf_token %}
+              <br>
+              <br>
+              <button type="submit" class="btn btn-default">Login</button>
+          </form>
+      </div>
 </div>
 <br>
 <hr>
 <div class="container">
-  <h2>Si no tenes cuenta, registrate</h2>
+  <h2>Si no tenés cuenta, registráte</h2>
   <br>
   <button type="button" class="btn btn-default" onclick="window.location='/register'">Registrate</button>
 </div>

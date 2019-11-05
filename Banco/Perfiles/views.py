@@ -56,4 +56,7 @@ def contactos(request):
 def saldo(request):
     return render(request, "saldo.html")
 
+def perfil(request):
+    return render(request, "perfil.html")
+
 

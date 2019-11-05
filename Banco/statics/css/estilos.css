@@ -49,3 +49,21 @@ hr{
   margin-top: 120px;
   margin-bottom: 30px;
 }
+
+#register {
+  margin-left: 5px;
+  margin-right: 100px;
+}
+
+#perfil {
+  margin-top: 35px;
+  font: bold;
+}
+
+#div-perfil {
+  margin-left: 20px;
+}
+
+#div-register {
+  margin-left: 10px;
+}

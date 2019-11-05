@@ -1,0 +1,41 @@
+{% load static %}
+<html>
+    <head>
+        <title>Perfil / Banco de Mendiolaza</title>
+        <link rel="shortcut icon" href="{% static 'icon.png' %}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+    </head>
+    <body>
+            <nav class="navbar navbar-inverse">
+                    <div class="container-fluid">
+                      <div class="navbar-header">
+                        <a class="navbar-brand" href="/">BMendiolaza</a>
+                      </div>
+                      <ul class="nav navbar-nav">
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/saldo">Saldo</a></li>
+                        <li><a href="/contactos">Contactos</a></li>
+                        <li><a href="/info">Información</a></li>
+                        <li class="active"><a href="/perfil">Perfil</a></li>
+                      </ul>
+                      <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item"><p class="navbar-text">Bienvenido, {{request.user.first_name}}</p></li>
+                        <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Cerrar Sesión</a></li>
+                      </ul>
+                    </div>
+                  </nav>
+                  <div id="div-perfil">
+                      <p>Nombre de usuario: <label id="perfil">{{request.user.username}} </label></p>
+                      <p>Nombre: <label id="perfil">{{request.user.first_name}}</label></p>
+                      <p>Apellido: <label id="perfil">{{request.user.last_name}}</label></p>
+                      <p>Fecha de nacimiento: <label id="perfil">{{request.user.born_date}}</label></p>
+                      <p>E-mail: <label id="perfil">{{request.user.email}}</label></p>
+                      <p>Teléfono: <label id="perfil">{{request.user.phone}}</label></p>
+                      <p>DNI: <label id="perfil">{{request.user.dni}}</label></p>
+                      <p>Dirección: <label id="perfil">{{request.user.direction}}</label></p>
+                      
+                  </div>
+        
+    </body>
+</html>
