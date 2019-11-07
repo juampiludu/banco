@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'gfwutv_&+u164-g*r91*2a6=8r5@!zrea0e+zvexm-b&3bqt*f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -71,11 +72,6 @@ TEMPLATES = [
 AUTH_USER_MODEL = 'Perfiles.Cuenta'
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
-ALLOWED_HOSTS = ['127.0.0.1']
-
-
-
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -128,3 +124,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'statics'),
 ]
+
+SECURE_SSL_REDIRECT = False
