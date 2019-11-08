@@ -2,15 +2,9 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Cuenta
 
-YEARS= [x for x in range(1940,2021)]
+YEARS= [x for x in range(1900,2021)]
 
 class RegistroForm(UserCreationForm):
-
-    username = forms.CharField(label='Nombre de usuario', widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-        }
-    ))
 
     first_name = forms.CharField(label="Nombre", max_length=140, required=True, widget=forms.TextInput(
         attrs={
@@ -67,7 +61,6 @@ class RegistroForm(UserCreationForm):
     class Meta:
         model = Cuenta
         fields = (
-            'username',
             'email',    
             'first_name',
             'last_name',

@@ -4,6 +4,7 @@ from django.contrib.auth import login as do_login
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .form import RegistroForm
+from .models import CuentaManager
 
 def welcome(request):
     if request.user.is_authenticated:
@@ -21,7 +22,7 @@ def register(request):
                 do_login(request, user)
                 return redirect('/')
 
-    form.fields['username'].help_text = None
+    form.fields['email'].help_text = None
     form.fields['password1'].help_text = None
     form.fields['password2'].help_text = None
 
@@ -56,7 +57,17 @@ def contactos(request):
 def saldo(request):
     return render(request, "saldo.html")
 
-def perfil(request):
-    return render(request, "perfil.html")
+def perfil(request, cuenta_id):
+    instancia = CuentaManager.objects.get(id=cuenta_id)
+
+    form = RegistroForm(instance=instancia)
+
+    if request.method == "POST":
+        form = RegistroForm(request.POST, instance=instancia)
+        if form.is_valid():
+            instancia = form.save(commit=False)
+            instancia.save()
+
+    return render(request, "perfil.html", {'form': form})
 
 

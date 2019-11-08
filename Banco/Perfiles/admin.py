@@ -3,4 +3,4 @@ from .models import *
 
 @admin.register(Cuenta)
 class CuentaAdmin(admin.ModelAdmin):
-    list_display = ('username',)
+    list_display = ('email', 'is_active', 'is_superuser')

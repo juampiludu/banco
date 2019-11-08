@@ -2,13 +2,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class CuentaManager(BaseUserManager):
-    def create_user(self, username, email, first_name, last_name, password=None):
-        if not username:
-            raise ValueError("User must have an username")
+    def create_user(self, email, first_name, last_name, password=None):
+        if not email:
+            raise ValueError("User must have an email")
 
         user = self.model(
             email = self.normalize_email(email),
-            username = username,
             first_name = first_name,
             last_name = last_name,
         )
@@ -17,10 +16,9 @@ class CuentaManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, email, first_name, last_name, password):
+    def create_superuser(self, email, first_name, last_name, password):
         user = self.create_user(
             email = self.normalize_email(email),
-            username = username,
             first_name = first_name,
             last_name = last_name,
             password=password,
@@ -33,7 +31,7 @@ class CuentaManager(BaseUserManager):
         return user
 
 class Cuenta(AbstractBaseUser):
-    username = models.CharField(max_length=30, unique=True)
+    cuenta_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField(max_length=60, unique=True)
@@ -44,13 +42,13 @@ class Cuenta(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name',]
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name',]
 
     objects = CuentaManager()
 
     def __str__(self):
-        return self.username
+        return self.email
 
     def has_perm(self, perm, obj=None):
         return self.is_admin
