@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from .models import Cuenta
 
 YEARS= [x for x in range(1900,2021)]
@@ -70,4 +70,33 @@ class RegistroForm(UserCreationForm):
             'direction',
             'password1',
             'password2',
+        )
+
+class ActualizarForm(UserChangeForm):
+
+    first_name = forms.CharField(label="Nombre", max_length=140, required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+        }
+    ))
+
+    last_name = forms.CharField(label="Apellido", max_length=140, required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+        }
+    ))
+
+    email = forms.EmailField(label="Email", required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+        }
+    ))
+
+    class Meta:
+        model = Cuenta
+        fields = (
+            'email',
+            'first_name',
+            'last_name',
+            'password',
         )

@@ -2,9 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout as do_logout
 from django.contrib.auth import login as do_login
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .form import RegistroForm
-from .models import CuentaManager
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
+from .form import RegistroForm, ActualizarForm
 
 def welcome(request):
     if request.user.is_authenticated:
@@ -57,17 +56,14 @@ def contactos(request):
 def saldo(request):
     return render(request, "saldo.html")
 
-def perfil(request, cuenta_id):
-    instancia = CuentaManager.objects.get(id=cuenta_id)
-
-    form = RegistroForm(instance=instancia)
-
+def perfil(request):
     if request.method == "POST":
-        form = RegistroForm(request.POST, instance=instancia)
+        form = ActualizarForm(request.POST, instance=request.user)
         if form.is_valid():
-            instancia = form.save(commit=False)
-            instancia.save()
-
-    return render(request, "perfil.html", {'form': form})
+            form.save()
+            return redirect('/perfil')
+    else:
+        form = ActualizarForm(instance=request.user)
+        return render(request, "perfil.html", {'form': form})
 
 

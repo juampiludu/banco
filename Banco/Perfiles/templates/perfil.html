@@ -26,11 +26,12 @@
                     </div>
                   </nav>
                   <div id="div-perfil">
-                    {{ form.as_p }}
-                    {% csrf_token %}
-                    <br>
-                    <button type="submit" class="form-control">Guardar</button>
-                      
+                    <form method="POST">
+                        {{ form.as_p }}
+                        {% csrf_token %}
+                        <br>
+                        <button type="submit" class="form-control">Guardar</button>
+                    </form>
                   </div>
         
     </body>
