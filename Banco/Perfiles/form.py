@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from .models import Cuenta
 
 YEARS= [x for x in range(1900,2021)]
@@ -18,7 +18,11 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
-    born_date = forms.DateField(label="Fecha de nacimiento", required=True, initial='2019-01-01', widget=forms.SelectDateWidget(years=YEARS))
+    born_date = forms.DateField(label="Fecha de nacimiento", required=True, initial='2019-01-01', widget=forms.TextInput(
+        attrs={
+            'type': 'date',
+        }
+    ))
     
     email = forms.EmailField(label="Email", required=True, widget=forms.TextInput(
         attrs={
@@ -86,8 +90,75 @@ class ActualizarForm(UserChangeForm):
         }
     ))
 
+    born_date = forms.DateField(label="Fecha de nacimiento", required=True, initial='2019-01-01', widget=forms.TextInput(
+        attrs={
+            'type': 'date',
+        }
+    ))
+    
     email = forms.EmailField(label="Email", required=True, widget=forms.TextInput(
         attrs={
+            'class': 'form-control',
+        }
+    ))
+
+    phone = forms.CharField(label="Teléfono", max_length=14, required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+        }
+    ))
+
+    dni = forms.CharField(label="DNI", max_length=8, required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+        }
+    ))
+
+    direction = forms.CharField(label="Dirección", max_length=140, required=False, widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+        }
+    ))
+
+    password = forms.CharField(label='Contraseña', widget=forms.TextInput(
+        attrs={
+            'type': 'password',
+            'class': 'form-control',
+            'readonly': 'readonly',
+        }
+    ))
+
+    class Meta:
+        model = Cuenta
+        fields = (
+            'email',    
+            'first_name',
+            'last_name',
+            'born_date',
+            'phone',
+            'dni',
+            'direction',
+        )
+
+class CambiarContraForm(PasswordChangeForm):
+
+    old_password = forms.CharField(label='Antigua contraseña:', widget=forms.TextInput(
+        attrs={
+            'type': 'password',
+            'class': 'form-control',
+        }
+    ))
+
+    new_password1 = forms.CharField(label='Nueva contraseña:', widget=forms.TextInput(
+        attrs={
+            'type': 'password',
+            'class': 'form-control',
+        }
+    ))
+
+    new_password2 = forms.CharField(label='Confirme nueva contraseña:', widget=forms.TextInput(
+        attrs={
+            'type': 'password',
             'class': 'form-control',
         }
     ))
@@ -95,8 +166,7 @@ class ActualizarForm(UserChangeForm):
     class Meta:
         model = Cuenta
         fields = (
-            'email',
-            'first_name',
-            'last_name',
-            'password',
+            'old_password',
+            'new_password1',
+            'new_password2',
         )

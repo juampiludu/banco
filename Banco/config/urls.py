@@ -26,6 +26,7 @@ urlpatterns = [
     path('contactos/', views.contactos),
     path('saldo/', views.saldo),
     path('perfil/', views.perfil),
+    path('perfil/actualizar-contraseña/', views.cambiar_contraseña),
 
     path('admin/', admin.site.urls),
 ]

@@ -1,0 +1,29 @@
+{% load static %}
+<html>
+    <head>
+        <title>Cambiar Contraseña / Banco de Mendiolaza</title>
+        <link rel="shortcut icon" href="{% static 'icon.png' %}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+    </head>
+    <body>
+        <div id="div-pass">
+            <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <br>
+                    <ul>
+                        <li>Tu contraseña no puede ser similar a otro dato personal.</li>
+                        <li>Tu contraseña debe contener al menos 8 caracteres.</li>       
+                        <li>Tu contraseña no puede ser igual que la actualmente usada.</li>       
+                        <li>Tu contraseña no puede ser solamente numérica.</li>     
+                    </ul>
+                    <br>
+                    <h3 style="color: red;">Si al actualizar la contraseña no sale de la actual página, hubo un error. Chequee los requisitos.</h3>
+                    <br>
+                    <button type="submit" class="btn btn-success">Actualizar contraseña</button>
+                    <button style="margin-left: 20px;" type="button" class="btn btn-default" onclick="window.location='/perfil'">Atrás</button>
+                </form>
+        </div>
+    </body>
+</html>
