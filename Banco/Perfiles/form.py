@@ -138,11 +138,12 @@ class ActualizarForm(UserChangeForm):
             'phone',
             'dni',
             'direction',
+            'password',
         )
 
 class CambiarContraForm(PasswordChangeForm):
 
-    old_password = forms.CharField(label='Antigua contraseña:', widget=forms.TextInput(
+    old_password = forms.CharField(label='Actual contraseña:', widget=forms.TextInput(
         attrs={
             'type': 'password',
             'class': 'form-control',
