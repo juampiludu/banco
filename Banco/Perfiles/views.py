@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout as do_logout
 from django.contrib.auth import login as do_login
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm, PasswordChangeForm, PasswordResetForm
 from .form import RegistroForm, ActualizarForm, CambiarContraForm
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponseRedirect

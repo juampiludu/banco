@@ -126,3 +126,6 @@ STATICFILES_DIRS = [
 ]
 
 SECURE_SSL_REDIRECT = False
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+

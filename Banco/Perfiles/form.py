@@ -2,8 +2,6 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from .models import Cuenta
 
-YEARS= [x for x in range(1900,2021)]
-
 class RegistroForm(UserCreationForm):
 
     first_name = forms.CharField(label="Nombre", max_length=140, required=True, widget=forms.TextInput(
