@@ -1,94 +1,130 @@
+{% extends 'base.html' %}
 {% load static %}
-<html lang="es-AR" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Saldo / Banco de Mendiolaza</title>
-    <link rel="shortcut icon" href="{% static 'icon.png' %}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
-  </head>
-  <body>
-    <nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="/">BMendiolaza</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li><a href="/">Inicio</a></li>
-      <li class="active"><a href="/saldo">Saldo</a></li>
-      <li><a href="/contactos">Contactos</a></li>
-      <li><a href="/info">Información</a></li>
-      <li><a href="/perfil">Perfil</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li class="nav-item"><p class="navbar-text">Bienvenido, {{request.user.first_name}}</p></li>
-      <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Cerrar Sesión</a></li>
-    </ul>
-  </div>
-</nav>
+
+{% block navblock %}
+<li class="nav-item">
+  <a class="nav-link" href="/">Inicio</a>
+</li>
+<li class="nav-item active">
+  <a class="nav-link" href="/saldo">Saldo</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/contactos">Contactos</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/info">Información</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/perfil">Perfil</a>
+</li>
+{% endblock %}
+
+{% block mainblock %}
 
 <div class="container">
-  <form class="formulario">
-    <h2>Saldo:</h2>
+
+  <form action="{% url 'balance' %}" method="POST" autocomplete="off">
+    {% csrf_token %}
+    <h1>Saldo:</h1>
+
     <div id="signo">
-      $
+      {% for i in balance %}
+      $ {{ i.balance }}
+      {% endfor %}
     </div>
-    <div id="saldo">
-      <input id="sa" type="text" name="sa" readonly="readonly" value="0">
-    </div>
-      <input id="ing" maxlength="7" name="ing" type="text" class="form-control" placeholder="Ingresar monto" onkeypress="return valida(event)">
+
+      <input id="ing" maxlength="7" type="text" name="total_balance" class="form-control" placeholder="Ingresar monto" onkeypress="return valida(event)">
       <br>
-      <button id="btn1" type="button" class="btn btn-success" onclick="ingresar()">Ingresar</button>
+      <button id="btn1" type="submit" class="btn btn-success" name="add_balance">Ingresar</button>
+      <button id="btn2" type="submit" class="btn btn-danger" name="remove_balance">Retirar</button>
       <br>
-      <br>
-      <input id="ret" maxlength="7" name="ret" type="text" class="form-control" placeholder="Ingresar monto" onkeypress="return valida(event)">
-      <br>
-      <button id="btn2" type="button" class="btn btn-danger" onclick="retirar()">Retirar</button>
-      <br>
+  </form>
+
+</div>
+
+<br/>
+<hr>
+<br/>
+
+<div class="container">
+
+  {% for i in balance %}
+  {% if i.cvu == None %}
+
+  <div class="dont-have-cvu">
+    <h1>CVU:</h1>
+    <p>Creando una Clave Virtual Uniforme (CVU) podés:</p>
+    <ul>
+      <li>Enviar dinero a otros usuarios que utilicen Banco Mendiolaza</li>
+      <li>Recibir dinero</li>
+    </ul>
+    <form action="{% url 'create_cvu' %}" method="POST">
+      {% csrf_token %}
+      <button class="btn btn-primary" type="submit">Crear CVU</button>
+    </form>
+  </div>
+
+  {% else %}
+
+  <div class="have-cvu">
+    <form action="{% url 'send_cash' %}" method="POST" autocomplete="off">
+      {% csrf_token %}
+      <h3>Enviar dinero:</h3>
+      <p>Tu CVU es: <strong>{{ i.cvu }}</strong></p>
+      <p>Cantidad: <input class="form-control" type="text" name="cash_for_send" onkeypress="return valida(event)"></p>
+      <p>CVU destinatario: <input maxlength="22" class="form-control" type="text" name="addressee_cvu" onkeypress="return valida(event)"></p>
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+  </div>
+
+  {% endif %}
+  {% endfor %}
+
+</div>
+
       <div class="container" id="div1">
         <h4>Para informar sobre algún error en el sistema ingrese en el siguiente formulario para contactarnos.</h4>
         <button type="button" class="btn btn-warning btn-lg" id="btn3">Abrir</button>
       </div>
-      <div class="modal fade" id="mostrarmodal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-           <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h3>Centro de Informe</h3>
-           </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="mostrarmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Centro de Informe</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
             <div class="modal-body">
-              <h4>Nombre:</h4>
-              <input type="text" class="form-control" placeholder="Nombre" id="name">
-              <h4>Apellido:</h4>
-              <input type="text" class="form-control" placeholder="Apellido" id="lastname">
-              <h4>E-mail:</h4>
-              <input type="email" class="form-control" placeholder="example@gmail.com" id="email">
               <h4>Motivo:</h4>
               <textarea rows="4" class="form-control" maxlength="500" id="texarea"></textarea>
               <br>
               <button type="button" class="btn btn-success" onclick="informe()" id="btn4">Enviar</button>
+              
               <div class="modal fade" id="mostrarmodal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                
+                <div class="modal-dialog modal-lg">
+                  
                   <div class="modal-content">
+                    
                     <div class="modal-header">
                       <h3 class="modal-title" id="exampleModalCenterTitle">¡Informe enviado con éxito!</h3>
                     </div>
-                        <div class="modal-body">
-                          Le llegará la respuesta a su mail en un rango de 5-10 meses. ¡Muchas Gracias!
-                        </div>
-                      </div>
+
+                    <div class="modal-body">
+                      Le llegará la respuesta a su mail en un rango de 5-10 años. ¡Muchas Gracias!
                     </div>
                   </div>
                 </div>
-                <div class="modal-footer">
-                  <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
-                </div>
               </div>
+            </div>
+            <div class="modal-footer">
+              <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
             </div>
           </div>
         </div>
-</body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="{% static 'js/funciones.js' %}"></script>
-</html>
+      </div>
+
+{% endblock %}

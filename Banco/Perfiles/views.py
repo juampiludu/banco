@@ -8,9 +8,11 @@ from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
+
 def welcome(request):
     if request.user.is_authenticated:
-        return render(request, "welcome.html")
+        title = "Inicio"
+        return render(request, "welcome.html", {'title' : title})
     return redirect('/login')
 
 def register(request):
@@ -31,6 +33,8 @@ def register(request):
     return render(request, "register.html", {'form': form})
 
 def login(request):
+    if request.user.is_authenticated:
+        return redirect('welcome')
     form = AuthenticationForm()
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -47,19 +51,27 @@ def login(request):
     return render(request, "login.html", {'form': form})
 
 def logout(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     do_logout(request)
     return redirect('/')
 
 def info(request):
-    return render(request, "info.html")
+    title = "Información"
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    return render(request, "info.html", {'title' : title})
 
 def contactos(request):
-    return render(request, "contactos.html")
-
-def saldo(request):
-    return render(request, "saldo.html")
+    title = "Contactos"
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    return render(request, "contactos.html", {'title' : title})
 
 def perfil(request):
+    title = "Perfil"
+    if not request.user.is_authenticated:
+        return redirect('/login')
     if request.method == "POST":
         form = ActualizarForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -67,9 +79,11 @@ def perfil(request):
             return redirect('/perfil')
     else:
         form = ActualizarForm(instance=request.user)
-        return render(request, "perfil.html", {'form': form})
+        return render(request, "perfil.html", {'form': form, 'title' : title})
 
 def cambiar_contraseña(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     if request.method == "POST":
         form = CambiarContraForm(request.user, request.POST)
         if form.is_valid():

@@ -3,6 +3,14 @@ hr{
   border-color: black;
 }
 
+.carousel-inner > .item > img {
+  margin: 0 auto;
+}
+
+nav {
+  margin-bottom: 40px;
+}
+
 #titulo {
   font-family: 'Courier', arial;
   font-size: 48px;
@@ -24,8 +32,10 @@ hr{
 }
 
 #divhome {
-  background-color: black;
+  background-color: rgb(49, 49, 49);
+  color: white;
   width: 50%;
+  border-radius: 10px;
 }
 
 #subtit {
@@ -62,7 +72,7 @@ hr{
 
 #div-perfil {
   margin-left: 20px;
-  margin-right: 300px;
+  margin-right: 20px;
   align-content: center;
 }
 

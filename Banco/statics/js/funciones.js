@@ -81,9 +81,6 @@ function ingresar() {
   if (document.getElementById("ing").value == "") {
     alert("Ingrese el monto a agregar a su cuenta");
   } else {
-    total = parseInt(document.getElementById("sa").value);
-    saldo = parseInt(document.getElementById("ing").value);
-    document.getElementById("sa").value = saldo + total;
     document.getElementById("ing").value = "";
   }
 }
@@ -96,9 +93,6 @@ function retirar() {
     alert("Saldo insuficiente");
     document.getElementById("ret").value = "";
   } else {
-        total = parseInt(document.getElementById("sa").value);
-        saldo2 = parseInt(document.getElementById("ret").value);
-        document.getElementById("sa").value = total - saldo2;
         document.getElementById("ret").value = "";
       }
 }
