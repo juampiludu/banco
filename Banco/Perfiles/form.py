@@ -97,6 +97,7 @@ class ActualizarForm(UserChangeForm):
     email = forms.EmailField(label="Email", required=True, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
+            'readonly': 'readonly',
         }
     ))
 
@@ -109,6 +110,7 @@ class ActualizarForm(UserChangeForm):
     dni = forms.CharField(label="DNI", max_length=8, required=True, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
+            'readonly': 'readonly',
         }
     ))
 

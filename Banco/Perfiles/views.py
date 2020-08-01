@@ -5,8 +5,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm, PasswordChangeForm, PasswordResetForm
 from .form import RegistroForm, ActualizarForm, CambiarContraForm
 from django.contrib.auth import update_session_auth_hash
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
+from banking.models import Banking
+from django.core import serializers
 
 
 def welcome(request):
@@ -97,3 +99,10 @@ def cambiar_contraseña(request):
     else:
         form = CambiarContraForm(request.user)
         return render(request, 'perfil/change_pass.html', { 'form': form })
+
+def search_view(request):
+    term = request.GET.get('term')
+
+    all_users = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name')
+
+    return render(request, 'search.html', {'term' : term, 'all_users' : all_users})

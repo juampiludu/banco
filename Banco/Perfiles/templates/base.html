@@ -22,6 +22,10 @@
             {% block navblock %}
             {% endblock %}
           </ul>
+          <form class="form-inline my-2 my-lg-0" action="{% url 'search_view' %}" autocomplete="off">
+            <input class="form-control mr-sm-2" type="search" id="search-input" name="term" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+          </form>
             <a class="nav-link text-danger" href="/logout"><svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-box-arrow-in-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 0 1 0-.708L10.793 8 8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z"/>
                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 1 8z"/>

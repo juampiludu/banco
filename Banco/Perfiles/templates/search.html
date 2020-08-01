@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block navblock %}
+<li class="nav-item">
+  <a class="nav-link" href="/">Inicio</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="/saldo">Saldo</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/contactos">Contactos</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/info">Información</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/perfil">Perfil</a>
+</li>
+{% endblock %}
+
+{% block mainblock %}
+
+<center>
+    {% for i in all_users %}
+    {% if term in i.user__email or term in i.user__first_name or term in i.user__last_name %}
+    <div class="row" style="margin: 20px;">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{i.user__first_name}} {{i.user__last_name}}</h5>
+              <p class="card-text">{{i.user__email}}</p>
+              <p class="card-text">CVU: <strong id="cvu">{{i.cvu}}</strong></p>
+              <a href="#" class="btn btn-primary" onclick="copyCvu('cvu')">Copiar CVU</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    {% endfor %}
+</center>
+
+{% endblock mainblock %}

@@ -75,6 +75,10 @@ def send_cash(request):
         cash_for_send = request.POST.get('cash_for_send')
         addressee_cvu = request.POST.get('addressee_cvu')
 
+        if addressee_cvu == balance.cvu:
+            error = 'No podés enviarte dinero a vos mismo.'
+            return render(request, "error.html", {'error' : error})
+
         if cash_for_send == "" or addressee_cvu == "":
             error = 'Completá todos los campos.'
             return render(request, "error.html", {'error' : error})

@@ -15,12 +15,7 @@ $("#pwd").blur(function() {
 
 $("#ing").blur(function() {
       $(this).css("background-color", "#fff");
-      $(this).attr('placeholder', "Ingresar monto").placeholder();
-    });
-
-$("#ret").blur(function() {
-      $(this).css("background-color", "#fff");
-      $(this).attr('placeholder', "Ingresar monto").placeholder();
+      $(this).attr('placeholder', "Monto").placeholder();
     });
 
 $("#name").blur(function() {
@@ -38,6 +33,13 @@ $("#email").blur(function() {
       $(this).attr('placeholder', "example@gmail.com").placeholder();
     });
 
+$("#search-input").blur(function() {
+  $(this).css("background-color", "#fff");
+  $(this).attr('placeholder', "Search").placeholder();
+});
+
+$("#search-input").autocomplete({source: "/search_view"});
+
 $("input").blur(function() {
       $(this).css("background-color", "#fff");
     });
@@ -49,6 +51,24 @@ $("textarea").focus(function() {
 $("textarea").blur(function() {
       $(this).css("background-color", "#fff");
     });
+
+function copyCvu(elementId) {
+  
+  var aux = document.createElement("input");
+
+  aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+
+  document.body.appendChild(aux);
+
+  aux.select();
+
+  document.execCommand("copy");
+
+  document.body.removeChild(aux);
+
+  alert("Ya tenés el CVU! Ahora andá a \"Saldo\" y pegá el número (" + aux.value + ") en el campo correspondiente.")
+
+}
 
 function abrir() {
   var usuar = document.getElementById("user").value;
