@@ -9,7 +9,7 @@
   <a class="nav-link" href="/saldo">Saldo</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="/contactos">Contactos</a>
+    <a class="nav-link" href="/movimientos">Movimientos</a>
 </li>
 <li class="nav-item">
     <a class="nav-link" href="/info">Información</a>
@@ -33,7 +33,7 @@
       {% endfor %}
     </div>
 
-      <input id="ing" maxlength="7" type="text" name="total_balance" class="form-control" placeholder="Monto" onkeypress="return valida(event)">
+      <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control" placeholder="Monto" onkeypress="return valida(event)">
       <br>
       <button id="btn1" type="submit" class="btn btn-success" name="add_balance">Ingresar</button>
       <button id="btn2" type="submit" class="btn btn-danger" name="remove_balance">Retirar</button>
@@ -53,14 +53,14 @@
 
   <div class="dont-have-cvu">
     <h1>CVU:</h1>
-    <p>Creando una Clave Virtual Uniforme (CVU) podés:</p>
+    <p>Generando una Clave Virtual Uniforme (CVU) podés:</p>
     <ul>
       <li>Enviar dinero a otros usuarios que utilicen Banco Mendiolaza</li>
       <li>Recibir dinero</li>
     </ul>
     <form action="{% url 'create_cvu' %}" method="POST">
       {% csrf_token %}
-      <button class="btn btn-primary" type="submit">Crear CVU</button>
+      <button class="btn btn-primary" type="submit">Generar CVU</button>
     </form>
   </div>
 
@@ -69,11 +69,11 @@
   <div class="have-cvu">
     <form action="{% url 'send_cash' %}" method="POST" autocomplete="off">
       {% csrf_token %}
-      <h3>Enviar dinero:</h3>
+      <h3>Transferir dinero:</h3>
       <p>Tu CVU es: <strong>{{ i.cvu }}</strong></p>
-      <p>Cantidad: <input class="form-control" type="text" name="cash_for_send" onkeypress="return valida(event)"></p>
-      <p>CVU destinatario: <input maxlength="22" class="form-control" type="text" name="addressee_cvu" onkeypress="return valida(event)"></p>
-      <button type="submit" class="btn btn-primary">Enviar</button>
+      <p>Cantidad: <input class="form-control" maxlength="6" type="tel" name="cash_for_send" onkeypress="return valida(event)"></p>
+      <p>CVU destinatario: <input maxlength="22" class="form-control" type="tel" name="addressee_cvu" onkeypress="return valida(event)"></p>
+      <button type="submit" class="btn btn-primary">Transferir</button>
     </form>
   </div>
 
@@ -81,6 +81,8 @@
   {% endfor %}
 
 </div>
+<br/>
+<hr>
 
       <div class="container" id="div1">
         <h4>Para informar sobre algún error en el sistema ingrese en el siguiente formulario para contactarnos.</h4>

@@ -35,10 +35,8 @@ $("#email").blur(function() {
 
 $("#search-input").blur(function() {
   $(this).css("background-color", "#fff");
-  $(this).attr('placeholder', "Search").placeholder();
+  $(this).attr('placeholder', "Buscar").placeholder();
 });
-
-$("#search-input").autocomplete({source: "/search_view"});
 
 $("input").blur(function() {
       $(this).css("background-color", "#fff");

@@ -64,12 +64,6 @@ def info(request):
         return redirect('/login')
     return render(request, "info.html", {'title' : title})
 
-def contactos(request):
-    title = "Contactos"
-    if not request.user.is_authenticated:
-        return redirect('/login')
-    return render(request, "contactos.html", {'title' : title})
-
 def perfil(request):
     title = "Perfil"
     if not request.user.is_authenticated:
@@ -101,8 +95,11 @@ def cambiar_contraseña(request):
         return render(request, 'perfil/change_pass.html', { 'form': form })
 
 def search_view(request):
+
+    title = "Búsqueda"
+
     term = request.GET.get('term')
 
-    all_users = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name')
+    all_users = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name').order_by('user__last_name')
 
-    return render(request, 'search.html', {'term' : term, 'all_users' : all_users})
+    return render(request, 'search.html', {'term' : term, 'all_users' : all_users, 'title' : title})

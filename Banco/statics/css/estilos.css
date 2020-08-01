@@ -3,12 +3,12 @@ hr{
   border-color: black;
 }
 
-.carousel-inner > .item > img {
-  margin: 0 auto;
-}
-
 nav {
   margin-bottom: 40px;
+}
+
+#sticky-footer {
+  flex-shrink: none;
 }
 
 #titulo {
@@ -56,7 +56,7 @@ nav {
 }
 
 #div1 {
-  margin-top: 120px;
+  margin-top: 30px;
   margin-bottom: 30px;
 }
 
