@@ -1,39 +1,23 @@
+{% extends 'base_form.html' %}
 {% load static %}
-<html>
-    <head>
-        <title>Registrate / Banco de Mendiolaza</title>
-        <link rel="shortcut icon" href="{% static 'icon.png' %}">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
-    </head>
-    <body>
-<div id="register">
-    <h2>Registrate</h2>
+{% block mainblock %}
+
+  <!-- Login Form -->
+  <form method="POST" style="margin: 10px;" autocomplete="off">
+    {{ form.as_p }}
+    {% csrf_token %}
     <br>
-    <form method="POST">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <br>
-        <ul>
-            <li>Tu contraseña no puede ser similar a otro dato personal.</li>
-            <li>Tu contraseña debe contener al menos 8 caracteres.</li>       
-            <li>Tu contraseña no puede ser igual que la usada actualmente.</li>       
-            <li>Tu contraseña no puede ser solamente numérica.</li>     
-        </ul>
-        <br>
-        <button type="submit" class="btn btn-default">Registrar</button>
-    </form>
-</div>
+    <ul class="fadeIn eleventh">
+        <li>Tu contraseña no puede ser similar a otro dato personal.</li>
+        <li>Tu contraseña debe contener al menos 8 caracteres.</li>       
+        <li>Tu contraseña no puede ser igual que la usada actualmente.</li>       
+        <li>Tu contraseña no puede ser solamente numérica.</li>     
+    </ul>
+    <input type="submit" class="fadeIn twelveth" value="Registrarse">
+  </form>
 
-<hr />
+  <div id="formFooter">
+    <a class="underlineHover" href="/login">Si ya tenés cuenta, iniciá sesión</a>
+  </div>
 
-<div id="div-register">
-        <h3>Si ya tenés cuenta, iniciá sesión</h3>
-        <br>
-        <button type="button" class="btn btn-default" onclick="window.location='/login'">Iniciar Sesión</button>
-</div>
-<br>
-<br>
-<br>
-    </body>
-</html>
+{% endblock mainblock %}

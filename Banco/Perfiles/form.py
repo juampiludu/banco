@@ -4,59 +4,68 @@ from .models import Cuenta
 
 class RegistroForm(UserCreationForm):
 
-    first_name = forms.CharField(label="Nombre", max_length=140, required=True, widget=forms.TextInput(
+    first_name = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
-            'class': 'form-control',
+            'class': 'fadeIn second',
+            'placeholder': 'Nombre',
         }
     ))
 
-    last_name = forms.CharField(label="Apellido", max_length=140, required=True, widget=forms.TextInput(
+    last_name = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
-            'class': 'form-control',
+            'class': 'fadeIn third',
+            'placeholder': 'Apellido',
         }
     ))
 
-    born_date = forms.DateField(label="Fecha de nacimiento", required=True, initial='2019-01-01', widget=forms.TextInput(
+    born_date = forms.DateField(label="", required=True, initial='2019-01-01', widget=forms.TextInput(
         attrs={
             'type': 'date',
+            'class': 'fadeIn fourth',
         }
     ))
     
-    email = forms.EmailField(label="Email", required=True, widget=forms.TextInput(
+    email = forms.EmailField(label="", required=True, widget=forms.TextInput(
         attrs={
-            'class': 'form-control',
+            'class': 'fadeIn fifth',
+            'placeholder': 'Email',
         }
     ))
 
-    phone = forms.CharField(label="Teléfono", max_length=14, required=True, widget=forms.TextInput(
+    phone = forms.CharField(label="", max_length=14, required=True, widget=forms.TextInput(
         attrs={
-            'class': 'form-control',
+            'class': 'fadeIn sixth',
+            'placeholder': 'Teléfono',
         }
     ))
 
-    dni = forms.CharField(label="DNI", max_length=8, required=True, widget=forms.TextInput(
+    dni = forms.CharField(label="", max_length=8, required=True, widget=forms.TextInput(
         attrs={
-            'class': 'form-control',
+            'class': 'fadeIn seventh',
+            'placeholder': 'DNI',
         }
     ))
 
-    direction = forms.CharField(label="Dirección", max_length=140, required=False, widget=forms.TextInput(
+    direction = forms.CharField(label="", max_length=140, required=False, widget=forms.TextInput(
         attrs={
-            'class': 'form-control',
+            'class': 'fadeIn eighth',
+            'placeholder': 'Dirección',
         }
     ))
 
-    password1 = forms.CharField(label='Contraseña', widget=forms.TextInput(
+    password1 = forms.CharField(label='', widget=forms.TextInput(
         attrs={
             'type': 'password',
-            'class': 'form-control',
+            'class': 'fadeIn ninth',
+            'placeholder': 'Contraseña',
         }
     ))
 
-    password2 = forms.CharField(label='Repita contraseña', widget=forms.TextInput(
+    password2 = forms.CharField(label='', widget=forms.TextInput(
         attrs={
             'type': 'password',
-            'class': 'form-control',
+            'class': 'fadeIn tenth',
+            'placeholder': 'Repita Contraseña',
         }
     ))
 
@@ -171,3 +180,22 @@ class CambiarContraForm(PasswordChangeForm):
             'new_password1',
             'new_password2',
         )
+
+class LoginForm(AuthenticationForm):
+
+    username = forms.EmailField(label=False, required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'fadeIn second',
+            'placeholder': 'Email',
+            'name': 'username',
+        }
+    ))
+
+    password = forms.CharField(label=False, widget=forms.TextInput(
+        attrs={
+            'type': 'password',
+            'class': 'fadeIn third',
+            'placeholder': 'Contraseña',
+            'name': 'password',
+        }
+    ))

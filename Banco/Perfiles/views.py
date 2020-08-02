@@ -3,7 +3,7 @@ from django.contrib.auth import logout as do_logout
 from django.contrib.auth import login as do_login
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm, PasswordChangeForm, PasswordResetForm
-from .form import RegistroForm, ActualizarForm, CambiarContraForm
+from .form import RegistroForm, ActualizarForm, CambiarContraForm, LoginForm
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
@@ -18,6 +18,7 @@ def welcome(request):
     return redirect('/login')
 
 def register(request):
+    title = 'Registrarse'
     form = RegistroForm()
     if request.method == "POST":
         form = RegistroForm(data=request.POST)
@@ -32,12 +33,13 @@ def register(request):
     form.fields['password1'].help_text = None
     form.fields['password2'].help_text = None
 
-    return render(request, "register.html", {'form': form})
+    return render(request, "register.html", {'form': form, 'title' : title})
 
 def login(request):
+    title = 'Iniciar Sesión'
     if request.user.is_authenticated:
         return redirect('welcome')
-    form = AuthenticationForm()
+    form = LoginForm()
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -50,7 +52,7 @@ def login(request):
                 do_login(request, user)
                 return redirect('/')
 
-    return render(request, "login.html", {'form': form})
+    return render(request, "login.html", {'form': form, 'title' : title})
 
 def logout(request):
     if not request.user.is_authenticated:

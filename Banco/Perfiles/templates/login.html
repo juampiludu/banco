@@ -1,39 +1,22 @@
+{% extends 'base_form.html' %}
 {% load static %}
-<html lang="es-AR" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Iniciar Sesión / Banco de Mendiolaza</title>
-    <link rel="shortcut icon" href="{% static 'icon.png' %}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
-  </head>
-  <body>
-    <center>
-      <div class="container">
-        <h1 id="titulo">Banco de Mendiolaza</h1>
-        <br>
-        <img src="{% static 'icon2.png' %}">
-      </div>
-    </center>
-    <div class="container">
-      <div id="form">
-          <form method="POST">
-              {{ form.as_p }}
-              {% csrf_token %}
-              <br>
-              <br>
-              <button type="submit" class="btn btn-default">Login</button>
-          </form>
-      </div>
-</div>
-<br>
-<hr>
-<div class="container">
-  <h2>Si no tenés cuenta, registráte</h2>
-  <br>
-  <button type="button" class="btn btn-default" onclick="window.location='/register'">Registrate</button>
-</div>
-  </body>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="{% static 'js/funciones.js' %}"></script>
-</html>
+{% block mainblock %}
+
+  <!-- Login Form -->
+  <form method="POST" style="margin: 10px;">
+    {% if form.errors %}
+    <p>Por favor ingrese un correo electrónico y contraseña correctos. Considere que ambos campos son sensibles al uso de mayúsculas.</p>
+    <br/>
+    {% endif %}
+    {{ form.username }}
+    {{ form.password }}
+    {% csrf_token %}
+    <br/>
+    <input type="submit" class="fadeIn fourth" value="Entrar">
+  </form>
+
+  <div id="formFooter">
+    <a class="underlineHover" href="/register">Si no tenés cuenta, registráte</a>
+  </div>
+
+{% endblock mainblock %}
