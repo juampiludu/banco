@@ -38,7 +38,7 @@ def register(request):
 def login(request):
     title = 'Iniciar Sesión'
     if request.user.is_authenticated:
-        return redirect('welcome')
+        return redirect('/')
     form = LoginForm()
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)

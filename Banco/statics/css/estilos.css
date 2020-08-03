@@ -3,10 +3,6 @@ hr{
   border-color: black;
 }
 
-nav {
-  margin-bottom: 40px;
-}
-
 #sticky-footer {
   flex-shrink: none;
 }
@@ -75,7 +71,21 @@ nav {
 }
 
 #div-pass {
-  margin-top: 20px;
-  margin-right: 300px;
-  margin-left: 10px;
+  margin: 20px;
+}
+
+#carousel-img {
+  height: 600px;
+}
+
+@media only screen and (max-width: 1080px) {
+  
+  #divhome {
+    width: 80%;
+  }
+
+  #carousel-img {
+    height: 180px;
+  }
+
 }

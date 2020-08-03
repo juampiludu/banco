@@ -1,54 +1,42 @@
 $("input").focus(function() {
-      $(this).css("background-color","#ECE2E2");
       $(this).removeAttr('placeholder');
-    });
+});
 
 $("#user").blur(function() {
-      $(this).css("background-color", "#fff");
       $(this).attr('placeholder', "Nombre de Usuario").placeholder();
-    });
+});
 
 $("#pwd").blur(function() {
-      $(this).css("background-color", "#fff");
       $(this).attr('placeholder', "Contraseña").placeholder();
-    });
+});
 
 $("#ing").blur(function() {
-      $(this).css("background-color", "#fff");
       $(this).attr('placeholder', "Monto").placeholder();
-    });
+});
 
 $("#name").blur(function() {
-      $(this).css("background-color", "#fff");
       $(this).attr('placeholder', "Nombre").placeholder();
-    });
+});
 
 $("#lastname").blur(function() {
-      $(this).css("background-color", "#fff");
       $(this).attr('placeholder', "Apellido").placeholder();
-    });
+});
 
 $("#email").blur(function() {
-      $(this).css("background-color", "#fff");
       $(this).attr('placeholder', "example@gmail.com").placeholder();
-    });
+});
 
 $("#search-input").blur(function() {
-  $(this).css("background-color", "#fff");
   $(this).attr('placeholder', "Buscar").placeholder();
 });
 
-$("input").blur(function() {
-      $(this).css("background-color", "#fff");
-    });
+$("#trans-cant").blur(function() {
+  $(this).attr('placeholder', "$").placeholder();
+});
 
-$("textarea").focus(function() {
-      $(this).css("background-color","#ECE2E2");
-    });
-
-$("textarea").blur(function() {
-      $(this).css("background-color", "#fff");
-    });
+$("#trans-cvu").blur(function() {
+  $(this).attr('placeholder', "CVU").placeholder();
+});
 
 function copyCvu(elementId) {
   

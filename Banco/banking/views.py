@@ -104,6 +104,10 @@ def create_cvu(request):
 
     user_cvu = Banking.objects.get(user=request.user.id)
 
+    if not user_cvu.cvu == None:
+        error = 'Ya contás con un CVU.'
+        return render(request, "error.html", {'error' : error})
+
     if request.method == 'POST':
         generated_cvu = randrange(1000000000000000, 1999999999999999)
         user_cvu.cvu = f'000000{generated_cvu}'

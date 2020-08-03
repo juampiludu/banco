@@ -21,6 +21,8 @@
 
 {% block mainblock %}
 
+<br/>
+
 <div class="container">
 
   <form action="{% url 'balance' %}" method="POST" autocomplete="off">
@@ -38,6 +40,7 @@
       <button id="btn1" type="submit" class="btn btn-success" name="add_balance">Ingresar</button>
       <button id="btn2" type="submit" class="btn btn-danger" name="remove_balance">Retirar</button>
       <br>
+
   </form>
 
 </div>
@@ -71,8 +74,8 @@
       {% csrf_token %}
       <h3>Transferir dinero:</h3>
       <p>Tu CVU es: <strong>{{ i.cvu }}</strong></p>
-      <p>Cantidad: <input class="form-control" maxlength="6" type="tel" name="cash_for_send" onkeypress="return valida(event)"></p>
-      <p>CVU destinatario: <input maxlength="22" class="form-control" type="tel" name="addressee_cvu" onkeypress="return valida(event)"></p>
+      <p>Cantidad: <input class="form-control" placeholder="$" maxlength="6" type="tel" id="trans-cant" name="cash_for_send" onkeypress="return valida(event)"></p>
+      <p>CVU destinatario: <input maxlength="22" placeholder="CVU" class="form-control" id="trans-cvu" type="tel" name="addressee_cvu" onkeypress="return valida(event)"></p>
       <button type="submit" class="btn btn-primary">Transferir</button>
     </form>
   </div>
