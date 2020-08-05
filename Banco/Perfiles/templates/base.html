@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
     <link rel="shortcut icon" href="{% static 'icon.png' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    {% block headblock %}
+    {% endblock %}
 </head>
 <body>
     
@@ -22,17 +24,20 @@
             {% block navblock %}
             {% endblock %}
           </ul>
+          {% if user.is_authenticated %}
           <form class="form-inline my-2 my-lg-0" action="{% url 'search_view' %}" autocomplete="off">
-            <input class="form-control mr-sm-2" type="search" id="search-input" name="term" placeholder="Buscar" aria-label="Buscar">
-            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Buscar</button>
+            <input class="form-control mr-sm-2" type="search" id="search-input" name="term" placeholder="Buscar personas" aria-label="Buscar">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
           </form>
-            <a class="nav-link text-danger" href="/logout"><svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-box-arrow-in-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 0 1 0-.708L10.793 8 8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z"/>
-                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 1 8z"/>
-                <path fill-rule="evenodd" d="M13.5 14.5A1.5 1.5 0 0 0 15 13V3a1.5 1.5 0 0 0-1.5-1.5h-8A1.5 1.5 0 0 0 4 3v1.5a.5.5 0 0 0 1 0V3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5h-8A.5.5 0 0 1 5 13v-1.5a.5.5 0 0 0-1 0V13a1.5 1.5 0 0 0 1.5 1.5h8z"/>
-              </svg>
-               Cerrar Sesión</a>
+          <a class="nav-link text-danger" href="/logout">
+              Cerrar Sesión
+          </a>
         </div>
+        {% else %}
+        <a class="nav-link text-light" href="/login">
+          Iniciar Sesión
+        </a>
+        {% endif %}
       </nav>
 
     
@@ -45,10 +50,12 @@
       </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="{% static 'js/funciones.js' %}"></script>
+    {% block scriptblock %}
+    {% endblock %}
 
 </body>
 </html>

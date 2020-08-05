@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block navblock %}
+{% if user.is_authenticated %}
 <li class="nav-item">
   <a class="nav-link" href="/">Inicio</a>
 </li>
@@ -11,12 +12,20 @@
 <li class="nav-item">
     <a class="nav-link" href="/movimientos">Movimientos</a>
 </li>
-<li class="nav-item">
-    <a class="nav-link active" href="/info">Información</a>
+<li class="nav-item active">
+    <a class="nav-link" href="/info">Información</a>
 </li>
 <li class="nav-item">
     <a class="nav-link" href="/perfil">Perfil</a>
 </li>
+{% else %}
+<li class="nav-item">
+  <a class="nav-link" href="/">Inicio</a>
+</li>
+<li class="nav-item active">
+  <a class="nav-link" href="/info">Información</a>
+</li>
+{% endif %}
 {% endblock %}
 
 {% block mainblock %}
@@ -25,10 +34,16 @@
 
 <div class="container">
   <center>
-    <h2>Conozca nuestra sucursal</h2>
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1705.4046075792023!2d-64.26132274194912!3d-31.253704402400892!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9432834c09dc08ff%3A0x9e2822f279e84a44!2sAv.+Mart%C3%ADn+Tissera+3701-3799%2C+X5108BXW+Mendiolaza%2C+C%C3%B3rdoba%2C+Argentina!5e0!3m2!1ses-419!2sus!4v1542909911624" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
-    <p>Av. Martín Tissera 3701-3799, X5108BXW Mendiolaza, Córdoba, Argentina</p>
+    <h2>Conozca nuestro establecimiento</h2>
+    <div id="map"></div>
+    <p>Av. Martín Tissera 3701 - Mendiolaza, Córdoba, Argentina</p>
   </center>
 </div>
 
+{% endblock %}
+
+{% block scriptblock %}
+    <script defer
+        src="https://maps.googleapis.com/maps/api/js?AIzaSyCKMN-aqhHfuyh0Nx8HrxFCzNSLYa1-nzY&callback=initMap">
+    </script>
 {% endblock %}

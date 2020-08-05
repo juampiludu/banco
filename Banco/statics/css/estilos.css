@@ -78,6 +78,11 @@ hr{
   height: 600px;
 }
 
+#map {
+  height: 600px;  /* The height is 400 pixels */
+  width: 100%;  /* The width is the width of the web page */
+ }
+
 @media only screen and (max-width: 1080px) {
   
   #divhome {
@@ -87,5 +92,10 @@ hr{
   #carousel-img {
     height: 180px;
   }
+
+  #map {
+    height: 400px;  /* The height is 400 pixels */
+    width: 100%;  /* The width is the width of the web page */
+   }
 
 }

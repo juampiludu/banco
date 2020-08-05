@@ -32,14 +32,40 @@
               <h5 class="card-title">{{i.user__first_name}} {{i.user__last_name}}</h5>
               <p class="card-text">{{i.user__email}}</p>
               <p class="card-text">CVU: <strong id="{{i.cvu}}">{{i.cvu}}</strong></p>
-              <a href="#" class="btn btn-primary" onclick="copyCvu('{{i.cvu}}')">Copiar CVU</a>
+              <button class="btn btn-primary" id="{{i.cvu}}-btn" onclick="copyCvu{{i.cvu}}('{{i.cvu}}')">Copiar CVU</button>
             </div>
           </div>
         </div>
       </div>
+
+      <script>
+        function copyCvu{{i.cvu}}(elementId) {
+  
+          var aux = document.createElement("input");
+
+          var btn = document.getElementById("{{i.cvu}}-btn");
+
+          aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+
+          document.body.appendChild(aux);
+
+          aux.select();
+
+          document.execCommand("copy");
+
+          document.body.removeChild(aux);
+
+          btn.className = "btn btn-success";
+
+          btn.innerHTML = "Copiado &#10004;";
+
+        }
+      </script>
+
     {% endif %}
     {% endif %}
     {% endfor %}
+    
 </center>
 
 {% endblock mainblock %}

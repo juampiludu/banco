@@ -2,14 +2,6 @@ $("input").focus(function() {
       $(this).removeAttr('placeholder');
 });
 
-$("#user").blur(function() {
-      $(this).attr('placeholder', "Nombre de Usuario").placeholder();
-});
-
-$("#pwd").blur(function() {
-      $(this).attr('placeholder', "Contraseña").placeholder();
-});
-
 $("#ing").blur(function() {
       $(this).attr('placeholder', "Monto").placeholder();
 });
@@ -27,7 +19,7 @@ $("#email").blur(function() {
 });
 
 $("#search-input").blur(function() {
-  $(this).attr('placeholder', "Buscar").placeholder();
+  $(this).attr('placeholder', "Buscar personas").placeholder();
 });
 
 $("#trans-cant").blur(function() {
@@ -38,39 +30,6 @@ $("#trans-cvu").blur(function() {
   $(this).attr('placeholder', "CVU").placeholder();
 });
 
-function copyCvu(elementId) {
-  
-  var aux = document.createElement("input");
-
-  aux.setAttribute("value", document.getElementById(elementId).innerHTML);
-
-  document.body.appendChild(aux);
-
-  aux.select();
-
-  document.execCommand("copy");
-
-  document.body.removeChild(aux);
-
-  alert("Ya tenés el CVU! Ahora andá a \"Saldo\" y pegá el número (" + aux.value + ") en el campo correspondiente.")
-
-}
-
-function abrir() {
-  var usuar = document.getElementById("user").value;
-  var contra = document.getElementById("pwd").value;
-  if (usuar == "" || contra == ""){
-    alert("Debe ingresar un nombre de usuario y/o contraseña");
-  } else {
-    window.location='template/home.html';
-    alert("Bienvenido, " + usuar + "!");
-  }
-}
-
-function abrir2() {
-  window.location='template/home.html';
-}
-
 function valida(e){
     tecla = (document.all) ? e.keyCode : e.which;
 
@@ -78,29 +37,20 @@ function valida(e){
         return true;
     }
 
-    patron =/[0-9]/;
+    patron =/[0-9.]/;
     tecla_final = String.fromCharCode(tecla);
     return patron.test(tecla_final);
 }
 
-function ingresar() {
-  if (document.getElementById("ing").value == "") {
-    alert("Ingrese el monto a agregar a su cuenta");
-  } else {
-    document.getElementById("ing").value = "";
-  }
-}
-
-function retirar() {
-  if (document.getElementById("ret").value == "") {
-    alert("Ingrese el monto a retirar de su cuenta");
-  }
-  else if (document.getElementById("ret").value > document.getElementById("sa").value) {
-    alert("Saldo insuficiente");
-    document.getElementById("ret").value = "";
-  } else {
-        document.getElementById("ret").value = "";
-      }
+// Initialize and add the map
+function initMap() {
+  // The location of Uluru
+  var uluru = {lat: -31.25378, lng: -64.26068};
+  // The map, centered at Uluru
+  var map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 16, center: uluru});
+  // The marker, positioned at Uluru
+  var marker = new google.maps.Marker({position: uluru, map: map});
 }
 
 $('#btn3').click(function()
@@ -110,18 +60,13 @@ $('#btn3').click(function()
 
 $('#btn4').click(function()
   {
-    var nombre = $('#name').val();
-    var apellido = $('#lastname').val();
-    var email = $('#email').val();
     var texarea = $('textarea').val();
 
-    if (nombre == "" || apellido == "" || email == "" || texarea == "") {
+    if (texarea == "") {
       alert("Completá todos los campos");
     } else {
       $("#mostrarmodal2").modal("show");
-      $('#name').val('');
-      $('#lastname').val('');
-      $('#email').val('');
+      $("#mostrarmodal").modal("hide");
       $('#texarea').val('');
     }
   });

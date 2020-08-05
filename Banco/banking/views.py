@@ -69,31 +69,37 @@ def balance(request):
     if request.method == 'POST':
         
         total_balance = request.POST.get('total_balance')
-        
-        if total_balance == "" or total_balance == '0':
-            error = 'Ingresá un monto.'
-            return render(request, "error.html", {'error' : error})
-        
-        if 'add_balance' in request.POST:
-            a = Cuenta.objects.get(id=request.user.id)
-            b = Transactions(user=a, cash_moved=f'+{total_balance}', type_of_move='Ingreso', date=parseDateTime(datetime.now()))
-            balance.balance += float(total_balance)
-            balance.save()
-            b.save()
-        
-        if 'remove_balance' in request.POST:
+
+        try:
+            if total_balance == "" or float(total_balance) == 0:
+                error = 'Ingresá un monto.'
+                return render(request, "error.html", {'error' : error})
             
-            if float(total_balance) > balance.balance:
-                error = 'El monto que estás queriendo retirar es mayor al que poseés.'
-                return render(request, "error.html", {'error' : error})
-            if float(total_balance) < 3:
-                error = 'El monto mínimo para retirar es $ 3.'
-                return render(request, "error.html", {'error' : error})
-            a = Cuenta.objects.get(id=request.user.id)
-            b = Transactions(user=a, cash_moved=f'-{total_balance}', type_of_move='Retiro', date=parseDateTime(datetime.now()))
-            balance.balance -= float(total_balance)
-            balance.save()
-            b.save()
+            if 'add_balance' in request.POST:
+                a = Cuenta.objects.get(id=request.user.id)
+                formatted_balance = "{:.2f}".format(float(total_balance))
+                b = Transactions(user=a, cash_moved=f'+{float(formatted_balance)}', type_of_move='Ingreso', date=parseDateTime(datetime.now()))
+                balance.balance += float(formatted_balance)
+                balance.save()
+                b.save()
+            
+            if 'remove_balance' in request.POST:
+                
+                if float(total_balance) > balance.balance:
+                    error = 'El monto que estás queriendo retirar es mayor al que poseés.'
+                    return render(request, "error.html", {'error' : error})
+                if float(total_balance) < 3:
+                    error = 'El monto mínimo para retirar es $ 3.'
+                    return render(request, "error.html", {'error' : error})
+                a = Cuenta.objects.get(id=request.user.id)
+                formatted_balance = "{:.2f}".format(float(total_balance))
+                b = Transactions(user=a, cash_moved=f'-{float(formatted_balance)}', type_of_move='Retiro', date=parseDateTime(datetime.now()))
+                balance.balance -= float(formatted_balance)
+                balance.save()
+                b.save()
+        except ValueError:
+            error = 'Por favor, ingresá solo números.'
+            return render(request, "error.html", {'error' : error})
         
         return redirect('/saldo')
 
@@ -128,48 +134,53 @@ def send_cash(request):
         cash_for_send = request.POST.get('cash_for_send')
         addressee_cvu = request.POST.get('addressee_cvu')
 
-        if addressee_cvu == balance.cvu:
-            error = 'No podés enviarte dinero a vos mismo.'
-            return render(request, "error.html", {'error' : error})
+        try:
+            if addressee_cvu == balance.cvu:
+                error = 'No podés enviarte dinero a vos mismo.'
+                return render(request, "error.html", {'error' : error})
 
-        if cash_for_send == "" or addressee_cvu == "":
-            error = 'Completá todos los campos.'
-            return render(request, "error.html", {'error' : error})
+            if cash_for_send == "" or addressee_cvu == "":
+                error = 'Completá todos los campos.'
+                return render(request, "error.html", {'error' : error})
 
-        if float(cash_for_send) > balance.balance:
-            error = 'Estás enviando más dinero del que poseés. Intentá reducir el monto y probá nuevamente.'
-            return render(request, "error.html", {'error' : error})
-        
-        if not float(cash_for_send) >= 3 or float(cash_for_send) < 0:
-            error = 'El monto mínimo para enviar es $ 3'
-            return render(request, "error.html", {'error' : error})
-        
-        cvu_list = []
-
-        for i in all_accounts:
-            cvu_list.append(i.cvu)
-        
-        print(cvu_list)
-
-        if addressee_cvu in cvu_list:
+            if float(cash_for_send) > balance.balance:
+                error = 'Estás enviando más dinero del que poseés. Intentá reducir el monto y probá nuevamente.'
+                return render(request, "error.html", {'error' : error})
+            
+            if not float(cash_for_send) >= 3 or float(cash_for_send) < 0:
+                error = 'El monto mínimo para enviar es $ 3'
+                return render(request, "error.html", {'error' : error})
+            
+            cvu_list = []
 
             for i in all_accounts:
+                cvu_list.append(i.cvu)
+            
+            print(cvu_list)
 
-                b = Cuenta.objects.get(id=request.user.id)
-                addressee_user = Banking.objects.get(cvu=addressee_cvu)
-                addressee_user.balance += float(cash_for_send)
-                balance.balance -= float(cash_for_send)
-                addressee_user.save()
-                balance.save()
+            if addressee_cvu in cvu_list:
 
-                c = Banking.objects.get(cvu=balance.cvu)
-                a = Transferencias(from_user=b, to_user=addressee_user.user, from_cvu=c, to_cvu=addressee_user, cash_sended=str(f'+{cash_for_send}'), cash_losed=str(f'-{cash_for_send}'), date=parseDateTime(datetime.now()))
-                a.save()
+                for i in all_accounts:
 
-                return redirect('/saldo')
-        
-        error = 'El CVU que ingresaste no existe. Verificá si lo estás ingresando correctamente.'
-        return render(request, "error.html", {'error' : error})
+                    b = Cuenta.objects.get(id=request.user.id)
+                    addressee_user = Banking.objects.get(cvu=addressee_cvu)
+                    formatted_balance = "{:.2f}".format(float(cash_for_send))
+                    addressee_user.balance += float(formatted_balance)
+                    balance.balance -= float(formatted_balance)
+                    addressee_user.save()
+                    balance.save()
+
+                    c = Banking.objects.get(cvu=balance.cvu)
+                    a = Transferencias(from_user=b, to_user=addressee_user.user, from_cvu=c, to_cvu=addressee_user, cash_sended=str(f'+{float(formatted_balance)}'), cash_losed=str(f'-{float(formatted_balance)}'), date=parseDateTime(datetime.now()))
+                    a.save()
+
+                    return redirect('/saldo')
+            
+            error = 'El CVU que ingresaste no existe. Verificá si lo estás ingresando correctamente.'
+            return render(request, "error.html", {'error' : error})
+        except ValueError:
+            error = 'Por favor, ingresá solo números.'
+            return render(request, "error.html", {'error' : error})
         
         return redirect('/saldo')
 

@@ -25,16 +25,16 @@
 
 <div class="container">
 
+  <h1>Saldo:</h1>
+
+  <div id="signo">
+    {% for i in balance %}
+    $ {{ i.balance }}
+    {% endfor %}
+  </div>
+
   <form action="{% url 'balance' %}" method="POST" autocomplete="off">
     {% csrf_token %}
-    <h1>Saldo:</h1>
-
-    <div id="signo">
-      {% for i in balance %}
-      $ {{ i.balance }}
-      {% endfor %}
-    </div>
-
       <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control" placeholder="Monto" onkeypress="return valida(event)">
       <br>
       <button id="btn1" type="submit" class="btn btn-success" name="add_balance">Ingresar</button>
@@ -102,34 +102,101 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
-              <h4>Motivo:</h4>
-              <textarea rows="4" class="form-control" maxlength="500" id="texarea"></textarea>
-              <br>
-              <button type="button" class="btn btn-success" onclick="informe()" id="btn4">Enviar</button>
-              
-              <div class="modal fade" id="mostrarmodal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                
-                <div class="modal-dialog modal-lg">
-                  
-                  <div class="modal-content">
-                    
-                    <div class="modal-header">
-                      <h3 class="modal-title" id="exampleModalCenterTitle">¡Informe enviado con éxito!</h3>
-                    </div>
-
-                    <div class="modal-body">
-                      Le llegará la respuesta a su mail en un rango de 5-10 años. ¡Muchas Gracias!
-                    </div>
-                  </div>
-                </div>
+            <form class="sendEmail" method="POST" autocomplete="off">
+              <div class="modal-body">
+                <h4>Motivo:</h4>
+                <textarea rows="4" class="form-control" maxlength="500" id="emailbody"></textarea>
+                <br>
+                <button type="submit" class="btn btn-success" id="btn4">Enviar</button>
               </div>
-            </div>
+            </form>
             <div class="modal-footer">
               <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
             </div>
           </div>
         </div>
       </div>
+
+      <div class="modal fade" id="mostrarmodal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                
+        <div class="modal-dialog modal-lg">
+          
+          <div class="modal-content">
+            
+            <div class="modal-header">
+              <h5 class="modal-title" id="emailMessageTitle"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body" id="emailMessageBody">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+{% endblock %}
+
+{% block scriptblock %}
+
+<script type="text/javascript">
+
+  /*$(document).on('submit', '#saldo-form', function(e){
+
+    e.preventDefault();
+
+    $.ajax({
+      type: 'POST',
+      url: '/saldo/balance/',
+      data: {
+        total_balance: $('#ing').val(),
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+      },
+      success: function() {
+        alert('it works!');
+      }
+    });
+
+  });*/
+
+  $(function(){
+
+    $('.sendEmail').submit(function(e){
+
+        e.preventDefault();
+
+        var from = "{{request.user.email}}";
+        var to = "lu.dev.spprt@gmail.com";
+        var subject = "soporte-bancomendiolaza";
+        var emailbody = $("#emailbody").val();
+
+        $.ajax({
+
+          url: "https://formspree.io/xgenddwd",
+          data: {
+            from: from,
+            to: to,
+            subject: subject,
+            emailbody: emailbody
+          },
+          success: function(data) {
+            $('#emailMessageTitle').html("¡Informe enviado con éxito!");
+            $('#emailMessageBody').html("Le llegará la respuesta a su mail en un rango de 5-10 años. ¡Muchas Gracias!");
+          },
+          error: function() {
+            $('#emailMessageTitle').html("Error");
+            $('#emailMessageBody').html("Ha ocurrido un error. Probá de nuevo más tarde.");
+          },
+          type: 'POST'
+
+        });
+
+        });
+
+  });
+
+  </script>
 
 {% endblock %}

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block navblock %}
+{% if user.is_authenticated %}
 <li class="nav-item active">
   <a class="nav-link" href="/">Inicio</a>
 </li>
@@ -17,6 +18,14 @@
 <li class="nav-item">
     <a class="nav-link" href="/perfil">Perfil</a>
 </li>
+{% else %}
+<li class="nav-item active">
+  <a class="nav-link" href="/">Inicio</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="/info">Información</a>
+</li>
+{% endif %}
 {% endblock %}
 
 {% block mainblock %}

@@ -12,12 +12,12 @@ from django.core import serializers
 
 
 def welcome(request):
-    if request.user.is_authenticated:
-        title = "Inicio"
-        return render(request, "welcome.html", {'title' : title})
-    return redirect('/login')
+    title = "Inicio"
+    return render(request, "welcome.html", {'title' : title})
 
 def register(request):
+    if request.user.is_authenticated:
+        return redirect('/')
     title = 'Registrarse'
     form = RegistroForm()
     if request.method == "POST":
@@ -62,8 +62,6 @@ def logout(request):
 
 def info(request):
     title = "Información"
-    if not request.user.is_authenticated:
-        return redirect('/login')
     return render(request, "info.html", {'title' : title})
 
 def perfil(request):
@@ -97,6 +95,9 @@ def cambiar_contraseña(request):
         return render(request, 'perfil/change_pass.html', { 'form': form })
 
 def search_view(request):
+
+    if not request.user.is_authenticated:
+        return redirect('/login')
 
     title = "Búsqueda"
 
