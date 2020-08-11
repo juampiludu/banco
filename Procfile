@@ -1,0 +1,1 @@
+web: gunicorn bancomendiolaza.wsgi --log-file -
