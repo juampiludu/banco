@@ -101,8 +101,8 @@ def search_view(request):
 
     title = "Búsqueda"
 
-    term = request.GET.get('term')
+    search = request.GET.get('search')
 
     all_users = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name').order_by('user__last_name')
 
-    return render(request, 'search.html', {'term' : term, 'all_users' : all_users, 'title' : title})
+    return render(request, 'search.html', {'search' : search, 'all_users' : all_users, 'title' : title})

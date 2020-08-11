@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .models import Banking, Transactions, Transferencias
 from Perfiles.models import Cuenta
 from random import randrange
@@ -114,11 +114,20 @@ def create_cvu(request):
         error = 'Ya contás con un CVU.'
         return render(request, "error.html", {'error' : error})
 
+    cvus = Banking.objects.all().cvu
+    cvu_list = []
+
+    for cvu in cvu_list:
+        cvu_list.append(cvu)
+
     if request.method == 'POST':
         generated_cvu = randrange(1000000000000000, 1999999999999999)
-        user_cvu.cvu = f'000000{generated_cvu}'
-        user_cvu.save()
-        return redirect('/saldo')
+        if generated_cvu not in cvu_list:
+            user_cvu.cvu = f'000000{generated_cvu}'
+            user_cvu.save()
+            return redirect('/saldo')
+        else:
+            return HttpResponse('Error, try again later.')
 
 
 def send_cash(request):

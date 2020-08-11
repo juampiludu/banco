@@ -35,7 +35,7 @@
 
   <form action="{% url 'balance' %}" method="POST" autocomplete="off">
     {% csrf_token %}
-      <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control" placeholder="Monto" onkeypress="return valida(event)">
+      <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control" placeholder="Monto" required onkeypress="return valida(event)">
       <br>
       <button id="btn1" type="submit" class="btn btn-success" name="add_balance">Ingresar</button>
       <button id="btn2" type="submit" class="btn btn-danger" name="remove_balance">Retirar</button>
@@ -74,8 +74,8 @@
       {% csrf_token %}
       <h3>Transferir dinero:</h3>
       <p>Tu CVU es: <strong>{{ i.cvu }}</strong></p>
-      <p>Cantidad: <input class="form-control" placeholder="$" maxlength="6" type="tel" id="trans-cant" name="cash_for_send" onkeypress="return valida(event)"></p>
-      <p>CVU destinatario: <input maxlength="22" placeholder="CVU" class="form-control" id="trans-cvu" type="tel" name="addressee_cvu" onkeypress="return valida(event)"></p>
+      <p>Cantidad: <input class="form-control" placeholder="$" maxlength="6" type="tel" id="trans-cant" name="cash_for_send" required onkeypress="return valida(event)"></p>
+      <p>CVU destinatario: <input maxlength="22" placeholder="CVU" class="form-control" id="trans-cvu" type="tel" name="addressee_cvu" required onkeypress="return valida(event)"></p>
       <button type="submit" class="btn btn-primary">Transferir</button>
     </form>
   </div>
@@ -136,67 +136,5 @@
           </div>
         </div>
       </div>
-
-{% endblock %}
-
-{% block scriptblock %}
-
-<script type="text/javascript">
-
-  /*$(document).on('submit', '#saldo-form', function(e){
-
-    e.preventDefault();
-
-    $.ajax({
-      type: 'POST',
-      url: '/saldo/balance/',
-      data: {
-        total_balance: $('#ing').val(),
-        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-      },
-      success: function() {
-        alert('it works!');
-      }
-    });
-
-  });*/
-
-  $(function(){
-
-    $('.sendEmail').submit(function(e){
-
-        e.preventDefault();
-
-        var from = "{{request.user.email}}";
-        var to = "lu.dev.spprt@gmail.com";
-        var subject = "soporte-bancomendiolaza";
-        var emailbody = $("#emailbody").val();
-
-        $.ajax({
-
-          url: "https://formspree.io/xgenddwd",
-          data: {
-            from: from,
-            to: to,
-            subject: subject,
-            emailbody: emailbody
-          },
-          success: function(data) {
-            $('#emailMessageTitle').html("¡Informe enviado con éxito!");
-            $('#emailMessageBody').html("Le llegará la respuesta a su mail en un rango de 5-10 años. ¡Muchas Gracias!");
-          },
-          error: function() {
-            $('#emailMessageTitle').html("Error");
-            $('#emailMessageBody').html("Ha ocurrido un error. Probá de nuevo más tarde.");
-          },
-          type: 'POST'
-
-        });
-
-        });
-
-  });
-
-  </script>
 
 {% endblock %}

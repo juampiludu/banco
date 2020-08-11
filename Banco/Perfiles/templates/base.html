@@ -26,16 +26,16 @@
           </ul>
           {% if user.is_authenticated %}
           <form class="form-inline my-2 my-lg-0" action="{% url 'search_view' %}" autocomplete="off">
-            <input class="form-control mr-sm-2" type="search" id="search-input" name="term" placeholder="Buscar personas" aria-label="Buscar">
+            <input class="form-control mr-sm-2" type="search" id="search-input" name="search" placeholder="Buscar personas" aria-label="Buscar">
             <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
           </form>
           <a class="nav-link text-danger" href="/logout">
-              Cerrar Sesión
+              Salir
           </a>
         </div>
         {% else %}
         <a class="nav-link text-light" href="/login">
-          Iniciar Sesión
+          Acceder
         </a>
         {% endif %}
       </nav>

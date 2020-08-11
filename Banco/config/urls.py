@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from Perfiles import views
+from Perfiles import form
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.welcome),
@@ -26,7 +28,12 @@ urlpatterns = [
     path('perfil/', views.perfil),
     path('perfil/actualizar-contraseña/', views.cambiar_contraseña),
     path('', include('banking.urls')),
-    path('search/', views.search_view, name="search_view"),
+    path('personas/', views.search_view, name="search_view"),
 
     path('admin/', admin.site.urls),
+
+    path('reset/', auth_views.PasswordResetView.as_view(template_name="perfil/restablecer_contra_form.html"), name="password_reset"),
+    path('reset/done',auth_views.PasswordResetDoneView.as_view(template_name="perfil/restablecer_contra_terminado.html"), name="password_reset_done"),
+    path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name="perfil/restablecer_contra_confirm.html"), name='password_reset_confirm'),
+    path('reset/completed', auth_views.PasswordResetCompleteView.as_view(template_name="perfil/restablecer_contra_completado.html"), name='password_reset_complete'),
 ]

@@ -28,7 +28,7 @@ class RegistroForm(UserCreationForm):
     email = forms.EmailField(label="", required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn fifth',
-            'placeholder': 'Email',
+            'placeholder': 'Correo Electrónico',
         }
     ))
 
@@ -186,7 +186,7 @@ class LoginForm(AuthenticationForm):
     username = forms.EmailField(label=False, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn second',
-            'placeholder': 'Email',
+            'placeholder': 'Correo Electrónico',
             'name': 'username',
         }
     ))

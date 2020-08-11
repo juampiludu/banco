@@ -1,0 +1,26 @@
+{% extends 'base_form.html' %}
+{% load static %}
+{% block mainblock %}
+<script>
+    window.onload = function() {
+        var email_input = document.getElementById("id_email");
+        email_input.placeholder = "Correo electrónico";
+        email_input.className = "fadeIn second";
+        $('label').remove();
+    };
+</script>
+
+<form method="POST">
+    <p class="fadeIn second">
+        Ingresá tu correo electrónico así te contactamos
+    </p>
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" class="fadeIn third" value="Enviar">
+</form>
+
+<div id="formFooter">
+    <a class="underlineHover" href="/login">Atrás</a>
+</div>
+
+{% endblock %}

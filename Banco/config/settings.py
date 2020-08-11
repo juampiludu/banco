@@ -127,5 +127,12 @@ STATICFILES_DIRS = [
 
 SECURE_SSL_REDIRECT = False
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = 'smtp.sendgrid.net'
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST_USER = 'apikey'
+#DEFAULT_FROM_EMAIL  = 'lu.dev.spprt@gmail.com'
+#EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
 

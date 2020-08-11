@@ -23,7 +23,7 @@
 
 <center>
     {% for i in all_users %}
-    {% if term in i.user__email or term in i.user__first_name or term in i.user__last_name %}
+    {% if search in i.user__email or search in i.user__first_name or search in i.user__last_name %}
     {% if not i.cvu == None %}
     <div class="row" style="margin: 20px;">
         <div class="col-sm-12">
@@ -58,6 +58,11 @@
           btn.className = "btn btn-success";
 
           btn.innerHTML = "Copiado &#10004;";
+
+          setTimeout(() => { 
+            btn.className = "btn btn-primary";
+            btn.innerHTML = "Copiar CVU";
+           }, 4000)
 
         }
       </script>
