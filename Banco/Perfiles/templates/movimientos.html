@@ -69,7 +69,7 @@
 
   {% for i in user_transfers %}
 
-    <!--{% if i.from_user__email == request.user.email %}-->
+    {% if i.from_user__email == request.user.email %}
 
     <br/>
         
@@ -87,7 +87,7 @@
 
     <br/>
     
-    <!--{% else %}
+    {% else %}
 
     <br/>
 
@@ -111,7 +111,7 @@
 
       {% endif %}
 
-    {% endif %}-->
+    {% endif %}
 
   {% endfor %}
 

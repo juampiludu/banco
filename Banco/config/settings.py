@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-#import django_heroku
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -27,7 +26,7 @@ SECRET_KEY = 'gfwutv_&+u164-g*r91*2a6=8r5@!zrea0e+zvexm-b&3bqt*f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bancomendiolaza.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -43,7 +42,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -129,20 +127,11 @@ STATICFILES_DIRS = [
 
 SECURE_SSL_REDIRECT = False
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_HOST = 'smtp.sendgrid.net'
-#EMAIL_PORT = 587
-#EMAIL_USE_TLS = True
-#EMAIL_HOST_USER = 'apikey'
-#DEFAULT_FROM_EMAIL  = 'lu.dev.spprt@gmail.com'
-#EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
-
-# Activate Django-Heroku.
-#django_heroku.settings(locals())
-
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
-import dj_database_url 
-prod_db  =  dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(prod_db)
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey'
+DEFAULT_FROM_EMAIL  = 'lu.dev.spprt@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']

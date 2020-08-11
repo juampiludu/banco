@@ -3,6 +3,8 @@ from .models import Banking, Transactions, Transferencias
 from Perfiles.models import Cuenta
 from random import randrange
 from datetime import datetime
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 def parseDateTime(a):
 
@@ -72,8 +74,9 @@ def balance(request):
 
         try:
             if total_balance == "" or float(total_balance) == 0:
-                error = 'Ingresá un monto.'
-                return render(request, "error.html", {'error' : error})
+                messages.info(request, 'Ingresá un monto distinto a 0.')
+                return HttpResponseRedirect('/saldo')
+                
             
             if 'add_balance' in request.POST:
                 a = Cuenta.objects.get(id=request.user.id)
@@ -86,11 +89,11 @@ def balance(request):
             if 'remove_balance' in request.POST:
                 
                 if float(total_balance) > balance.balance:
-                    error = 'El monto que estás queriendo retirar es mayor al que poseés.'
-                    return render(request, "error.html", {'error' : error})
+                    messages.info(request, 'El monto que estás queriendo retirar es mayor al que poseés.')
+                    return HttpResponseRedirect('/saldo')
                 if float(total_balance) < 3:
-                    error = 'El monto mínimo para retirar es $ 3.'
-                    return render(request, "error.html", {'error' : error})
+                    messages.info(request, 'El monto mínimo para retirar es $ 3.')
+                    return HttpResponseRedirect('/saldo')
                 a = Cuenta.objects.get(id=request.user.id)
                 formatted_balance = "{:.2f}".format(float(total_balance))
                 b = Transactions(user=a, cash_moved=f'-{float(formatted_balance)}', type_of_move='Retiro', date=parseDateTime(datetime.now()))
@@ -98,8 +101,8 @@ def balance(request):
                 balance.save()
                 b.save()
         except ValueError:
-            error = 'Por favor, ingresá solo números.'
-            return render(request, "error.html", {'error' : error})
+            messages.info(request, 'Por favor, ingresá solo números.')
+            return HttpResponseRedirect('/saldo')
         
         return redirect('/saldo')
 
@@ -121,7 +124,7 @@ def create_cvu(request):
         cvu_list.append(cvu)
 
     if request.method == 'POST':
-        generated_cvu = randrange(1000000000000000, 1999999999999999)
+        generated_cvu = randrange(1000000000000000, 9999999999999999)
         if generated_cvu not in cvu_list:
             user_cvu.cvu = f'000000{generated_cvu}'
             user_cvu.save()
