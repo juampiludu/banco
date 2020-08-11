@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
 from banking.models import Banking
 from django.core import serializers
-
+from datetime import datetime
 
 def welcome(request):
     title = "Inicio"
@@ -22,16 +22,27 @@ def register(request):
     form = RegistroForm()
     if request.method == "POST":
         form = RegistroForm(data=request.POST)
+
+        a = request.POST.get('born_date')
+        b = datetime.strptime(a, '%Y-%m-%d')
+        age = datetime.now() - b
+        print(age)
+
+        if age.days < 6575:
+            error = "Tenés que ser mayor de 18 años para registrarte."
+            return render(request, 'error.html', {'error', error})
+
         if form.is_valid():
+
             user = form.save()
 
             if user is not None:
                 do_login(request, user)
                 return redirect('/')
 
-    form.fields['email'].help_text = None
-    form.fields['password1'].help_text = None
-    form.fields['password2'].help_text = None
+    #form.fields['email'].help_text = None
+    #form.fields['password1'].help_text = None
+    #form.fields['password2'].help_text = None
 
     return render(request, "register.html", {'form': form, 'title' : title})
 
@@ -80,19 +91,18 @@ def perfil(request):
 def cambiar_contraseña(request):
     if not request.user.is_authenticated:
         return redirect('/login')
+    form = CambiarContraForm(request.user, request.POST)
     if request.method == "POST":
-        form = CambiarContraForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
             messages.success(request, 'Your password was successfully updated!')
             return redirect('/perfil')
         else:
-            messages.error(request, 'Error')
+            messages.error(request, 'Ha ocurrido un error. Ingrese los datos de manera correcta e intente nuevamente.')
             return HttpResponseRedirect("/perfil/actualizar-contraseña")
-    else:
-        form = CambiarContraForm(request.user)
-        return render(request, 'perfil/change_pass.html', { 'form': form })
+    
+    return render(request, 'perfil/change_pass.html', { 'form': form })
 
 def search_view(request):
 

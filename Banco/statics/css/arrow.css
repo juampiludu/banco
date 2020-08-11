@@ -1,0 +1,43 @@
+.wrapper-arrow {
+    display: flex;
+    justify-content: left;
+    margin-top: 5px;
+  }
+  
+  .item {
+    width: 200px;
+    height: 50px;
+    margin: 10px;
+    position: relative;
+  }
+  
+  #arrow-btn {
+    border: 1px solid white;
+    background: white;
+    width: 100%;
+    padding: 15px;
+    border-radius: 5px;
+    color: #292b2c;
+    transition: background 0.5s ease;
+    cursor: pointer;
+  }
+  
+  #arrow-btn:hover {
+    background: #292b2c;
+    color: white;
+    font-weight: normal;
+  }
+  
+  #arrow-btn:hover i {
+    color: white;
+  }
+  
+  i {
+    color: #292b2c;
+    margin-right: 20px;
+  }
+  
+  .arrow1 {
+    animation: slide1 1s ease-in-out infinite;
+    margin-right: 9px;
+  }

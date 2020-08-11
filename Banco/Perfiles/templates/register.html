@@ -4,9 +4,22 @@
 
   <!-- Login Form -->
   <form method="POST" style="margin: 10px;" autocomplete="off">
-    {{ form.as_p }}
     {% csrf_token %}
-    <br>
+    {{ form.email }}
+    {{ form.first_name }}
+    {{ form.last_name }}
+    <br/><br/>
+    <p class="fadeIn fourth">
+      Fecha de nacimiento:
+    </p>
+    {{ form.born_date }}
+    <br/><br/>
+    {{ form.phone }}
+    {{ form.dni }}
+    {{ form.direction }}
+    {{ form.password1 }}
+    {{ form.password2 }}
+    <br/><br/>
     <ul class="fadeIn eleventh">
         <li>Tu contraseña no puede ser similar a otro dato personal.</li>
         <li>Tu contraseña debe contener al menos 8 caracteres.</li>       

@@ -32,8 +32,8 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-    path('reset/', auth_views.PasswordResetView.as_view(template_name="perfil/restablecer_contra_form.html"), name="password_reset"),
-    path('reset/done',auth_views.PasswordResetDoneView.as_view(template_name="perfil/restablecer_contra_terminado.html"), name="password_reset_done"),
-    path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name="perfil/restablecer_contra_confirm.html"), name='password_reset_confirm'),
-    path('reset/completed', auth_views.PasswordResetCompleteView.as_view(template_name="perfil/restablecer_contra_completado.html"), name='password_reset_complete'),
+    path('reset/', auth_views.PasswordResetView.as_view(template_name="perfil/restablecer_contra_form.html", html_email_template_name="perfil/password_reset_email.html", subject_template_name="perfil/reset_password_email_subject.txt", title="Restablecer Contraseña"), name="password_reset"),
+    path('reset/done',auth_views.PasswordResetDoneView.as_view(template_name="perfil/restablecer_contra_terminado.html", title="Correo enviado"), name="password_reset_done"),
+    path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name="perfil/restablecer_contra_confirm.html", title="Nueva Contraseña"), name='password_reset_confirm'),
+    path('reset/completed', auth_views.PasswordResetCompleteView.as_view(template_name="perfil/restablecer_contra_completado.html", title="Finalizado"), name='password_reset_complete'),
 ]

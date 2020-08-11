@@ -7,11 +7,18 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
     </head>
-    <body>
+    <body style="background-color: rgb(248, 248, 248);">
         <div id="div-pass">
             <form method="POST">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    Actual contraseña:
+                    {{ form.old_password }}
+                    <br/>
+                    Nueva contraseña:
+                    {{ form.new_password1 }}
+                    <br/>
+                    Confirmar contraseña:
+                    {{ form.new_password2 }}
                     <br>
                     <ul>
                         <li>Tu contraseña no puede ser similar a otro dato personal.</li>
@@ -20,10 +27,14 @@
                         <li>Tu contraseña no puede ser solamente numérica.</li>     
                     </ul>
                     <br>
-                    <h3 style="color: red;">Si al actualizar la contraseña no sale de la actual página, hubo un error. Chequee los requisitos.</h3>
+                    {% if messages %}
+                    {% for m in messages %}
+                    <h3 style="color: red;">{{m}}</h3>
                     <br>
+                    {% endfor %}
+                    {% endif %}
                     <button type="submit" class="btn btn-warning">Actualizar contraseña</button>
-                    <button style="margin-left: 20px;" type="button" class="btn btn-default" onclick="window.location='/perfil'">Atrás</button>
+                    <button style="margin-left: 20px;" type="button" class="btn btn-dark" onclick="window.location='/perfil'">Atrás</button>
                 </form>
         </div>
     </body>

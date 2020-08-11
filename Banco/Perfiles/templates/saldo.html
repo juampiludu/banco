@@ -5,8 +5,8 @@
 <li class="nav-item">
   <a class="nav-link" href="/">Inicio</a>
 </li>
-<li class="nav-item active">
-  <a class="nav-link" href="/saldo">Saldo</a>
+<li class="nav-item">
+  <a class="nav-link active" href="/saldo">Saldo</a>
 </li>
 <li class="nav-item">
     <a class="nav-link" href="/movimientos">Movimientos</a>
@@ -44,8 +44,8 @@
       <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control" placeholder="Monto" required onkeypress="return valida(event)">
       {% endif %}
       <br>
-      <button id="btn1" type="submit" class="btn btn-success" name="add_balance">Ingresar</button>
-      <button id="btn2" type="submit" class="btn btn-danger" name="remove_balance">Retirar</button>
+      <button id="btn1" type="submit" class="btn btn-dark" name="add_balance">Ingresar</button>
+      <button id="btn2" type="submit" class="btn btn-dark" name="remove_balance">Retirar</button>
       <br>
 
   </form>
@@ -70,7 +70,7 @@
     </ul>
     <form action="{% url 'create_cvu' %}" method="POST">
       {% csrf_token %}
-      <button class="btn btn-primary" type="submit">Generar CVU</button>
+      <button class="btn btn-dark" type="submit">Generar CVU</button>
     </form>
   </div>
 
@@ -83,7 +83,7 @@
       <p>Tu CVU es: <strong>{{ i.cvu }}</strong></p>
       <p>Cantidad: <input class="form-control" placeholder="$" maxlength="6" type="tel" id="trans-cant" name="cash_for_send" required onkeypress="return valida(event)"></p>
       <p>CVU destinatario: <input maxlength="22" placeholder="CVU" class="form-control" id="trans-cvu" type="tel" name="addressee_cvu" required onkeypress="return valida(event)"></p>
-      <button type="submit" class="btn btn-primary">Transferir</button>
+      <button type="submit" class="btn btn-dark">Transferir</button>
     </form>
   </div>
 
@@ -95,7 +95,7 @@
 <hr>
 
       <div class="container" id="div1">
-        <h4>Para informar sobre algún error en el sistema ingrese en el siguiente formulario para contactarnos.</h4>
+        <h4>Para informar sobre algún error en el sistema, ingrese en el siguiente formulario para contactarnos.</h4>
         <button type="button" class="btn btn-warning btn-lg" id="btn3">Abrir</button>
       </div>
 
@@ -112,9 +112,9 @@
             <form class="sendEmail" method="POST" autocomplete="off">
               <div class="modal-body">
                 <h4>Motivo:</h4>
-                <textarea rows="4" class="form-control" maxlength="500" id="emailbody"></textarea>
+                <textarea rows="4" class="form-control" maxlength="500" required id="emailbody"></textarea>
                 <br>
-                <button type="submit" class="btn btn-success" id="btn4">Enviar</button>
+                <button type="submit" class="btn btn-dark" id="btn4">Enviar</button>
               </div>
             </form>
             <div class="modal-footer">

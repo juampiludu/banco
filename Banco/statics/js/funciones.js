@@ -63,7 +63,7 @@ $('#btn4').click(function()
     var texarea = $('textarea').val();
 
     if (texarea == "") {
-      alert("Completá todos los campos");
+      
     } else {
       $("#mostrarmodal2").modal("show");
       $("#mostrarmodal").modal("hide");

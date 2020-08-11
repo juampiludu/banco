@@ -32,7 +32,7 @@
               <h5 class="card-title">{{i.user__first_name}} {{i.user__last_name}}</h5>
               <p class="card-text">{{i.user__email}}</p>
               <p class="card-text">CVU: <strong id="{{i.cvu}}">{{i.cvu}}</strong></p>
-              <button class="btn btn-primary" id="{{i.cvu}}-btn" onclick="copyCvu{{i.cvu}}('{{i.cvu}}')">Copiar CVU</button>
+              <button class="btn btn-dark" id="{{i.cvu}}-btn" onclick="copyCvu{{i.cvu}}('{{i.cvu}}')">Copiar CVU</button>
             </div>
           </div>
         </div>
@@ -60,7 +60,7 @@
           btn.innerHTML = "Copiado &#10004;";
 
           setTimeout(() => { 
-            btn.className = "btn btn-primary";
+            btn.className = "btn btn-dark";
             btn.innerHTML = "Copiar CVU";
            }, 4000)
 
