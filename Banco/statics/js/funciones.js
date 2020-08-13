@@ -60,13 +60,13 @@ $('#btn3').click(function()
 
 $('#btn4').click(function()
   {
-    var texarea = $('textarea').val();
 
-    if (texarea == "") {
-      
-    } else {
+    if ($("#motivo").val() != "") {
+
       $("#mostrarmodal2").modal("show");
       $("#mostrarmodal").modal("hide");
-      $('#texarea').val('');
+      setTimeout(() => {$("#motivo").val("");}, 500)
+
     }
+
   });

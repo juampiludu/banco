@@ -7,14 +7,14 @@ class RegistroForm(UserCreationForm):
     first_name = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn second',
-            'placeholder': 'Nombre',
+            'placeholder': 'Nombre*',
         }
     ))
 
     last_name = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn third',
-            'placeholder': 'Apellido',
+            'placeholder': 'Apellido*',
         }
     ))
 
@@ -28,7 +28,7 @@ class RegistroForm(UserCreationForm):
     email = forms.EmailField(label="", required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn fifth',
-            'placeholder': 'Correo Electrónico',
+            'placeholder': 'Correo Electrónico*',
         }
     ))
 
@@ -42,7 +42,7 @@ class RegistroForm(UserCreationForm):
     dni = forms.CharField(label="", max_length=8, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn seventh',
-            'placeholder': 'DNI',
+            'placeholder': 'DNI*',
         }
     ))
 
@@ -69,6 +69,12 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
+    def clean_firstname(self):
+        return self.cleaned_data['first_name'].capitalize()
+
+    def clean_lastname(self):
+        return self.cleaned_data['last_name'].capitalize()
+
     class Meta:
         model = Cuenta
         fields = (
@@ -85,41 +91,9 @@ class RegistroForm(UserCreationForm):
 
 class ActualizarForm(UserChangeForm):
 
-    first_name = forms.CharField(label="Nombre", max_length=140, required=True, widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-        }
-    ))
-
-    last_name = forms.CharField(label="Apellido", max_length=140, required=True, widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-        }
-    ))
-
-    born_date = forms.DateField(label="Fecha de nacimiento", required=True, initial='2019-01-01', widget=forms.TextInput(
-        attrs={
-            'type': 'date',
-        }
-    ))
-    
-    email = forms.EmailField(label="Email", required=True, widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-            'readonly': 'readonly',
-        }
-    ))
-
     phone = forms.CharField(label="Teléfono", max_length=14, required=True, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
-        }
-    ))
-
-    dni = forms.CharField(label="DNI", max_length=8, required=True, widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-            'readonly': 'readonly',
         }
     ))
 
@@ -129,26 +103,12 @@ class ActualizarForm(UserChangeForm):
         }
     ))
 
-    password = forms.CharField(label='Contraseña', widget=forms.TextInput(
-        attrs={
-            'type': 'password',
-            'class': 'form-control',
-            'readonly': 'readonly',
-        }
-    ))
-
     class Meta:
         model = Cuenta
         fields = (
-            'email',    
-            'first_name',
-            'last_name',
-            'born_date',
             'phone',
-            'dni',
             'direction',
-            'password',
-        )
+            )
 
 class CambiarContraForm(PasswordChangeForm):
 

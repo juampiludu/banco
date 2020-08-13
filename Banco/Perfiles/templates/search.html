@@ -6,16 +6,22 @@
   <a class="nav-link" href="/">Inicio</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link" href="/saldo">Saldo</a>
+  <a class="nav-link" href="/cuenta">Cuenta</a>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Actividad
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="/actividad/transacciones">Transacciones</a>
+    <a class="dropdown-item" href="/actividad/transferencias">Transferencias</a>
+  </div>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="/movimientos">Movimientos</a>
+    <a class="nav-link" href="/about-us">Sobre Nosotros</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="/info">Información</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="/perfil">Perfil</a>
+    <a class="nav-link" href="/info-personal">Información Personal</a>
 </li>
 {% endblock %}
 
@@ -30,7 +36,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">{{i.user__first_name}} {{i.user__last_name}}</h5>
-              <p class="card-text">{{i.user__email}}</p>
+              <p class="card-text"><a href="mailto:{{i.user__email}}">{{i.user__email}}</a></p>
               <p class="card-text">CVU: <strong id="{{i.cvu}}">{{i.cvu}}</strong></p>
               <button class="btn btn-dark" id="{{i.cvu}}-btn" onclick="copyCvu{{i.cvu}}('{{i.cvu}}')">Copiar CVU</button>
             </div>
@@ -70,6 +76,31 @@
     {% endif %}
     {% endif %}
     {% endfor %}
+
+    {% if all_users.has_other_pages %}
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        {% if all_users.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ all_users.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+          <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1"><span>&laquo;</span></a></li>
+        {% endif %}
+        {% for i in all_users.paginator.page_range %}
+          {% if all_users.number == i %}
+            <li class="page-item active"><a class="page-link" href="#"><span>{{ i }} <span class="sr-only">(current)</span></span></a></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if all_users.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ all_users.next_page_number }}">&raquo;</a></li>
+        {% else %}
+          <li class="page-item disabled"><a class="page-link" href="#"><span>&raquo;</span></a></li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
     
 </center>
 

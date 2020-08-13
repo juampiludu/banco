@@ -1,18 +1,3 @@
-"""Banco URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from Perfiles import views
@@ -20,17 +5,28 @@ from Perfiles import form
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.welcome),
+    path('admin/', admin.site.urls),
+
+
+    # register and confirmation of account
+
     path('register/', views.register),
+    path('activar/<uidb64>/<token>', views.activate, name='activate'),
+
+    path('', views.welcome),
     path('login/', views.login, name="login"),
     path('logout/', views.logout),
-    path('info/', views.info),
-    path('perfil/', views.perfil),
+    path('about-us/', views.info),
+    path('info-personal/', views.perfil),
     path('perfil/actualizar-contraseña/', views.cambiar_contraseña),
-    path('', include('banking.urls')),
     path('personas/', views.search_view, name="search_view"),
 
-    path('admin/', admin.site.urls),
+    # includes
+
+    path('', include('banking.urls')),
+    path('', include('user_contact.urls')),
+
+    # reset password views
 
     path('reset/', auth_views.PasswordResetView.as_view(template_name="perfil/restablecer_contra_form.html", html_email_template_name="perfil/password_reset_email.html", subject_template_name="perfil/reset_password_email_subject.txt", title="Restablecer Contraseña"), name="password_reset"),
     path('reset/done',auth_views.PasswordResetDoneView.as_view(template_name="perfil/restablecer_contra_terminado.html", title="Correo enviado"), name="password_reset_done"),

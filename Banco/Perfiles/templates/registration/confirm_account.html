@@ -1,0 +1,36 @@
+{% autoescape off %}
+<center>
+<br/>
+<h5 style="font-family: 'Courier', arial; font-size: 28px; text-shadow: 4px 4px 4px #aaa;">
+    <img src="https://raw.githubusercontent.com/juampiludu/Banco/develop/Banco/statics/icon.png" id="icon" style="height: 60px; width: 60px; vertical-align: middle;" />
+        Banco de Mendiolaza
+</h5>
+<br/>
+<p style="@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap'); font-family: 'Raleway', sans-serif;">
+    ¡Hola, {{ user.first_name }} {{ user.last_name }}! Para confirmar tu cuenta, hacé click en el botón de abajo:
+</p>
+<br/>
+<p>
+    <a href="{%if request.is_secure%}https{%else%}http{%endif%}://{{ domain }}{% url 'activate' uidb64=uid token=token %}">
+        <button 
+            style="background-color: #292b2c; color: white; border: none; outline: none; width: 200px; height: 40px; border-radius: 10px; cursor: pointer;">
+            Confirmar Cuenta
+        </button>
+    </a>
+</p>
+<br/>
+<p style="@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap'); font-family: 'Raleway', sans-serif;">
+    Si el botón no funciona al clickearlo, copiá y pegá el siguiente link en una nueva pestaña:
+</p>
+<p style="@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap'); font-family: 'Raleway', sans-serif;">
+    <a href="{%if request.is_secure%}https{%else%}http{%endif%}://{{ domain }}{% url 'activate' uidb64=uid token=token %}">
+        {%if request.is_secure%}https{%else%}http{%endif%}://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+    </a>
+</p>
+<br/>
+<p style="@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap'); font-family: 'Raleway', sans-serif;">
+    Atentamente,<br/>
+    Banco de Mendiolaza
+</p>
+</center> 
+{% endautoescape %}

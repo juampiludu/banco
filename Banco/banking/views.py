@@ -5,6 +5,8 @@ from random import randrange
 from datetime import datetime
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 def parseDateTime(a):
 
@@ -49,7 +51,7 @@ def parseDateTime(a):
     return f'{day} de {month} del {year} - {hour}:{minute}'
 
 def saldo(request):
-    title = "Saldo"
+    title = "Cuenta"
     if not request.user.is_authenticated:
         return redirect('/login')
     
@@ -75,7 +77,7 @@ def balance(request):
         try:
             if total_balance == "" or float(total_balance) == 0:
                 messages.info(request, 'Ingresá un monto distinto a 0.')
-                return HttpResponseRedirect('/saldo')
+                return HttpResponseRedirect('/cuenta')
                 
             
             if 'add_balance' in request.POST:
@@ -90,10 +92,10 @@ def balance(request):
                 
                 if float(total_balance) > balance.balance:
                     messages.info(request, 'El monto que estás queriendo retirar es mayor al que poseés.')
-                    return HttpResponseRedirect('/saldo')
+                    return HttpResponseRedirect('/cuenta')
                 if float(total_balance) < 3:
                     messages.info(request, 'El monto mínimo para retirar es $ 3.')
-                    return HttpResponseRedirect('/saldo')
+                    return HttpResponseRedirect('/cuenta')
                 a = Cuenta.objects.get(id=request.user.id)
                 formatted_balance = "{:.2f}".format(float(total_balance))
                 b = Transactions(user=a, cash_moved=f'-{float(formatted_balance)}', type_of_move='Retiro', date=parseDateTime(datetime.now()))
@@ -102,9 +104,9 @@ def balance(request):
                 b.save()
         except ValueError:
             messages.info(request, 'Por favor, ingresá solo números.')
-            return HttpResponseRedirect('/saldo')
+            return HttpResponseRedirect('/cuenta')
         
-        return redirect('/saldo')
+        return redirect('/cuenta')
 
 def create_cvu(request):
 
@@ -117,7 +119,7 @@ def create_cvu(request):
         error = 'Ya contás con un CVU.'
         return render(request, "error.html", {'error' : error})
 
-    cvus = Banking.objects.all().cvu
+    cvus = Banking.objects.all().values('cvu')
     cvu_list = []
 
     for cvu in cvu_list:
@@ -128,9 +130,9 @@ def create_cvu(request):
         if generated_cvu not in cvu_list:
             user_cvu.cvu = f'000000{generated_cvu}'
             user_cvu.save()
-            return redirect('/saldo')
+            return redirect('/cuenta')
         else:
-            return HttpResponse('Error, try again later.')
+            return HttpResponse('Error, prueba nuevamente más tarde.')
 
 
 def send_cash(request):
@@ -186,7 +188,7 @@ def send_cash(request):
                     a = Transferencias(from_user=b, to_user=addressee_user.user, from_cvu=c, to_cvu=addressee_user, cash_sended=str(f'+{float(formatted_balance)}'), cash_losed=str(f'-{float(formatted_balance)}'), date=parseDateTime(datetime.now()))
                     a.save()
 
-                    return redirect('/saldo')
+                    return redirect('/cuenta')
             
             error = 'El CVU que ingresaste no existe. Verificá si lo estás ingresando correctamente.'
             return render(request, "error.html", {'error' : error})
@@ -194,12 +196,34 @@ def send_cash(request):
             error = 'Por favor, ingresá solo números.'
             return render(request, "error.html", {'error' : error})
         
-        return redirect('/saldo')
+        return redirect('/cuenta')
 
-def movimientos(request):
-    title = "Movimientos"
+def transactions(request):
+
     if not request.user.is_authenticated:
         return redirect('/login')
-    user_transfers = Transferencias.objects.values('from_user__email', 'to_user__email', 'to_user__first_name', 'to_user__last_name', 'from_user__first_name', 'from_user__last_name', 'from_cvu__cvu', 'to_cvu__cvu', 'cash_losed', 'cash_sended', 'date').order_by('-id')
-    user_transactions = Transactions.objects.values('user__email', 'cash_moved', 'type_of_move', 'date').order_by('-id')
-    return render(request, "movimientos.html", {'title' : title, 'user_transfers' : user_transfers, 'user_transactions' : user_transactions})
+
+    title = 'Transacciones'
+
+    user_transactions = Transactions.objects.values('user__email', 'cash_moved', 'type_of_move', 'date').order_by('-id').filter(user=request.user.id)
+
+    paginator = Paginator(user_transactions, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'transactions.html', {'page_obj' : page_obj, 'title' : title})
+
+def transferencias(request):
+
+    if not request.user.is_authenticated:
+        return redirect('/login')
+
+    title = 'Transferencias'
+
+    user_transfers = Transferencias.objects.values('from_user__email', 'to_user__email', 'to_user__first_name', 'to_user__last_name', 'from_user__first_name', 'from_user__last_name', 'from_cvu__cvu', 'to_cvu__cvu', 'cash_losed', 'cash_sended', 'date').filter(Q(to_user__id=request.user.id) | Q(from_user__id=request.user.id)).order_by('-id')
+
+    paginator = Paginator(user_transfers, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'transfers.html', {'page_obj' : page_obj, 'title' : title})

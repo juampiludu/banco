@@ -10,7 +10,7 @@
     {{ form.last_name }}
     <br/><br/>
     <p class="fadeIn fourth">
-      Fecha de nacimiento:
+      Fecha de nacimiento*:
     </p>
     {{ form.born_date }}
     <br/><br/>
@@ -24,7 +24,9 @@
         <li>Tu contraseña no puede ser similar a otro dato personal.</li>
         <li>Tu contraseña debe contener al menos 8 caracteres.</li>       
         <li>Tu contraseña no puede ser igual que la usada actualmente.</li>       
-        <li>Tu contraseña no puede ser solamente numérica.</li>     
+        <li>Tu contraseña no puede ser solamente numérica.</li>
+        <li>Todos los campos son obligatorios.</li> 
+        <li>Aseguráte de ingresar bien los datos marcados con (*) porque después no se pueden modificar.</li>   
     </ul>
     <input type="submit" class="fadeIn twelveth" value="Registrarse">
   </form>

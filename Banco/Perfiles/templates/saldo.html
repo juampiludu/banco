@@ -6,16 +6,22 @@
   <a class="nav-link" href="/">Inicio</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link active" href="/saldo">Saldo</a>
+  <a class="nav-link active" href="/cuenta">Cuenta</a>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Actividad
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="/actividad/transacciones">Transacciones</a>
+    <a class="dropdown-item" href="/actividad/transferencias">Transferencias</a>
+  </div>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="/movimientos">Movimientos</a>
+    <a class="nav-link" href="/about-us">Sobre Nosotros</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="/info">Información</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="/perfil">Perfil</a>
+    <a class="nav-link" href="/info-personal">Información Personal</a>
 </li>
 {% endblock %}
 
@@ -109,10 +115,11 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form class="sendEmail" method="POST" autocomplete="off">
+            <form action="{% url 'informe' %}" method="POST" autocomplete="off">
+              {% csrf_token %}
               <div class="modal-body">
                 <h4>Motivo:</h4>
-                <textarea rows="4" class="form-control" maxlength="500" required id="emailbody"></textarea>
+                <textarea rows="4" class="form-control" maxlength="500" name="motivo" required id="motivo"></textarea>
                 <br>
                 <button type="submit" class="btn btn-dark" id="btn4">Enviar</button>
               </div>
@@ -131,14 +138,14 @@
           <div class="modal-content">
             
             <div class="modal-header">
-              <h5 class="modal-title" id="emailMessageTitle"></h5>
+              <h5 class="modal-title" id="emailMessageTitle">Informe enviado con éxito</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
 
             <div class="modal-body" id="emailMessageBody">
-              
+              ¡Gracias por enviarnos tu informe! Nos pondremos en contacto con vos mediante correo electrónico en caso de ser necesario.
             </div>
           </div>
         </div>

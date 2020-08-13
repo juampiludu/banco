@@ -7,23 +7,29 @@
   <a class="nav-link active" href="/">Inicio</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link" href="/saldo">Saldo</a>
+  <a class="nav-link" href="/cuenta">Cuenta</a>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Actividad
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="/actividad/transacciones">Transacciones</a>
+    <a class="dropdown-item" href="/actividad/transferencias">Transferencias</a>
+  </div>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="/movimientos">Movimientos</a>
+    <a class="nav-link" href="/about-us">Sobre Nosotros</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="/info">Información</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="/perfil">Perfil</a>
+    <a class="nav-link" href="/info-personal">Información Personal</a>
 </li>
 {% else %}
-<li class="nav-item active">
-  <a class="nav-link" href="/">Inicio</a>
+<li class="nav-item">
+  <a class="nav-link active" href="/">Inicio</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link" href="/info">Información</a>
+  <a class="nav-link" href="/about-us">Sobre Nosotros</a>
 </li>
 {% endif %}
 {% endblock %}
@@ -66,7 +72,7 @@
       </ul>
     </div>
     <br>
-    <button type="button" class="btn btn-light" onclick="window.location='/saldo'">Ver más</button>
+    <button type="button" class="btn btn-light" onclick="window.location='/cuenta'">Ver más</button>
     <br>
     <br>
 </div>

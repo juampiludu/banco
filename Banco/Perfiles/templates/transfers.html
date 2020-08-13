@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block navblock %}
+<li class="nav-item">
+  <a class="nav-link" href="/">Inicio</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="/cuenta">Cuenta</a>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Actividad
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="/actividad/transacciones">Transacciones</a>
+    <a class="dropdown-item" href="/actividad/transferencias">Transferencias</a>
+  </div>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/about-us">Sobre Nosotros</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/info-personal">Información Personal</a>
+</li>
+{% endblock %}
+
+{% block mainblock %}
+
+<div class="container">
+
+    <br/>
+    <p class="text-muted">Actividad > Transferencias</p>
+
+    {% for i in page_obj %}
+
+    {% if i.from_user__email == request.user.email %}
+        
+    <div class="card">
+      <h5 class="card-header">Transferencia</h5>
+      <div class="card-body">
+        <p class="card-text">Para: </p>
+        <h5 class="card-title">{{i.to_user__first_name}} {{i.to_user__last_name}}</h5>
+        <p class="card-text"><a href="mailto:{{i.to_user__email}}">{{i.to_user__email}}</a></p>
+        <p class="card-text">CVU: {{i.to_cvu__cvu}}</p>
+        <p class="card-text text-danger">$ {{i.cash_losed}}</p>
+        <p class="card-text">{{i.date}}</p>
+      </div>
+    </div>
+
+    <br/>
+    
+    {% else %}
+
+    {% if request.user.email == i.to_user__email %}
+
+      <div class="card">
+        <h5 class="card-header">Transferencia</h5>
+        <div class="card-body">
+          <p class="card-text">De: </p>
+          <h5 class="card-title">{{i.from_user__first_name}} {{i.from_user__last_name}}</h5>
+          <p class="card-text"><a href="mailto:{{i.to_user__email}}">{{i.to_user__email}}</a></p>
+          <p class="card-text">CVU: {{i.from_cvu__cvu}}</p>
+          <p class="card-text text-success">$ {{i.cash_sended}}</p>
+          <p class="card-text">{{i.date}}</p>
+        </div>
+      </div>
+
+      <br/>
+
+      {% else %}
+
+      {% endif %}
+
+    {% endif %}
+
+  {% endfor %}
+
+  {% if page_obj.has_other_pages %}
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1"><span>&laquo;</span></a></li>
+      {% endif %}
+      {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+          <li class="page-item active"><a class="page-link" href="#"><span>{{ i }} <span class="sr-only">(current)</span></span></a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#"><span>&raquo;</span></a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
+</div>
+
+{% endblock %}
