@@ -3,9 +3,9 @@ from banking import views
 
 urlpatterns = [
     path('cuenta/', views.saldo),
-    path('saldo/balance/', views.balance, name="balance"),
-    path('saldo/create_cvu/', views.create_cvu, name="create_cvu"),
-    path('saldo/send_cash/', views.send_cash, name="send_cash"),
+    path('cuenta/balance/', views.balance, name="balance"),
+    path('cuenta/create_cvu/', views.create_cvu, name="create_cvu"),
+    path('cuenta/send_cash/', views.send_cash, name="send_cash"),
     path('actividad/transacciones/', views.transactions, name='transactions'),
     path('actividad/transferencias/', views.transferencias, name='transferencias'),
 ]

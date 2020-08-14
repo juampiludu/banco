@@ -2,21 +2,25 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class CuentaManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name, born_date, phone, dni, direction, password=None):
+    def create_user(self, email, first_name, last_name, born_date, phone, dni, province, city, address, password=None):
         if not email:
             raise ValueError("User must have an email")
         if not first_name:
-            raise ValueError("User must have an first name")
+            raise ValueError("User must have a first name")
         if not last_name:
-            raise ValueError("User must have an last name")
+            raise ValueError("User must have a last name")
         if not born_date:
-            raise ValueError("User must have an born date")
+            raise ValueError("User must have a born date")
         if not phone:
-            raise ValueError("User must have an phone")
+            raise ValueError("User must have a phone")
         if not dni:
-            raise ValueError("User must have an dni")
-        if not direction:
-            raise ValueError("User must have an direction")
+            raise ValueError("User must have a dni")
+        if not address:
+            raise ValueError("User must have an address")
+        if not province:
+            raise ValueError("User must have a province")
+        if not city:
+            raise ValueError("User must have a city")
 
         user = self.model(
             email = self.normalize_email(email),
@@ -25,14 +29,16 @@ class CuentaManager(BaseUserManager):
             born_date = born_date,
             phone = phone,
             dni = dni,
-            direction = direction,
+            address = address,
+            province = province,
+            city = city,
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, first_name, last_name, born_date, phone, dni, direction, password):
+    def create_superuser(self, email, first_name, last_name, born_date, phone, dni, city, province, address, password):
         user = self.create_user(
             email = self.normalize_email(email),
             first_name = first_name,
@@ -40,12 +46,15 @@ class CuentaManager(BaseUserManager):
             born_date = born_date,
             phone = phone,
             dni = dni,
-            direction = direction,
+            address = address,
+            province = province,
+            city = city,
             password=password,
         )
 
         user.is_admin = True
         user.is_staff = True
+        user.is_active = True
         user.is_superuser = True
         user.save(using = self._db)
         return user
@@ -57,7 +66,9 @@ class Cuenta(AbstractBaseUser):
     born_date = models.DateField(auto_now=False)
     phone = models.CharField(max_length=14)
     dni = models.CharField(max_length=8)
-    direction = models.CharField(max_length=140)
+    province = models.CharField(max_length=50, default="")
+    city = models.CharField(max_length=250)
+    address = models.CharField(max_length=140)
     date_joined = models.DateField(verbose_name="date joined", auto_now_add=True)
     last_login = models.DateField(verbose_name="last login", auto_now=True)
     is_admin = models.BooleanField(default=False)
@@ -66,7 +77,7 @@ class Cuenta(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'born_date', 'phone', 'dni', 'direction',]
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'born_date', 'phone', 'city', 'dni', 'address', 'province']
 
     objects = CuentaManager()
 

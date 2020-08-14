@@ -18,7 +18,7 @@ urlpatterns = [
     path('logout/', views.logout),
     path('about-us/', views.info),
     path('info-personal/', views.perfil),
-    path('perfil/actualizar-contraseña/', views.cambiar_contraseña),
+    path('info-personal/actualizar-contraseña/', views.cambiar_contraseña),
     path('personas/', views.search_view, name="search_view"),
 
     # includes

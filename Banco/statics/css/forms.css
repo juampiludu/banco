@@ -313,4 +313,30 @@ html {
   #icon {
     width:60%;
   }
+
+  /* SELECT */
+
+  #id_province {
+    background-color: #f6f6f6;
+    border: none;
+    width: 85%;
+    font-size: 16px; 
+    margin-left: 7.5%;
+    height: 60px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #5f5f5f;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+  }
+
+  #id_province:focus {
+    background-color: white;
+    color: #0d0d0d;
+    box-shadow: none;
+    border: black solid 1px;
+  }
   

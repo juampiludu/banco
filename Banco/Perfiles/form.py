@@ -2,6 +2,33 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from .models import Cuenta
 
+PROVINCE_FIELDS = (
+    ('first', '-- Seleccioná tu provincia --'),
+    ('ba', 'Buenos Aires'),
+    ('ct', 'Catamarca'),
+    ('cc', 'Chaco'),
+    ('ch', 'Chubut'),
+    ('cb', 'Córdoba'),
+    ('cn', 'Corrientes'),
+    ('er', 'Entre Ríos'),
+    ('fm', 'Formosa'),
+    ('jy', 'Jujuy'),
+    ('lp', 'La Pampa'),
+    ('lr', 'La Rioja'),
+    ('mz', 'Mendoza'),
+    ('mn', 'Misiones'),
+    ('nq', 'Neuquén'),
+    ('rn', 'Río Negro'),
+    ('sa', 'Salta'),
+    ('sj', 'San Juan'),
+    ('sl', 'San Luis'),
+    ('sc', 'Santa Cruz'),
+    ('sf', 'Santa Fe'),
+    ('se', 'Santiago del Estero'),
+    ('tf', 'Tierra del Fuego'),
+    ('tm', 'Tucumán'),
+)
+
 class RegistroForm(UserCreationForm):
 
     first_name = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
@@ -46,7 +73,7 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
-    direction = forms.CharField(label="", max_length=140, required=False, widget=forms.TextInput(
+    address = forms.CharField(label="", max_length=140, required=False, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn eighth',
             'placeholder': 'Dirección',
@@ -69,6 +96,19 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
+    province = forms.ChoiceField(choices=PROVINCE_FIELDS, widget=forms.Select(
+        attrs={
+            'class' : 'form-control fadeIn eighth',
+        }
+    ))
+
+    city = forms.CharField(label="", max_length=140, required=False, widget=forms.TextInput(
+        attrs={
+            'class': 'fadeIn seventh',
+            'placeholder': 'Ciudad',
+        }
+    ))
+
     def clean_firstname(self):
         return self.cleaned_data['first_name'].capitalize()
 
@@ -84,7 +124,9 @@ class RegistroForm(UserCreationForm):
             'born_date',
             'phone',
             'dni',
-            'direction',
+            'city',
+            'province',
+            'address',
             'password1',
             'password2',
         )
@@ -97,7 +139,15 @@ class ActualizarForm(UserChangeForm):
         }
     ))
 
-    direction = forms.CharField(label="Dirección", max_length=140, required=False, widget=forms.TextInput(
+    address = forms.CharField(label="Dirección", max_length=140, required=False, widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+        }
+    ))
+
+    province = forms.ChoiceField(choices=PROVINCE_FIELDS)
+
+    city = forms.CharField(label="", max_length=140, required=False, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
         }
@@ -107,7 +157,9 @@ class ActualizarForm(UserChangeForm):
         model = Cuenta
         fields = (
             'phone',
-            'direction',
+            'address',
+            'city',
+            'province',
             )
 
 class CambiarContraForm(PasswordChangeForm):

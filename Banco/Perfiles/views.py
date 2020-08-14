@@ -10,6 +10,8 @@ from django.contrib import messages
 from banking.models import Banking
 from django.core import serializers
 from datetime import datetime
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
@@ -27,7 +29,8 @@ CuentaModel = get_user_model()
 
 def welcome(request):
     title = "Inicio"
-    return render(request, "welcome.html", {'title' : title})
+    all_users = Cuenta.objects.all()
+    return render(request, "welcome.html", {'title' : title, 'all_users' : all_users})
 
 def register(request):
     if request.user.is_authenticated:
@@ -42,7 +45,6 @@ def register(request):
         a = request.POST.get('born_date')
         b = datetime.strptime(a, '%Y-%m-%d')
         age = datetime.now() - b
-        print(age)
 
         if age.days < 6575:
 
@@ -152,7 +154,7 @@ def cambiar_contraseña(request):
             return redirect('/info-personal')
         else:
             messages.error(request, 'Ha ocurrido un error. Ingrese los datos de manera correcta e intente nuevamente.')
-            return HttpResponseRedirect("/perfil/actualizar-contraseña")
+            return HttpResponseRedirect("/info-personal/actualizar-contraseña")
     
     return render(request, 'perfil/change_pass.html', { 'form': form })
 
@@ -165,10 +167,13 @@ def search_view(request):
 
     search = request.GET.get('search')
 
-    all_users = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name').order_by('user__last_name')
+    if search == '':
+        all_users_query = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name').order_by('user__last_name')
+    else:
+        all_users_query = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name').filter(Q(user__first_name__icontains=search) | Q(user__last_name__icontains=search)).order_by('user__last_name')
 
-    #paginator = Paginator(all_users, 10)
-    #page_number = request.GET.get('page')
-    #page_obj = paginator.get_page(page_number)
+    paginator = Paginator(all_users_query, 1)
+    page_number = request.GET.get('page')
+    all_users = paginator.get_page(page_number)
 
     return render(request, 'search.html', {'search' : search, 'all_users' : all_users, 'title' : title})

@@ -16,7 +16,9 @@
     <br/><br/>
     {{ form.phone }}
     {{ form.dni }}
-    {{ form.direction }}
+    {{ form.province }}
+    {{ form.city }}
+    {{ form.address }}
     {{ form.password1 }}
     {{ form.password2 }}
     <br/><br/>
@@ -34,5 +36,13 @@
   <div id="formFooter">
     <a class="underlineHover" href="/login">Si ya tenés cuenta, iniciá sesión</a>
   </div>
+
+  <script>
+
+    window.onload = function() {
+      var x = document.getElementById("id_province").options[0].disabled = true;
+    };
+
+  </script>
 
 {% endblock mainblock %}

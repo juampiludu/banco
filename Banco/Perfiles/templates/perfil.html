@@ -57,8 +57,16 @@
                       <td>{{ request.user.dni }}</td>
                     </tr>
                     <tr>
+                      <td>Provincia:</td>
+                      <td>{{ form.province }}</td>
+                    </tr>
+                    <tr>
+                      <td>Ciudad:</td>
+                      <td>{{ form.city }}</td>
+                    </tr>
+                    <tr>
                       <td>Dirección:</td>
-                      <td>{{ form.direction }}</td>
+                      <td>{{ form.address }}</td>
                     </tr>
                     <tr>
                       <td>Correo:</td>
@@ -72,7 +80,7 @@
                 </table>
                 
                 <button type="submit" class="btn btn-dark">Guardar cambios</button>
-                <button type="button" class="btn btn-primary" onclick="window.location='/perfil/actualizar-contraseña'">Editar contraseña</button>
+                <button type="button" class="btn btn-primary" onclick="window.location='/info-personal/actualizar-contraseña'">Editar contraseña</button>
               </div>
             </div>
           </div>
@@ -85,5 +93,17 @@
 </form>
 
   <br/>
+
+  <script>
+
+    window.onload = function() {
+
+      var province_select = document.getElementById("id_province");
+      province_select.options[0].disabled = true;
+      province_select.className = 'form-control';
+      
+    };
+
+  </script>
 
 {% endblock %}
