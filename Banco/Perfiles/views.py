@@ -168,11 +168,11 @@ def search_view(request):
     search = request.GET.get('search')
 
     if search == '':
-        all_users_query = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name').order_by('user__last_name')
+        all_users_query = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name').exclude(cvu=None).order_by('user__last_name')
     else:
-        all_users_query = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name').filter(Q(user__first_name__icontains=search) | Q(user__last_name__icontains=search)).order_by('user__last_name')
+        all_users_query = Banking.objects.values('user__email', 'cvu', 'user__first_name', 'user__last_name').filter(Q(user__first_name__icontains=search) | Q(user__last_name__icontains=search) | Q(user__email__icontains=search)).exclude(cvu=None).order_by('user__last_name')
 
-    paginator = Paginator(all_users_query, 1)
+    paginator = Paginator(all_users_query, 20)
     page_number = request.GET.get('page')
     all_users = paginator.get_page(page_number)
 

@@ -30,6 +30,54 @@ $("#trans-cvu").blur(function() {
   $(this).attr('placeholder', "CVU").placeholder();
 });
 
+/* REGISTER FORM */
+
+$("#id_email").blur(function() {
+  $(this).attr('placeholder', "*Correo electrónico").placeholder();
+});
+
+$("#id_first_name").blur(function() {
+  $(this).attr('placeholder', "*Nombre").placeholder();
+});
+
+$("#id_last_name").blur(function() {
+  $(this).attr('placeholder', "*Apellido").placeholder();
+});
+
+$("#id_phone").blur(function() {
+  $(this).attr('placeholder', "Teléfono").placeholder();
+});
+
+$("#id_dni").blur(function() {
+  $(this).attr('placeholder', "*DNI").placeholder();
+});
+
+$("#id_city").blur(function() {
+  $(this).attr('placeholder', "Ciudad").placeholder();
+});
+
+$("#id_address").blur(function() {
+  $(this).attr('placeholder', "Dirección").placeholder();
+});
+
+$("#id_password1").blur(function() {
+  $(this).attr('placeholder', "Contraseña").placeholder();
+});
+
+$("#id_password2").blur(function() {
+  $(this).attr('placeholder', "Repita contraseña").placeholder();
+});
+
+/* LOGIN */
+
+$("#id_username").blur(function() {
+  $(this).attr('placeholder', "Correo electrónico").placeholder();
+});
+
+$("#id_password").blur(function() {
+  $(this).attr('placeholder', "Contraseña").placeholder();
+});
+
 function valida(e){
     tecla = (document.all) ? e.keyCode : e.which;
 
@@ -70,3 +118,25 @@ $('#btn4').click(function()
     }
 
   });
+
+/* currency converter functions */
+
+function convertCurrency() {
+  
+  var from = document.getElementById("from").value;
+  var to = document.getElementById("to").value;
+  var xmlhttp = new XMLHttpRequest();
+  var url = "http://data.fixer.io/api/latest?access_key=bf27415b8a1d95b6cde0a5a4c5794277&symbols=" + from + "," + to;
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      var result = xmlhttp.responseText;
+      var jsResult = JSON.parse(result);
+      var oneUnit = jsResult.rates[to]/jsResult.rates[from];
+      var amt = document.getElementById("fromAmount").value;
+      document.getElementById("toAmount").value = (oneUnit*amt).toFixed(2);
+    }
+  }
+
+}

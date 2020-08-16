@@ -35,7 +35,7 @@
 
   <div id="signo">
     {% for i in balance %}
-    $ {{ i.balance }}
+    $ {{ i.balance|floatformat:'2' }}
     {% endfor %}
   </div>
   <form action="{% url 'balance' %}" method="POST" autocomplete="off">

@@ -79,7 +79,7 @@
                   </tbody>
                 </table>
                 
-                <button type="submit" class="btn btn-dark">Guardar cambios</button>
+                <button type="submit" id="formSumbitionButton" disabled class="btn btn-dark">Guardar cambios</button>
                 <button type="button" class="btn btn-primary" onclick="window.location='/info-personal/actualizar-contraseña'">Editar contraseña</button>
               </div>
             </div>
@@ -101,6 +101,35 @@
       var province_select = document.getElementById("id_province");
       province_select.options[0].disabled = true;
       province_select.className = 'form-control';
+
+      var cityText = document.getElementById("id_city").value;
+      var addressText = document.getElementById("id_address").value;
+      var phoneText = document.getElementById("id_phone").value;
+      var provinceText = document.getElementById("id_province").value;
+
+      $("#id_city, #id_address, #id_phone, #id_province").each(function() {
+
+        $(this).on('input', function() {
+
+          $("#formSumbitionButton").removeAttr('disabled');
+
+          switch ($(this).val())
+          {
+
+            case cityText:
+            case addressText:
+            case phoneText:
+            case provinceText:
+
+              $("#formSumbitionButton").attr("disabled", 'disabled');
+              
+              break;
+
+          }
+
+        });
+
+      });
       
     };
 

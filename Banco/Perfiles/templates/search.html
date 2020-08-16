@@ -29,7 +29,6 @@
 
 <center>
     {% for i in all_users %}
-    {% if search in i.user__email or search in i.user__first_name or search in i.user__last_name %}
     {% if not i.cvu == None %}
     <div class="row" style="margin: 20px;">
         <div class="col-sm-12">
@@ -73,7 +72,6 @@
         }
       </script>
 
-    {% endif %}
     {% endif %}
     {% endfor %}
 

@@ -34,14 +34,14 @@ class RegistroForm(UserCreationForm):
     first_name = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn second',
-            'placeholder': 'Nombre*',
+            'placeholder': '*Nombre',
         }
     ))
 
     last_name = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn third',
-            'placeholder': 'Apellido*',
+            'placeholder': '*Apellido',
         }
     ))
 
@@ -55,7 +55,7 @@ class RegistroForm(UserCreationForm):
     email = forms.EmailField(label="", required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn fifth',
-            'placeholder': 'Correo Electrónico*',
+            'placeholder': '*Correo electrónico',
         }
     ))
 
@@ -63,13 +63,17 @@ class RegistroForm(UserCreationForm):
         attrs={
             'class': 'fadeIn sixth',
             'placeholder': 'Teléfono',
+            'onkeypress': 'return valida(event);',
+            'type': 'tel',
         }
     ))
 
     dni = forms.CharField(label="", max_length=8, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn seventh',
-            'placeholder': 'DNI*',
+            'placeholder': '*DNI',
+            'onkeypress': 'return valida(event);',
+            'type': 'tel',
         }
     ))
 
@@ -92,7 +96,7 @@ class RegistroForm(UserCreationForm):
         attrs={
             'type': 'password',
             'class': 'fadeIn tenth',
-            'placeholder': 'Repita Contraseña',
+            'placeholder': 'Repita contraseña',
         }
     ))
 
@@ -136,6 +140,8 @@ class ActualizarForm(UserChangeForm):
     phone = forms.CharField(label="Teléfono", max_length=14, required=True, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
+            'onkeypress': 'return valida(event);',
+            'type': 'tel',
         }
     ))
 
@@ -198,7 +204,7 @@ class LoginForm(AuthenticationForm):
     username = forms.EmailField(label=False, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn second',
-            'placeholder': 'Correo Electrónico',
+            'placeholder': 'Correo electrónico',
             'name': 'username',
         }
     ))

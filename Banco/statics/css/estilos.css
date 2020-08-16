@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
 hr{
   border-width: 2px;
   border-color: black;
@@ -24,6 +26,8 @@ hr{
 #divhome {
   background-color: rgb(49, 49, 49);
   color: white;
+  margin-top: 100px;
+  margin-bottom: 100px;
   width: 50%;
   border-radius: 10px;
   -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.6);
@@ -84,6 +88,33 @@ hr{
   height: 600px;  /* The height is 400 pixels */
   width: 100%;  /* The width is the width of the web page */
  }
+
+#fromAmount, #toAmount, #to, #from {
+  border: none;
+  border-radius: 5px;
+  vertical-align: middle;
+  margin: 5px;
+  height: 40px;
+  width: 240px;
+  color: rgb(44, 44, 44);
+  transition: box-shadow .2s;
+  font-family: 'Open Sans', sans-serif;
+  font-size: medium;
+}
+
+#fromAmount {
+  color: rgb(87, 87, 87);
+}
+
+#toAmount {
+  background-color: white;
+  color: rgb(87, 87, 87);
+}
+
+#fromAmount:focus, #toAmount:focus, #to:focus, #from:focus {
+  outline: none;
+  box-shadow: 0px 0px 12px 2px rgb(163, 163, 163);
+}
 
 @media only screen and (max-width: 1080px) {
   

@@ -12,7 +12,7 @@
     {% block headblock %}
     {% endblock %}
 </head>
-<body style="background-color: rgb(248, 248, 248);">
+<body style="background-color: rgb(248, 248, 248);" onload="convertCurrency();">
     
     <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
       <div class="container-fluid">
@@ -71,10 +71,42 @@
       </div>
 
 
-    <footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+    <footer id="sticky-footer" class="py-4 bg-dark text-white">
+      <br/><br/>
       <div class="container text-center">
-        <small>Copyright &copy; 2020 Banco de Mendiolaza</small>
+        <div class="box">
+          <h4>Conversor de Divisas</h4>
+          <br/>
+          <tr>
+            <td>
+              <input type="tel" id="fromAmount" value="1" onkeyup="convertCurrency();" onkeypress="return valida(event);">
+            </td>
+            <td>
+              <select id="from" onchange="convertCurrency();">
+                <option value="ARS">Peso Argentino (ARS)</option>
+                <option value="USD" selected>Dólar Estadounidense (USD)</option>
+                <option value="BRL">Real Brasilero (BRL)</option>
+              </select>
+            </td>
+          </tr>
+          <br/><br/>
+          <tr>
+            <td>
+              <input type="tel" id="toAmount" disabled>
+            </td>
+            <td>
+              <select id="to" onchange="convertCurrency();">
+                <option value="ARS" selected>Peso Argentino (ARS)</option>
+                <option value="USD">Dólar Estadounidense (USD)</option>
+                <option value="BRL">Real Brasilero (BRL)</option>
+              </select>
+            </td>
+          </tr>
+        </div>
+        <br/><br/>
+        <small class="text-white-50">Copyright &copy; 2020 Banco de Mendiolaza</small>
       </div>
+      <br/>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
