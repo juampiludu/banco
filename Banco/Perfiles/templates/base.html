@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="es-Ar">
 <head>
@@ -7,8 +8,9 @@
     <title>{{title}} | Banco de Mendiolaza</title>
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
     <link rel="shortcut icon" href="{% static 'icon.png' %}">
-    <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/c8787d6c86.js" crossorigin="anonymous"></script>
     {% block headblock %}
     {% endblock %}
 </head>
@@ -25,21 +27,52 @@
           <ul class="navbar-nav mr-auto">
             {% block navblock %}
             {% endblock %}
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{request.user.first_name}}
+                {% if not notifications.count == 0 %}
+                 ({{ notifications.count }})
+                {% endif %}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="/info-personal"><i class="fas fa-user"></i> Info. personal</a></li>
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#">
+                    <i class="fas fa-bell"></i> 
+                    Notificaciones
+                    ({{ notifications.count|intcomma }})
+                  </a>
+                  {% if not notifications.count == 0 %}
+                  <ul class="dropdown-menu">
+                    {% for notification in notifications %}
+                    <li><a class="dropdown-item" href="{% url 'notif_viewed' id=notification.id %}">
+                      {{ notification.text|safe }}
+                      <small>{{ notification.date|naturaltime }}</small>
+                    </a></li>
+                    {% if not notifications.count == 1 %}
+                    <li><div class="dropdown-divider"></div></li>
+                    {% endif %}
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                </li>
+                <li><div class="dropdown-divider"></div></li>
+                <li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+              </ul>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/info-personal"><i class="fas fa-user"></i> Info. personal</a>
+                <a class="dropdown-item" href="#"><i class="fas fa-bell"></i> Notificaciones</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-sign-out-alt"></i> Salir</a>
+              </div>
+            </li>
+            {% endif %}
           </ul>
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
-            <li class="nav-item dropdown active">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{request.user.first_name}}
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/info-personal">Info. personal</a>
-                <a class="dropdown-item" href="#">Notificaciones</a>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Salir</a>
-              </div>
-            </li>
             <li class="nav-item">
               <form class="form-inline my-2 my-lg-0" autocomplete="off" action="{% url 'search_view' %}">
                 <input class="form-control mr-sm-2" type="search" id="search-input" name="search" placeholder="Buscar personas" aria-label="Search">
@@ -123,7 +156,6 @@
       <br/>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="{% static 'js/funciones.js' %}"></script>

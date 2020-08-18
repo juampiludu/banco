@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
 from django.db.models import Q
+from notifications.models import Notification
+from django.contrib.humanize.templatetags.humanize import intcomma
 
 def parseDateTime(a):
 
@@ -56,13 +58,15 @@ def saldo(request):
         return redirect('/login')
     
     balance = Banking.objects.filter(user=request.user.id).values('balance', 'cvu')
+
+    notifications = Notification.objects.filter(user=request.user.id)
     
     if not Banking.objects.filter(user=request.user.id):
         account = Cuenta.objects.get(id=request.user.id)
         balance_user_id = Banking(user=account, balance=0, cvu=None)
         balance_user_id.save()
     
-    return render(request, "saldo.html", {'balance' : balance, 'title' : title})
+    return render(request, "saldo.html", {'balance' : balance, 'title' : title, 'notifications' : notifications})
 
 def balance(request):
     if not request.user.is_authenticated:
@@ -82,7 +86,7 @@ def balance(request):
             
             if 'add_balance' in request.POST:
                 a = Cuenta.objects.get(id=request.user.id)
-                formatted_balance = "{:.2f}".format(float(total_balance))
+                formatted_balance = float(total_balance)
                 b = Transactions(user=a, cash_moved=float(formatted_balance), type_of_move='Ingreso', date=parseDateTime(datetime.now()))
                 balance.balance += float(formatted_balance)
                 balance.save()
@@ -178,14 +182,17 @@ def send_cash(request):
 
                     b = Cuenta.objects.get(id=request.user.id)
                     addressee_user = Banking.objects.get(cvu=addressee_cvu)
-                    formatted_balance = "{:.2f}".format(float(cash_for_send))
+                    formatted_balance = float(cash_for_send)
                     addressee_user.balance += float(formatted_balance)
                     balance.balance -= float(formatted_balance)
                     addressee_user.save()
                     balance.save()
 
                     c = Banking.objects.get(cvu=balance.cvu)
+                    user_notif = Cuenta.objects.get(email=addressee_user.user)
+                    notification = Notification(user=user_notif, text=f"<p style='color: green;'>{request.user.first_name} {request.user.last_name} te ha transferido $ {intcomma(float(formatted_balance))}</p>")
                     a = Transferencias(from_user=b, to_user=addressee_user.user, from_cvu=c, to_cvu=addressee_user, cash_moved=float(formatted_balance), date=parseDateTime(datetime.now()))
+                    notification.save()
                     a.save()
 
                     return redirect('/cuenta')
@@ -205,13 +212,15 @@ def transactions(request):
 
     title = 'Transacciones'
 
+    notifications = Notification.objects.filter(user=request.user.id)
+
     user_transactions = Transactions.objects.values('user__email', 'cash_moved', 'type_of_move', 'date').order_by('-id').filter(user=request.user.id)
 
     paginator = Paginator(user_transactions, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'transactions.html', {'page_obj' : page_obj, 'title' : title})
+    return render(request, 'transactions.html', {'page_obj' : page_obj, 'title' : title, 'notifications' : notifications})
 
 def transferencias(request):
 
@@ -220,10 +229,12 @@ def transferencias(request):
 
     title = 'Transferencias'
 
+    notifications = Notification.objects.filter(user=request.user.id)
+
     user_transfers = Transferencias.objects.values('from_user__email', 'to_user__email', 'to_user__first_name', 'to_user__last_name', 'from_user__first_name', 'from_user__last_name', 'from_cvu__cvu', 'to_cvu__cvu', 'cash_moved', 'date').filter(Q(to_user__id=request.user.id) | Q(from_user__id=request.user.id)).order_by('-id')
 
     paginator = Paginator(user_transfers, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'transfers.html', {'page_obj' : page_obj, 'title' : title})
+    return render(request, 'transfers.html', {'page_obj' : page_obj, 'title' : title, 'notifications' : notifications})

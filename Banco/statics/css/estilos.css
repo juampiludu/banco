@@ -129,6 +129,24 @@ a, p, h1, h2, h3, h4, h5, h6, button, input, small, li {
   box-shadow: 0px 0px 12px 2px rgb(163, 163, 163);
 }
 
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu a::after {
+  transform: rotate(-90deg);
+  position: absolute;
+  right: 6px;
+  top: .8em;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-left: .1rem;
+  margin-right: .1rem;
+}
+
 @media only screen and (max-width: 1080px) {
   
   #divhome {

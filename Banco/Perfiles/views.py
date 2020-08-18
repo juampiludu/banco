@@ -12,6 +12,7 @@ from django.core import serializers
 from datetime import datetime
 from django.core.paginator import Paginator
 from django.db.models import Q
+from notifications.models import Notification
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
@@ -30,7 +31,8 @@ CuentaModel = get_user_model()
 def welcome(request):
     title = "Inicio"
     all_users = Cuenta.objects.all()
-    return render(request, "welcome.html", {'title' : title, 'all_users' : all_users})
+    notifications = Notification.objects.filter(user=request.user.id)
+    return render(request, "welcome.html", {'title' : title, 'all_users' : all_users, 'notifications' : notifications})
 
 def register(request):
     if request.user.is_authenticated:
@@ -126,10 +128,12 @@ def logout(request):
 
 def info(request):
     title = "Sobre Nosotros"
-    return render(request, "info.html", {'title' : title})
+    notifications = Notification.objects.filter(user=request.user.id)
+    return render(request, "info.html", {'title' : title, 'notifications' : notifications})
 
 def perfil(request):
     title = "Información Personal"
+    notifications = Notification.objects.filter(user=request.user.id)
     if not request.user.is_authenticated:
         return redirect('/login')
     if request.method == "POST":
@@ -140,7 +144,7 @@ def perfil(request):
             return redirect('/info-personal')
     else:
         form = ActualizarForm(instance=request.user)
-        return render(request, "perfil.html", {'form': form, 'title' : title})
+        return render(request, "perfil.html", {'form': form, 'title' : title, 'notifications' : notifications})
 
 def cambiar_contraseña(request):
     if not request.user.is_authenticated:
@@ -165,6 +169,8 @@ def search_view(request):
 
     title = "Búsqueda"
 
+    notifications = Notification.objects.filter(user=request.user.id)
+
     search = request.GET.get('search')
 
     if search == '':
@@ -176,4 +182,4 @@ def search_view(request):
     page_number = request.GET.get('page')
     all_users = paginator.get_page(page_number)
 
-    return render(request, 'search.html', {'search' : search, 'all_users' : all_users, 'title' : title})
+    return render(request, 'search.html', {'search' : search, 'all_users' : all_users, 'title' : title, 'notifications' : notifications})

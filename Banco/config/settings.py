@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'Perfiles',
     'banking',
     'user_contact',
+    'notifications',
 ]
 
 MIDDLEWARE = [
