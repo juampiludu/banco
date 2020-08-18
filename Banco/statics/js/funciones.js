@@ -3,79 +3,79 @@ $("input").focus(function() {
 });
 
 $("#ing").blur(function() {
-      $(this).attr('placeholder', "Monto").placeholder();
+      $(this).attr('placeholder', "Monto");
 });
 
 $("#name").blur(function() {
-      $(this).attr('placeholder', "Nombre").placeholder();
+      $(this).attr('placeholder', "Nombre");
 });
 
 $("#lastname").blur(function() {
-      $(this).attr('placeholder', "Apellido").placeholder();
+      $(this).attr('placeholder', "Apellido");
 });
 
 $("#email").blur(function() {
-      $(this).attr('placeholder', "example@gmail.com").placeholder();
+      $(this).attr('placeholder', "example@gmail.com");
 });
 
 $("#search-input").blur(function() {
-  $(this).attr('placeholder', "Buscar personas").placeholder();
+  $(this).attr('placeholder', "Buscar personas");
 });
 
 $("#trans-cant").blur(function() {
-  $(this).attr('placeholder', "$").placeholder();
+  $(this).attr('placeholder', "$");
 });
 
 $("#trans-cvu").blur(function() {
-  $(this).attr('placeholder', "CVU").placeholder();
+  $(this).attr('placeholder', "CVU");
 });
 
 /* REGISTER FORM */
 
 $("#id_email").blur(function() {
-  $(this).attr('placeholder', "*Correo electrónico").placeholder();
+  $(this).attr('placeholder', "*Correo electrónico");
 });
 
 $("#id_first_name").blur(function() {
-  $(this).attr('placeholder', "*Nombre").placeholder();
+  $(this).attr('placeholder', "*Nombre");
 });
 
 $("#id_last_name").blur(function() {
-  $(this).attr('placeholder', "*Apellido").placeholder();
+  $(this).attr('placeholder', "*Apellido");
 });
 
 $("#id_phone").blur(function() {
-  $(this).attr('placeholder', "Teléfono").placeholder();
+  $(this).attr('placeholder', "Teléfono");
 });
 
 $("#id_dni").blur(function() {
-  $(this).attr('placeholder', "*DNI").placeholder();
+  $(this).attr('placeholder', "*DNI");
 });
 
 $("#id_city").blur(function() {
-  $(this).attr('placeholder', "Ciudad").placeholder();
+  $(this).attr('placeholder', "Ciudad");
 });
 
 $("#id_address").blur(function() {
-  $(this).attr('placeholder', "Dirección").placeholder();
+  $(this).attr('placeholder', "Dirección");
 });
 
 $("#id_password1").blur(function() {
-  $(this).attr('placeholder', "Contraseña").placeholder();
+  $(this).attr('placeholder', "Contraseña");
 });
 
 $("#id_password2").blur(function() {
-  $(this).attr('placeholder', "Repita contraseña").placeholder();
+  $(this).attr('placeholder', "Repita contraseña");
 });
 
 /* LOGIN */
 
 $("#id_username").blur(function() {
-  $(this).attr('placeholder', "Correo electrónico").placeholder();
+  $(this).attr('placeholder', "Correo electrónico");
 });
 
 $("#id_password").blur(function() {
-  $(this).attr('placeholder', "Contraseña").placeholder();
+  $(this).attr('placeholder', "Contraseña");
 });
 
 function valida(e){
@@ -119,7 +119,7 @@ $('#btn4').click(function()
 
   });
 
-/* currency converter functions */
+/* currency converter functions *
 
 function convertCurrency() {
   
@@ -139,4 +139,4 @@ function convertCurrency() {
     }
   }
 
-}
+}*/

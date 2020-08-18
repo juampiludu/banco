@@ -11,12 +11,11 @@ class Transferencias(models.Model):
     to_user = models.ForeignKey(Cuenta, related_name="to_user", on_delete=models.CASCADE)
     from_cvu = models.ForeignKey(Banking, related_name="from_cvu", on_delete=models.CASCADE)
     to_cvu = models.ForeignKey(Banking, related_name="to_cvu", on_delete=models.CASCADE)
-    cash_sended = models.CharField(max_length=50, default="")
-    cash_losed = models.CharField(max_length=50, default="")
+    cash_moved = models.FloatField(default=0)
     date = models.CharField(max_length=60, default="")
 
 class Transactions(models.Model):
     user = models.ForeignKey(Cuenta, on_delete=models.CASCADE, default=None)
-    cash_moved = models.CharField(max_length=50, default="")
+    cash_moved = models.FloatField(default=0)
     type_of_move = models.CharField(max_length=50, default="")
     date = models.CharField(max_length=60, default="")

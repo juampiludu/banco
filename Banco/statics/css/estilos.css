@@ -5,6 +5,10 @@ hr{
   border-color: black;
 }
 
+a, p, h1, h2, h3, h4, h5, h6, button, input, small, li {
+  font-family: 'Open Sans', sans-serif;
+}
+
 #sticky-footer {
   flex-shrink: none;
 }
@@ -24,18 +28,27 @@ hr{
 }
 
 #divhome {
-  background-color: rgb(49, 49, 49);
-  color: white;
+  background-color: white;
+  color: black;
   margin-top: 100px;
   margin-bottom: 100px;
   width: 50%;
+  border: 1px solid black;
   border-radius: 10px;
+  transition: -webkit-box-shadow .6s, box-shadow .6s;
+}
+
+#divhome:hover {
   -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.6);
   box-shadow: 0 30px 60px 0 rgba(0,0,0,0.6);
 }
 
+.divhome-in {
+  margin: 30px;
+}
+
 #subtit {
-  color: white;
+  color: black;
 }
 
 #text {

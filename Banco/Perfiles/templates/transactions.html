@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block navblock %}
 <li class="nav-item">
@@ -8,7 +9,7 @@
 <li class="nav-item">
   <a class="nav-link" href="/cuenta">Cuenta</a>
 </li>
-<li class="nav-item dropdown">
+<li class="nav-item dropdown active">
   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Actividad
   </a>
@@ -20,9 +21,6 @@
 <li class="nav-item">
     <a class="nav-link" href="/about-us">Sobre Nosotros</a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" href="/info-personal">Información Personal</a>
-</li>
 {% endblock %}
 
 {% block mainblock %}
@@ -30,7 +28,7 @@
 <div class="container">
 
     <br/>
-    <p class="text-muted">Actividad > Transacciones</p>
+    <p class="text-muted">Actividad / Transacciones</p>
 
     {% for a in page_obj %}
 
@@ -40,7 +38,7 @@
         <h5 class="card-header">Transacción</h5>
         <div class="card-body">
           <h5 class="card-title">Ingreso</h5>
-          <p class="card-text text-success">$ {{a.cash_moved}}</p>
+          <p class="card-text text-success">+ $ {{a.cash_moved|intcomma}}</p>
           <p class="card-text">{{a.date}}</p>
         </div>
       </div>
@@ -55,7 +53,7 @@
           <h5 class="card-header">Transacción</h5>
           <div class="card-body">
             <h5 class="card-title">Retiro</h5>
-            <p class="card-text text-danger">$ {{a.cash_moved}}</p>
+            <p class="card-text text-danger">- $ {{a.cash_moved|intcomma}}</p>
             <p class="card-text">{{a.date}}</p>
           </div>
         </div>

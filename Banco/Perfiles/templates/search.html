@@ -20,16 +20,12 @@
 <li class="nav-item">
     <a class="nav-link" href="/about-us">Sobre Nosotros</a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" href="/info-personal">Información Personal</a>
-</li>
 {% endblock %}
 
 {% block mainblock %}
 
 <center>
     {% for i in all_users %}
-    {% if not i.cvu == None %}
     <div class="row" style="margin: 20px;">
         <div class="col-sm-12">
           <div class="card">
@@ -72,7 +68,6 @@
         }
       </script>
 
-    {% endif %}
     {% endfor %}
 
     {% if all_users.has_other_pages %}

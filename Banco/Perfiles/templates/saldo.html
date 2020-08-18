@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block navblock %}
 <li class="nav-item">
@@ -20,9 +21,6 @@
 <li class="nav-item">
     <a class="nav-link" href="/about-us">Sobre Nosotros</a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" href="/info-personal">Información Personal</a>
-</li>
 {% endblock %}
 
 {% block mainblock %}
@@ -35,7 +33,7 @@
 
   <div id="signo">
     {% for i in balance %}
-    $ {{ i.balance|floatformat:'2' }}
+    $ {{ i.balance|floatformat:'2'|intcomma }}
     {% endfor %}
   </div>
   <form action="{% url 'balance' %}" method="POST" autocomplete="off">

@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'Perfiles',
     'banking',
     'user_contact',
@@ -95,13 +96,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'America/Buenos_Aires'
 
 USE_I18N = True
 
 USE_L10N = True
+DECIMAL_SEPARATOR = ','
+USE_THOUSAND_SEPARATOR = True
+THOUSAND_SEPARATOR = '.'
 
 USE_TZ = True
 

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block navblock %}
 {% if user.is_authenticated %}
@@ -20,9 +21,6 @@
 </li>
 <li class="nav-item">
     <a class="nav-link" href="/about-us">Sobre Nosotros</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="/info-personal">Información Personal</a>
 </li>
 {% else %}
 <li class="nav-item">
@@ -59,10 +57,11 @@
 </div>
 <br/><br/>
 <div class="container" id="divhome">
-  <h2 id="subtit">BM Exclusive Banking</h1>
+  <div class="divhome-in">
+    <h2 id="subtit">BM Exclusive Banking</h2>
     <div>
       <br>
-      Accedé a ventajas únicas y beneficios preferenciales, con los más altos estándares de atención y servicio.
+      <h6>Accedé a ventajas únicas y beneficios preferenciales, con los más altos estándares de atención y servicio.</h6>
       <ul>
         <br>
         <li>Atención personalizada y prioridad en sucursales</li>
@@ -73,9 +72,8 @@
       </ul>
     </div>
     <br>
-    <button type="button" class="btn btn-light" onclick="window.location='/cuenta'">Ver más</button>
-    <br>
-    <br>
+    <button type="button" class="btn btn-outline-dark" onclick="window.location='/cuenta'">Ver más</button>
+  </div>
 </div>
     <br>
     <br>

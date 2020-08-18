@@ -83,7 +83,7 @@ def balance(request):
             if 'add_balance' in request.POST:
                 a = Cuenta.objects.get(id=request.user.id)
                 formatted_balance = "{:.2f}".format(float(total_balance))
-                b = Transactions(user=a, cash_moved=f'+{float(formatted_balance)}', type_of_move='Ingreso', date=parseDateTime(datetime.now()))
+                b = Transactions(user=a, cash_moved=float(formatted_balance), type_of_move='Ingreso', date=parseDateTime(datetime.now()))
                 balance.balance += float(formatted_balance)
                 balance.save()
                 b.save()
@@ -98,7 +98,7 @@ def balance(request):
                     return HttpResponseRedirect('/cuenta')
                 a = Cuenta.objects.get(id=request.user.id)
                 formatted_balance = "{:.2f}".format(float(total_balance))
-                b = Transactions(user=a, cash_moved=f'-{float(formatted_balance)}', type_of_move='Retiro', date=parseDateTime(datetime.now()))
+                b = Transactions(user=a, cash_moved=float(formatted_balance), type_of_move='Retiro', date=parseDateTime(datetime.now()))
                 balance.balance -= float(formatted_balance)
                 balance.save()
                 b.save()
@@ -185,7 +185,7 @@ def send_cash(request):
                     balance.save()
 
                     c = Banking.objects.get(cvu=balance.cvu)
-                    a = Transferencias(from_user=b, to_user=addressee_user.user, from_cvu=c, to_cvu=addressee_user, cash_sended=str(f'+{float(formatted_balance)}'), cash_losed=str(f'-{float(formatted_balance)}'), date=parseDateTime(datetime.now()))
+                    a = Transferencias(from_user=b, to_user=addressee_user.user, from_cvu=c, to_cvu=addressee_user, cash_moved=float(formatted_balance), date=parseDateTime(datetime.now()))
                     a.save()
 
                     return redirect('/cuenta')
@@ -220,7 +220,7 @@ def transferencias(request):
 
     title = 'Transferencias'
 
-    user_transfers = Transferencias.objects.values('from_user__email', 'to_user__email', 'to_user__first_name', 'to_user__last_name', 'from_user__first_name', 'from_user__last_name', 'from_cvu__cvu', 'to_cvu__cvu', 'cash_losed', 'cash_sended', 'date').filter(Q(to_user__id=request.user.id) | Q(from_user__id=request.user.id)).order_by('-id')
+    user_transfers = Transferencias.objects.values('from_user__email', 'to_user__email', 'to_user__first_name', 'to_user__last_name', 'from_user__first_name', 'from_user__last_name', 'from_cvu__cvu', 'to_cvu__cvu', 'cash_moved', 'date').filter(Q(to_user__id=request.user.id) | Q(from_user__id=request.user.id)).order_by('-id')
 
     paginator = Paginator(user_transfers, 5)
     page_number = request.GET.get('page')
