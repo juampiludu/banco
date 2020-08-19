@@ -43,19 +43,22 @@
                     Notificaciones
                     ({{ notifications.count|intcomma }})
                   </a>
-                  {% if not notifications.count == 0 %}
                   <ul class="dropdown-menu">
-                    {% for notification in notifications %}
-                    <li><a class="dropdown-item" href="{% url 'notif_viewed' id=notification.id %}">
-                      {{ notification.text|safe }}
-                      <small>{{ notification.date|naturaltime }}</small>
-                    </a></li>
-                    {% if not notifications.count == 1 %}
-                    <li><div class="dropdown-divider"></div></li>
+                    {% if not notifications.count == 0 %}
+                      {% for notification in notifications %}
+                      <li><a class="dropdown-item" href="{% url 'notif_viewed' id=notification.id %}">
+                        {{ notification.text }}
+                        <br/>
+                        <small>{{ notification.date|naturaltime }}</small>
+                      </a></li>
+                        {% if not notifications.count == 1 %}
+                        <li><div class="dropdown-divider"></div></li>
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                    <li><a class="dropdown-item">No hay notificaciones</a></li>
                     {% endif %}
-                    {% endfor %}
                   </ul>
-                  {% endif %}
                 </li>
                 <li><div class="dropdown-divider"></div></li>
                 <li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-sign-out-alt"></i> Salir</a></li>

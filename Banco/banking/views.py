@@ -190,7 +190,7 @@ def send_cash(request):
 
                     c = Banking.objects.get(cvu=balance.cvu)
                     user_notif = Cuenta.objects.get(email=addressee_user.user)
-                    notification = Notification(user=user_notif, text=f"<p style='color: green;'>{request.user.first_name} {request.user.last_name} te ha transferido $ {intcomma(float(formatted_balance))}</p>")
+                    notification = Notification(user=user_notif, text=f"{request.user.first_name} {request.user.last_name} te ha transferido $ {intcomma(float(formatted_balance))}")
                     a = Transferencias(from_user=b, to_user=addressee_user.user, from_cvu=c, to_cvu=addressee_user, cash_moved=float(formatted_balance), date=parseDateTime(datetime.now()))
                     notification.save()
                     a.save()
