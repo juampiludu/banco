@@ -60,15 +60,15 @@ class CuentaManager(BaseUserManager):
         return user
 
 class Cuenta(AbstractBaseUser):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30, default="")
+    last_name = models.CharField(max_length=30, default="")
     email = models.EmailField(max_length=60, unique=True)
-    born_date = models.DateField(auto_now=False)
-    phone = models.CharField(max_length=14)
-    dni = models.CharField(max_length=8)
+    born_date = models.DateField(auto_now=False, default=None, null=True, blank=True)
+    phone = models.CharField(max_length=14, default="")
+    dni = models.CharField(max_length=8, default="")
     province = models.CharField(max_length=50, default="")
-    city = models.CharField(max_length=250)
-    address = models.CharField(max_length=140)
+    city = models.CharField(max_length=250, default="")
+    address = models.CharField(max_length=140, default="")
     date_joined = models.DateField(verbose_name="date joined", auto_now_add=True)
     last_login = models.DateField(verbose_name="last login", auto_now=True)
     is_admin = models.BooleanField(default=False)

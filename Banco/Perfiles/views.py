@@ -31,7 +31,7 @@ CuentaModel = get_user_model()
 def welcome(request):
     title = "Inicio"
     all_users = Cuenta.objects.all()
-    notifications = Notification.objects.filter(user=request.user.id)
+    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
     return render(request, "welcome.html", {'title' : title, 'all_users' : all_users, 'notifications' : notifications})
 
 def register(request):
@@ -93,7 +93,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         title = 'Correo Confirmado'
-        msg = 'Gracias por confirmar tu correo. Ahora podés <a href="/login">acceder</a> a la página.'
+        msg = 'Gracias por confirmar tu correo. Ahora podés <a href="/login">acceder</a> a Banco de Mendiolaza.'
         return render(request, 'registration/message.html', {'msg' : msg, 'title' : title})
     else:
         title = 'Link inválido'
@@ -128,12 +128,12 @@ def logout(request):
 
 def info(request):
     title = "Sobre Nosotros"
-    notifications = Notification.objects.filter(user=request.user.id)
+    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
     return render(request, "info.html", {'title' : title, 'notifications' : notifications})
 
 def perfil(request):
     title = "Información Personal"
-    notifications = Notification.objects.filter(user=request.user.id)
+    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
     if not request.user.is_authenticated:
         return redirect('/login')
     if request.method == "POST":
@@ -142,9 +142,8 @@ def perfil(request):
         if form.is_valid():
             form.save()
             return redirect('/info-personal')
-    else:
-        form = ActualizarForm(instance=request.user)
-        return render(request, "perfil.html", {'form': form, 'title' : title, 'notifications' : notifications})
+    form = ActualizarForm(instance=request.user)
+    return render(request, "perfil.html", {'form': form, 'title' : title, 'notifications' : notifications})
 
 def cambiar_contraseña(request):
     if not request.user.is_authenticated:
@@ -169,7 +168,7 @@ def search_view(request):
 
     title = "Búsqueda"
 
-    notifications = Notification.objects.filter(user=request.user.id)
+    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
 
     search = request.GET.get('search')
 

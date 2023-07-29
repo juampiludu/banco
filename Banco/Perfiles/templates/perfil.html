@@ -47,11 +47,23 @@
                     </tr>
                     <tr>
                       <td>Fecha de nacimiento:</td>
-                      <td>{{ request.user.born_date }}</td>
+                      <td>
+                        {% if request.user.born_date == None %}
+                        {{ form.born_date }}
+                        {% else %}
+                        {{ request.user.born_date }}
+                        {% endif %}
+                      </td>
                     </tr>
                     <tr>
                       <td>DNI:</td>
-                      <td>{{ request.user.dni }}</td>
+                      <td>
+                        {% if request.user.dni == "" %}
+                        {{ form.dni }}
+                        {% else %}
+                        {{ request.user.dni }}
+                        {% endif %}
+                      </td>
                     </tr>
                     <tr>
                       <td>Provincia:</td>
@@ -103,8 +115,11 @@
       var addressText = document.getElementById("id_address").value;
       var phoneText = document.getElementById("id_phone").value;
       var provinceText = document.getElementById("id_province").value;
+      {% if request.user.dni == "" %}
+      var dniText = document.getElementById("id_dni").value;
+      {% endif %}
 
-      $("#id_city, #id_address, #id_phone, #id_province").each(function() {
+      $("#id_city, #id_address, #id_phone, #id_province, #id_dni").each(function() {
 
         $(this).on('input', function() {
 
@@ -117,6 +132,9 @@
             case addressText:
             case phoneText:
             case provinceText:
+            {% if request.user.dni == "" %}
+            case dniText:
+            {% endif %}
 
               $("#formSumbitionButton").attr("disabled", 'disabled');
               

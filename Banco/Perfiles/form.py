@@ -142,11 +142,29 @@ class ActualizarForm(UserChangeForm):
             'class': 'form-control',
             'onkeypress': 'return valida(event);',
             'type': 'tel',
+            'placeholder': 'Teléfono',
         }
     ))
 
     address = forms.CharField(label="Dirección", max_length=140, required=False, widget=forms.TextInput(
         attrs={
+            'class': 'form-control',
+            'placeholder': 'Dirección',
+        }
+    ))
+
+    dni = forms.CharField(label="DNI", max_length=8, required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': '*DNI',
+            'onkeypress': 'return valida(event);',
+            'type': 'tel',
+        }
+    ))
+
+    born_date = forms.DateField(label="", required=True, initial='2019-01-01', widget=forms.TextInput(
+        attrs={
+            'type': 'date',
             'class': 'form-control',
         }
     ))
@@ -156,6 +174,7 @@ class ActualizarForm(UserChangeForm):
     city = forms.CharField(label="", max_length=140, required=False, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
+            'placeholder': 'Ciudad',
         }
     ))
 
@@ -164,6 +183,8 @@ class ActualizarForm(UserChangeForm):
         fields = (
             'phone',
             'address',
+            'dni',
+            'born_date',
             'city',
             'province',
             )

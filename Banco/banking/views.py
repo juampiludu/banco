@@ -59,7 +59,7 @@ def saldo(request):
     
     balance = Banking.objects.filter(user=request.user.id).values('balance', 'cvu')
 
-    notifications = Notification.objects.filter(user=request.user.id)
+    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
     
     if not Banking.objects.filter(user=request.user.id):
         account = Cuenta.objects.get(id=request.user.id)
@@ -212,7 +212,7 @@ def transactions(request):
 
     title = 'Transacciones'
 
-    notifications = Notification.objects.filter(user=request.user.id)
+    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
 
     user_transactions = Transactions.objects.values('user__email', 'cash_moved', 'type_of_move', 'date').order_by('-id').filter(user=request.user.id)
 
@@ -229,7 +229,7 @@ def transferencias(request):
 
     title = 'Transferencias'
 
-    notifications = Notification.objects.filter(user=request.user.id)
+    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
 
     user_transfers = Transferencias.objects.values('from_user__email', 'to_user__email', 'to_user__first_name', 'to_user__last_name', 'from_user__first_name', 'from_user__last_name', 'from_cvu__cvu', 'to_cvu__cvu', 'cash_moved', 'date').filter(Q(to_user__id=request.user.id) | Q(from_user__id=request.user.id)).order_by('-id')
 

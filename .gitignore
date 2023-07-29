@@ -1,5 +1,4 @@
-.vscode/settings.json
-Banco/.vscode/settings.json
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
