@@ -1,21 +1,21 @@
 from django.db import models
-from Perfiles.models import Cuenta
 
 class Banking(models.Model):
-    user = models.ForeignKey(Cuenta, on_delete=models.CASCADE)
-    balance = models.FloatField(default=0)
-    cvu = models.CharField(max_length=22, default=None, null=True, unique=True)
+    user = models.ForeignKey("Perfiles.Cuenta", on_delete=models.CASCADE)
+    cvu = models.CharField(max_length=22, unique=True, editable=False)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self) -> str:
+        return f"Billetera de {self.user.get_full_name()}"
 
 class Transferencias(models.Model):
-    from_user = models.ForeignKey(Cuenta, related_name="from_user", on_delete=models.CASCADE)
-    to_user = models.ForeignKey(Cuenta, related_name="to_user", on_delete=models.CASCADE)
-    from_cvu = models.ForeignKey(Banking, related_name="from_cvu", on_delete=models.CASCADE)
-    to_cvu = models.ForeignKey(Banking, related_name="to_cvu", on_delete=models.CASCADE)
-    cash_moved = models.FloatField(default=0)
-    date = models.CharField(max_length=60, default="")
+    sender = models.ForeignKey("Perfiles.Cuenta", on_delete=models.CASCADE, related_name='sent_transferencias')
+    receiver = models.ForeignKey("Perfiles.Cuenta", on_delete=models.CASCADE, related_name='received_transferencias')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 class Transactions(models.Model):
-    user = models.ForeignKey(Cuenta, on_delete=models.CASCADE, default=None)
-    cash_moved = models.FloatField(default=0)
-    type_of_move = models.CharField(max_length=50, default="")
-    date = models.CharField(max_length=60, default="")
+    user = models.ForeignKey("Perfiles.Cuenta", on_delete=models.CASCADE, default=None)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    is_ingreso = models.BooleanField()
+    timestamp = models.DateTimeField(auto_now_add=True)

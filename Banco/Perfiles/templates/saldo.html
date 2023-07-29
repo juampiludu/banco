@@ -32,24 +32,21 @@
   <h1>Saldo:</h1>
 
   <div id="signo">
-    {% for i in balance %}
-    $ {{ i.balance|floatformat:'2'|intcomma }}
-    {% endfor %}
+    $ {{ banking.balance|floatformat:'2'|intcomma }}
   </div>
-  <form action="{% url 'balance' %}" method="POST" autocomplete="off">
+  <form method="POST" autocomplete="off">
       {% csrf_token %}
-      {% if messages %}
+      <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control {% for message in messages %}{% if 'cuenta' in message.tags %}is-invalid{% endif %}{% endfor %}" 
+      placeholder="Monto" required onkeypress="return valida(event)">
       {% for message in messages %}
-      <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control is-invalid" placeholder="Monto" required onkeypress="return valida(event)">
+      {% if 'cuenta' in message.tags %}
       <small class="text-danger">{{message}}</small>
       <br/>
-      {% endfor %}
-      {% else %}
-      <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control" placeholder="Monto" required onkeypress="return valida(event)">
       {% endif %}
+      {% endfor %}
       <br>
-      <button id="btn1" type="submit" class="btn btn-dark" name="add_balance">Ingresar</button>
-      <button id="btn2" type="submit" class="btn btn-dark" name="remove_balance">Retirar</button>
+      <button id="btn1" type="submit" class="btn btn-dark" name="cuenta_ingresar">Ingresar</button>
+      <button id="btn2" type="submit" class="btn btn-dark" name="cuenta_retirar">Retirar</button>
       <br>
 
   </form>
@@ -62,37 +59,34 @@
 
 <div class="container">
 
-  {% for i in balance %}
-  {% if i.cvu == None %}
-
-  <div class="dont-have-cvu">
-    <h1>CVU:</h1>
-    <p>Generando una Clave Virtual Uniforme (CVU) podés:</p>
-    <ul>
-      <li>Enviar dinero a otros usuarios que utilicen Banco Mendiolaza</li>
-      <li>Recibir dinero</li>
-    </ul>
-    <form action="{% url 'create_cvu' %}" method="POST">
-      {% csrf_token %}
-      <button class="btn btn-dark" type="submit">Generar CVU</button>
-    </form>
-  </div>
-
-  {% else %}
-
   <div class="have-cvu">
-    <form action="{% url 'send_cash' %}" method="POST" autocomplete="off">
+    <form method="POST" autocomplete="off">
       {% csrf_token %}
       <h3>Transferir dinero:</h3>
-      <p>Tu CVU es: <strong>{{ i.cvu }}</strong></p>
-      <p>Cantidad: <input class="form-control" placeholder="$" maxlength="6" type="tel" id="trans-cant" name="cash_for_send" required onkeypress="return valida(event)"></p>
-      <p>CVU destinatario: <input maxlength="22" placeholder="CVU" class="form-control" id="trans-cvu" type="tel" name="addressee_cvu" required onkeypress="return valida(event)"></p>
-      <button type="submit" class="btn btn-dark">Transferir</button>
+      <p>Tu CVU es: <strong>{{ banking.cvu }}</strong></p>
+      <p>Cantidad: 
+        <input class="form-control {% for message in messages %}{% if 'min' in message.tags %}is-invalid{% endif %}{% endfor %}" 
+        placeholder="$" maxlength="6" type="tel" id="trans-cant" name="transferir_amount" required onkeypress="return valida(event)">
+        {% for message in messages %}
+        {% if 'min' in message.tags %}
+        <small class="text-danger">{{message}}</small>
+        <br/>
+        {% endif %}
+        {% endfor %}
+      </p>
+      <p>CVU destinatario: 
+        <input maxlength="22" placeholder="CVU" class="form-control {% for message in messages %}{% if 'cvu' in message.tags %}is-invalid{% endif %}{% endfor %}" 
+        id="trans-cvu" type="tel" name="transferir_cvu" required onkeypress="return valida(event)">
+        {% for message in messages %}
+        {% if 'cvu' in message.tags %}
+        <small class="text-danger">{{message}}</small>
+        <br/>
+        {% endif %}
+        {% endfor %}
+      </p>
+      <button type="submit" name="transferir" class="btn btn-dark">Transferir</button>
     </form>
   </div>
-
-  {% endif %}
-  {% endfor %}
 
 </div>
 <br/>

@@ -9,64 +9,63 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from notifications.models import Notification
 from django.contrib.humanize.templatetags.humanize import intcomma
+from django.views import View
+from django.db import transaction
+from decimal import Decimal
+from django.core.exceptions import ObjectDoesNotExist
+from utils.exceptions import SameAccount
 
-def parseDateTime(a):
 
-    now = a
-    year = now.year
-    month = now.month
-    day = now.day
-    hour = now.hour
-    minute = now.minute
-
-    if len(str(hour)) == 1:
-        hour = f'0{hour}'
-
-    if len(str(minute)) == 1:
-        minute = f'0{minute}'
-
-    if month == 1:
-        month = 'Enero'
-    elif month == 2:
-        month = 'Febrero'
-    elif month == 3:
-        month = 'Marzo'
-    elif month == 4:
-        month = 'Abril'
-    elif month == 5:
-        month = 'Mayo'
-    elif month == 6:
-        month = 'Junio'
-    elif month == 7:
-        month = 'Julio'
-    elif month == 8:
-        month = 'Agosto'
-    elif month == 9:
-        month = 'Septiembre'
-    elif month == 10:
-        month = 'Octubre'
-    elif month == 11:
-        month = 'Noviembre'
-    elif month == 12:
-        month = 'Diciembre'
+class CuentaView(View):
+    def get(self, request):
+        banking = Banking.objects.get(user=request.user)
+        context = {'banking': banking, 'title': "Cuenta"}
         
-    return f'{day} de {month} del {year} - {hour}:{minute}'
+        return render(request, "saldo.html", context)
+    
+    def post(self, request):
+        banking = Banking.objects.get(user=request.user)
+        
+        if "cuenta_ingresar" in request.POST:
+            with transaction.atomic():
+                amount = Decimal(request.POST["total_balance"])
+                if amount <= 0:
+                    messages.error(request, "La cantidad mínima para ingresar es de $0,01", extra_tags="cuenta")
+                    return redirect("cuenta")
+                banking.balance += amount
+        
+        elif "cuenta_retirar" in request.POST:
+            with transaction.atomic():
+                amount = Decimal(request.POST["total_balance"])
+                if amount > banking.balance:
+                    messages.error(request, "Saldo insuficiente", extra_tags="cuenta")
+                    return redirect("cuenta")
+                banking.balance -= amount
+        
+        elif "transferir" in request.POST:
+            with transaction.atomic():
+                amount = Decimal(request.POST["transferir_amount"])
+                receiver_cvu = request.POST["transferir_cvu"]
+                try:
+                    receiver = Banking.objects.get(cvu=receiver_cvu)
+                    if receiver == banking:
+                        raise SameAccount()
+                    receiver.balance += amount
+                    banking.balance -= amount
+                except ObjectDoesNotExist:
+                    messages.error(request, "CVU incorrecto", extra_tags="cvu")
+                except SameAccount:
+                    messages.error(request, "No podés transferirte vos mismo", extra_tags="cvu")
+                finally:
+                    if amount <= 0:
+                        messages.error(request, "La cantidad mínima para transferir es de $0,01", extra_tags="min")
+                    elif amount > banking.balance:
+                        messages.error(request, "Saldo insuficiente", extra_tags="min")
+                    return redirect("cuenta")
 
-def saldo(request):
-    title = "Cuenta"
-    if not request.user.is_authenticated:
-        return redirect('/login')
-    
-    balance = Banking.objects.filter(user=request.user.id).values('balance', 'cvu')
+        banking.save()
 
-    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
-    
-    if not Banking.objects.filter(user=request.user.id):
-        account = Cuenta.objects.get(id=request.user.id)
-        balance_user_id = Banking(user=account, balance=0, cvu=None)
-        balance_user_id.save()
-    
-    return render(request, "saldo.html", {'balance' : balance, 'title' : title, 'notifications' : notifications})
+        return redirect("cuenta")
 
 def balance(request):
     if not request.user.is_authenticated:

@@ -7,8 +7,8 @@ class BankingAdmin(admin.ModelAdmin):
 
 @admin.register(Transferencias)
 class TransferenciasAdmin(admin.ModelAdmin):
-    list_display = ('from_user', 'to_user', 'cash_moved')
+    list_display = ('sender', 'receiver', 'amount')
 
 @admin.register(Transactions)
 class TransactionsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'cash_moved', 'type_of_move')
+    list_display = ('user', 'amount', 'is_ingreso')

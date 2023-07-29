@@ -1,5 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth import get_user_model
+from banking.models import Banking
+from utils.generar_cvu import generar_cvu
 
 class CuentaManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, born_date, phone, dni, province, city, address, password=None):
@@ -83,9 +88,22 @@ class Cuenta(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
 
     def has_perm(self, perm, obj=None):
         return self.is_admin
 
     def has_module_perms(self, app_label):
         return True
+
+@receiver(post_save, sender=get_user_model())
+def user_created(sender, instance, created, **kwargs):
+    if created:
+        banking = Banking()
+        banking.user = instance
+        banking.cvu = generar_cvu()
+        banking.save()
+
+post_save.connect(user_created, sender=get_user_model())
