@@ -31,7 +31,7 @@
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{request.user.first_name}}
-                {% if not notifications.count == 0 %}
+                {% if notifications %}
                 ({{ notifications.count }})
                 {% endif %}
               </a>
@@ -41,10 +41,10 @@
                   <a class="dropdown-item dropdown-toggle" href="#">
                     <i class="fas fa-bell"></i> 
                     Notificaciones
-                    ({{ notifications.count|intcomma }})
+                    ({{ notifications.count }})
                   </a>
                   <ul class="dropdown-menu">
-                    {% if not notifications.count == 0 %}
+                    {% if notifications %}
                       {% for notification in notifications %}
                       <li><a class="dropdown-item" href="{% url 'notif_viewed' id=notification.id %}">
                         {{ notification.text }}
@@ -154,7 +154,7 @@
           </tr>
         </div>
         <br/><br/>
-        <small class="text-white-50">Copyright &copy; 2020 Banco de Mendiolaza</small>
+        <small class="text-white-50">Copyright &copy; 2023 Banco de Mendiolaza</small>
       </div>
       <br/>
     </footer>

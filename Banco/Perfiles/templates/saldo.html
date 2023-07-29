@@ -64,7 +64,7 @@
       {% csrf_token %}
       <h3>Transferir dinero:</h3>
       <p>Tu CVU es: <strong>{{ banking.cvu }}</strong></p>
-      <p>Cantidad: 
+      <p>Monto: 
         <input class="form-control {% for message in messages %}{% if 'min' in message.tags %}is-invalid{% endif %}{% endfor %}" 
         placeholder="$" maxlength="6" type="tel" id="trans-cant" name="transferir_amount" required onkeypress="return valida(event)">
         {% for message in messages %}

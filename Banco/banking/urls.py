@@ -3,6 +3,6 @@ from banking.views import *
 
 urlpatterns = [
     path('cuenta/', CuentaView.as_view(), name="cuenta"),
-    # path('actividad/transacciones/', views.transactions, name='transactions'),
-    # path('actividad/transferencias/', views.transferencias, name='transferencias'),
+    path('actividad/transacciones/', TransactionsView.as_view(), name='transactions'),
+    path('actividad/transferencias/', TransfersView.as_view(), name='transferencias'),
 ]

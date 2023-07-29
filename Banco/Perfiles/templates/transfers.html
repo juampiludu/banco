@@ -30,19 +30,19 @@
     <br/>
     <p class="text-muted">Actividad / Transferencias</p>
 
-    {% for i in page_obj %}
+    {% for transfer in page_obj %}
 
-    {% if i.from_user__email == request.user.email %}
+    {% if transfer.sender == request.user %}
         
     <div class="card">
       <h5 class="card-header">Transferencia</h5>
       <div class="card-body">
         <p class="card-text">Para: </p>
-        <h5 class="card-title">{{i.to_user__first_name}} {{i.to_user__last_name}}</h5>
-        <p class="card-text"><a href="mailto:{{i.to_user__email}}">{{i.to_user__email}}</a></p>
-        <p class="card-text">CVU: {{i.to_cvu__cvu}}</p>
-        <p class="card-text text-danger">- $ {{i.cash_moved|intcomma}}</p>
-        <p class="card-text">{{i.date}}</p>
+        <h5 class="card-title">{{transfer.receiver.get_full_name}}</h5>
+        <p class="card-text"><a href="mailto:{{transfer.receiver.email}}">{{transfer.receiver.email}}</a></p>
+        <p class="card-text">CVU: {{transfer.get_receiver_cvu}}</p>
+        <p class="card-text text-danger">- $ {{transfer.amount|intcomma}}</p>
+        <p class="card-text">{{transfer.timestamp}}</p>
       </div>
     </div>
 
@@ -50,25 +50,19 @@
     
     {% else %}
 
-    {% if request.user.email == i.to_user__email %}
-
       <div class="card">
         <h5 class="card-header">Transferencia</h5>
         <div class="card-body">
           <p class="card-text">De: </p>
-          <h5 class="card-title">{{i.from_user__first_name}} {{i.from_user__last_name}}</h5>
-          <p class="card-text"><a href="mailto:{{i.from_user__email}}">{{i.from_user__email}}</a></p>
-          <p class="card-text">CVU: {{i.from_cvu__cvu}}</p>
-          <p class="card-text text-success">+ $ {{i.cash_moved|intcomma}}</p>
-          <p class="card-text">{{i.date}}</p>
+          <h5 class="card-title">{{transfer.sender.get_full_name}}</h5>
+          <p class="card-text"><a href="mailto:{{transfer.sender.email}}">{{transfer.sender.email}}</a></p>
+          <p class="card-text">CVU: {{transfer.get_sender_cvu}}</p>
+          <p class="card-text text-success">+ $ {{transfer.amount|intcomma}}</p>
+          <p class="card-text">{{transfer.timestamp}}</p>
         </div>
       </div>
 
       <br/>
-
-      {% else %}
-
-      {% endif %}
 
     {% endif %}
 

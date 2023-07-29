@@ -14,7 +14,50 @@ from django.db import transaction
 from decimal import Decimal
 from django.core.exceptions import ObjectDoesNotExist
 from utils.exceptions import SameAccount
+from django.utils import timezone
 
+
+def cuenta_ingresar(request, banking):
+    with transaction.atomic():
+        amount = Decimal(request.POST["total_balance"])
+        if amount <= 0:
+            messages.error(request, "La cantidad mínima para ingresar es de $0,01", extra_tags="cuenta")
+            return redirect("cuenta")
+        banking.balance += amount
+        Transactions.objects.create(user=request.user, amount=amount, is_ingreso=True, timestamp=timezone.now())
+
+def cuenta_retirar(request, banking):
+    with transaction.atomic():
+        amount = Decimal(request.POST["total_balance"])
+        if amount > banking.balance:
+            messages.error(request, "Saldo insuficiente", extra_tags="cuenta")
+            return redirect("cuenta")
+        banking.balance -= amount
+        Transactions.objects.create(user=request.user, amount=amount, is_ingreso=False, timestamp=timezone.now())
+
+def transferir(request, banking):
+    with transaction.atomic():
+        amount = Decimal(request.POST["transferir_amount"])
+        receiver_cvu = request.POST["transferir_cvu"]
+        try:
+            receiver = Banking.objects.get(cvu=receiver_cvu)
+            if receiver == banking:
+                raise SameAccount()
+            receiver.balance += amount
+            banking.balance -= amount
+            receiver.save()
+            Transferencias.objects.create(sender=request.user, receiver=receiver.user, amount=amount, timestamp=timezone.now())
+        except ObjectDoesNotExist:
+            messages.error(request, "CVU incorrecto", extra_tags="cvu")
+        except SameAccount:
+            messages.error(request, "No podés transferirte vos mismo", extra_tags="cvu")
+        finally:
+            if amount <= 0:
+                messages.error(request, "La cantidad mínima para transferir es de $0,01", extra_tags="min")
+            elif amount > banking.balance:
+                messages.error(request, "Saldo insuficiente", extra_tags="min")
+            return redirect("cuenta")
+        
 
 class CuentaView(View):
     def get(self, request):
@@ -27,213 +70,40 @@ class CuentaView(View):
         banking = Banking.objects.get(user=request.user)
         
         if "cuenta_ingresar" in request.POST:
-            with transaction.atomic():
-                amount = Decimal(request.POST["total_balance"])
-                if amount <= 0:
-                    messages.error(request, "La cantidad mínima para ingresar es de $0,01", extra_tags="cuenta")
-                    return redirect("cuenta")
-                banking.balance += amount
-        
+            cuenta_ingresar(request, banking)
         elif "cuenta_retirar" in request.POST:
-            with transaction.atomic():
-                amount = Decimal(request.POST["total_balance"])
-                if amount > banking.balance:
-                    messages.error(request, "Saldo insuficiente", extra_tags="cuenta")
-                    return redirect("cuenta")
-                banking.balance -= amount
-        
+            cuenta_retirar(request, banking)
         elif "transferir" in request.POST:
-            with transaction.atomic():
-                amount = Decimal(request.POST["transferir_amount"])
-                receiver_cvu = request.POST["transferir_cvu"]
-                try:
-                    receiver = Banking.objects.get(cvu=receiver_cvu)
-                    if receiver == banking:
-                        raise SameAccount()
-                    receiver.balance += amount
-                    banking.balance -= amount
-                except ObjectDoesNotExist:
-                    messages.error(request, "CVU incorrecto", extra_tags="cvu")
-                except SameAccount:
-                    messages.error(request, "No podés transferirte vos mismo", extra_tags="cvu")
-                finally:
-                    if amount <= 0:
-                        messages.error(request, "La cantidad mínima para transferir es de $0,01", extra_tags="min")
-                    elif amount > banking.balance:
-                        messages.error(request, "Saldo insuficiente", extra_tags="min")
-                    return redirect("cuenta")
+            transferir(request, banking)
 
         banking.save()
 
         return redirect("cuenta")
 
-def balance(request):
-    if not request.user.is_authenticated:
-        return redirect('/login')
 
-    balance = Banking.objects.get(user=request.user.id)
+class TransactionsView(View):
+    def get(self, request):
+        transactions = Transactions.objects.all().filter(user=request.user).order_by('-timestamp')
+
+        items_per_page = 1
+        paginator = Paginator(transactions, items_per_page)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        context = {'page_obj': page_obj, 'title': "Transacciones"}
+
+        return render(request, "transactions.html", context)
     
-    if request.method == 'POST':
-        
-        total_balance = request.POST.get('total_balance')
 
-        try:
-            if total_balance == "" or float(total_balance) == 0:
-                messages.info(request, 'Ingresá un monto distinto a 0.')
-                return HttpResponseRedirect('/cuenta')
-                
-            
-            if 'add_balance' in request.POST:
-                a = Cuenta.objects.get(id=request.user.id)
-                formatted_balance = float(total_balance)
-                b = Transactions(user=a, cash_moved=float(formatted_balance), type_of_move='Ingreso', date=parseDateTime(datetime.now()))
-                balance.balance += float(formatted_balance)
-                balance.save()
-                b.save()
-            
-            if 'remove_balance' in request.POST:
-                
-                if float(total_balance) > balance.balance:
-                    messages.info(request, 'El monto que estás queriendo retirar es mayor al que poseés.')
-                    return HttpResponseRedirect('/cuenta')
-                if float(total_balance) < 3:
-                    messages.info(request, 'El monto mínimo para retirar es $ 3.')
-                    return HttpResponseRedirect('/cuenta')
-                a = Cuenta.objects.get(id=request.user.id)
-                formatted_balance = "{:.2f}".format(float(total_balance))
-                b = Transactions(user=a, cash_moved=float(formatted_balance), type_of_move='Retiro', date=parseDateTime(datetime.now()))
-                balance.balance -= float(formatted_balance)
-                balance.save()
-                b.save()
-        except ValueError:
-            messages.info(request, 'Por favor, ingresá solo números.')
-            return HttpResponseRedirect('/cuenta')
-        
-        return redirect('/cuenta')
+class TransfersView(View):
+    def get(self, request):
+        transfers = Transferencias.objects.all().filter(Q(sender=request.user) | Q(receiver=request.user)).order_by('-timestamp')
 
-def create_cvu(request):
+        items_per_page = 1
+        paginator = Paginator(transfers, items_per_page)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
 
-    if not request.user.is_authenticated:
-        return redirect('/login')
+        context = {'page_obj': page_obj, 'title': "Transferencias"}
 
-    user_cvu = Banking.objects.get(user=request.user.id)
-
-    if not user_cvu.cvu == None:
-        error = 'Ya contás con un CVU.'
-        return render(request, "error.html", {'error' : error})
-
-    cvus = Banking.objects.all().values('cvu')
-    cvu_list = []
-
-    for cvu in cvu_list:
-        cvu_list.append(cvu)
-
-    if request.method == 'POST':
-        generated_cvu = randrange(1000000000000000, 9999999999999999)
-        if generated_cvu not in cvu_list:
-            user_cvu.cvu = f'000000{generated_cvu}'
-            user_cvu.save()
-            return redirect('/cuenta')
-        else:
-            return HttpResponse('Error, prueba nuevamente más tarde.')
-
-
-def send_cash(request):
-
-    if not request.user.is_authenticated:
-        return redirect('/login')
-
-    all_accounts = Banking.objects.all()
-    balance = Banking.objects.get(user=request.user.id)
-
-    if request.method == 'POST':
-
-        cash_for_send = request.POST.get('cash_for_send')
-        addressee_cvu = request.POST.get('addressee_cvu')
-
-        try:
-            if addressee_cvu == balance.cvu:
-                error = 'No podés enviarte dinero a vos mismo.'
-                return render(request, "error.html", {'error' : error})
-
-            if cash_for_send == "" or addressee_cvu == "":
-                error = 'Completá todos los campos.'
-                return render(request, "error.html", {'error' : error})
-
-            if float(cash_for_send) > balance.balance:
-                error = 'Estás enviando más dinero del que poseés. Intentá reducir el monto y probá nuevamente.'
-                return render(request, "error.html", {'error' : error})
-            
-            if not float(cash_for_send) >= 3 or float(cash_for_send) < 0:
-                error = 'El monto mínimo para enviar es $ 3'
-                return render(request, "error.html", {'error' : error})
-            
-            cvu_list = []
-
-            for i in all_accounts:
-                cvu_list.append(i.cvu)
-            
-            print(cvu_list)
-
-            if addressee_cvu in cvu_list:
-
-                for i in all_accounts:
-
-                    b = Cuenta.objects.get(id=request.user.id)
-                    addressee_user = Banking.objects.get(cvu=addressee_cvu)
-                    formatted_balance = float(cash_for_send)
-                    addressee_user.balance += float(formatted_balance)
-                    balance.balance -= float(formatted_balance)
-                    addressee_user.save()
-                    balance.save()
-
-                    c = Banking.objects.get(cvu=balance.cvu)
-                    user_notif = Cuenta.objects.get(email=addressee_user.user)
-                    notification = Notification(user=user_notif, text=f"{request.user.first_name} {request.user.last_name} te ha transferido $ {intcomma(float(formatted_balance))}")
-                    a = Transferencias(from_user=b, to_user=addressee_user.user, from_cvu=c, to_cvu=addressee_user, cash_moved=float(formatted_balance), date=parseDateTime(datetime.now()))
-                    notification.save()
-                    a.save()
-
-                    return redirect('/cuenta')
-            
-            error = 'El CVU que ingresaste no existe. Verificá si lo estás ingresando correctamente.'
-            return render(request, "error.html", {'error' : error})
-        except ValueError:
-            error = 'Por favor, ingresá solo números.'
-            return render(request, "error.html", {'error' : error})
-        
-        return redirect('/cuenta')
-
-def transactions(request):
-
-    if not request.user.is_authenticated:
-        return redirect('/login')
-
-    title = 'Transacciones'
-
-    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
-
-    user_transactions = Transactions.objects.values('user__email', 'cash_moved', 'type_of_move', 'date').order_by('-id').filter(user=request.user.id)
-
-    paginator = Paginator(user_transactions, 5)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, 'transactions.html', {'page_obj' : page_obj, 'title' : title, 'notifications' : notifications})
-
-def transferencias(request):
-
-    if not request.user.is_authenticated:
-        return redirect('/login')
-
-    title = 'Transferencias'
-
-    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
-
-    user_transfers = Transferencias.objects.values('from_user__email', 'to_user__email', 'to_user__first_name', 'to_user__last_name', 'from_user__first_name', 'from_user__last_name', 'from_cvu__cvu', 'to_cvu__cvu', 'cash_moved', 'date').filter(Q(to_user__id=request.user.id) | Q(from_user__id=request.user.id)).order_by('-id')
-
-    paginator = Paginator(user_transfers, 5)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, 'transfers.html', {'page_obj' : page_obj, 'title' : title, 'notifications' : notifications})
+        return render(request, "transfers.html", context)

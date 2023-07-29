@@ -30,31 +30,29 @@
     <br/>
     <p class="text-muted">Actividad / Transacciones</p>
 
-    {% for a in page_obj %}
+    {% for transaction in page_obj %}
 
-      {% if a.type_of_move == 'Ingreso' %}
+      {% if transaction.is_ingreso %}
 
       <div class="card">
         <h5 class="card-header">Transacción</h5>
         <div class="card-body">
           <h5 class="card-title">Ingreso</h5>
-          <p class="card-text text-success">+ $ {{a.cash_moved|intcomma}}</p>
-          <p class="card-text">{{a.date}}</p>
+          <p class="card-text text-success">+ $ {{transaction.amount|intcomma}}</p>
+          <p class="card-text">{{transaction.timestamp}}</p>
         </div>
       </div>
 
       <br/>
 
-      {% endif %}
-
-      {% if a.type_of_move == 'Retiro' %}
+      {% else %}
 
         <div class="card">
           <h5 class="card-header">Transacción</h5>
           <div class="card-body">
             <h5 class="card-title">Retiro</h5>
-            <p class="card-text text-danger">- $ {{a.cash_moved|intcomma}}</p>
-            <p class="card-text">{{a.date}}</p>
+            <p class="card-text text-danger">- $ {{transaction.amount|intcomma}}</p>
+            <p class="card-text">{{transaction.timestamp}}</p>
           </div>
         </div>
 

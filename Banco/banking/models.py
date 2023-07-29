@@ -14,6 +14,14 @@ class Transferencias(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def get_sender_cvu(self):
+        banking = Banking.objects.get(user=self.sender)
+        return banking.cvu
+
+    def get_receiver_cvu(self):
+        banking = Banking.objects.get(user=self.receiver)
+        return banking.cvu
+
 class Transactions(models.Model):
     user = models.ForeignKey("Perfiles.Cuenta", on_delete=models.CASCADE, default=None)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
