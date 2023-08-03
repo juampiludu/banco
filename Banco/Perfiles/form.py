@@ -46,7 +46,7 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
-    born_date = forms.DateField(label="", required=True, initial='2019-01-01', widget=forms.TextInput(
+    born_date = forms.DateField(label="", required=True, widget=forms.TextInput(
         attrs={
             'type': 'date',
             'class': 'fadeIn fourth',
@@ -101,9 +101,9 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
-    province = forms.ChoiceField(choices=PROVINCE_FIELDS, required=False, widget=forms.Select(
+    province = forms.ChoiceField(choices=PROVINCE_FIELDS, label='', required=False, widget=forms.Select(
         attrs={
-            'class' : 'form-control fadeIn eighth',
+            'class' : 'fadeIn eighth',
         }
     ))
 
@@ -128,10 +128,15 @@ class RegistroForm(UserCreationForm):
     
     def clean_born_date(self):
         born_date = self.cleaned_data['born_date']
-        print(born_date)
         if is_user_under_age(born_date):
             raise forms.ValidationError('Tenés que ser mayor de 18 años para poder crear tu cuenta')
         return born_date
+    
+    def clean_dni(self):
+        dni = self.cleaned_data['dni']
+        if Cuenta.objects.filter(dni=dni).exists():
+            raise forms.ValidationError(f'El DNI "{dni}" ya está registrado. Tal vez te hayas registrado previamente')
+        return dni
     
     def clean_province(self):
         province = self.cleaned_data['province']
@@ -148,8 +153,8 @@ class RegistroForm(UserCreationForm):
             'born_date',
             'phone',
             'dni',
-            'city',
             'province',
+            'city',
             'address',
             'password1',
             'password2',

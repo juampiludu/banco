@@ -1,13 +1,12 @@
 {% extends 'base_form.html' %}
 {% load static %}
+{% block onlyforregister %}formContentRegister{% endblock %}
 {% block mainblock %}
 
   {% if form.errors %}
-    <div style="margin: 20px;">
-      {% for field in form %}
-      {{ field.errors }}
-      {% endfor %}
-    </div>
+  {% for field in form %}
+  {{ field.errors }}
+  {% endfor %}
   {% endif %}
 
   <!-- Login Form -->
@@ -16,12 +15,7 @@
     {{ form.email }}
     {{ form.first_name }}
     {{ form.last_name }}
-    <br/><br/>
-    <p class="fadeIn fourth">
-      *Fecha de nacimiento:
-    </p>
     {{ form.born_date }}
-    <br/>
     {{ form.phone }}
     {{ form.dni }}
     {{ form.province }}
@@ -31,12 +25,9 @@
     {{ form.password2 }}
     <br/><br/>
     <ul class="fadeIn eleventh">
-        <li>Tu contraseña no puede ser similar a otro dato personal.</li>
-        <li>Tu contraseña debe contener al menos 8 caracteres.</li>       
-        <li>Tu contraseña no puede ser igual que la usada actualmente.</li>       
-        <li>Tu contraseña no puede ser solamente numérica.</li>
-        <li>Todos los campos son obligatorios.</li> 
-        <li>Aseguráte de ingresar bien los datos marcados con (*) porque después no se pueden modificar.</li>   
+      <li>Todos los campos son obligatorios.</li> 
+      <li>El campo de fecha corresponde a fecha de nacimiento.</li>
+      <li>Aseguráte de ingresar bien los datos marcados con (*) porque después no se pueden modificar (incluida fecha de nacimiento).</li>   
     </ul>
     <input type="submit" class="fadeIn twelveth" value="Registrarse">
   </form>

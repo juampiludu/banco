@@ -5,7 +5,9 @@
   <!-- Login Form -->
   <form method="POST" style="margin-top: 10px;">
     {% if form.errors %}
-    <p style="margin: 20px;">Por favor ingrese un correo electrónico y contraseña correctos. Considere que ambos campos son sensibles al uso de mayúsculas.</p>
+    <p style="margin: 20px;">Por favor ingrese un correo electrónico y contraseña correctos. 
+                            Considere que ambos campos son sensibles al uso de mayúsculas. 
+                            Es probable que tengas que activar tu cuenta si ya te has registrado.</p>
     <br/>
     {% endif %}
     {{ form.username }}

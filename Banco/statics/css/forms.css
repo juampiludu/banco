@@ -322,7 +322,6 @@ html {
     border: none;
     width: 85%;
     font-size: 16px; 
-    margin-left: 7.5%;
     height: 60px;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -349,8 +348,8 @@ html {
   width: 85%;
   font-size: 16px;
   height: 60px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin: 5px;
+  padding: 15px 32px;
   color: #5f5f5f;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
@@ -366,3 +365,20 @@ html {
   border: black solid 1px;
 }
   
+@media only screen and (min-width: 992px) {
+  .formContentRegister {
+    max-width: none !important;
+  }
+  .formContentRegister input {
+    width: 40% !important;
+  }
+  .formContentRegister #id_province {
+    width: 81% !important;
+  }
+  .formContentRegister .fadeIn.eleventh,
+  .formContentRegister ul.errorlist {
+    width: 81% !important;
+    margin-left: 10% !important;
+    margin-right: 10% !important;
+  }
+}

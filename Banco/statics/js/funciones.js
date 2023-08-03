@@ -1,3 +1,7 @@
+$(document).ready(function() {
+  $('[data-toggle="tooltip"]').tooltip();
+});
+
 $("input").focus(function() {
       $(this).removeAttr('placeholder');
 });
