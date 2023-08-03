@@ -8,20 +8,20 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
 
-    # register and confirmation of account
+    # login, register and confirmation of account
 
-    path('register/', views.register),
-    path('activar/<uidb64>/<token>', views.activate, name='activate'),
+    path('login/', views.LoginView.as_view(), name="login"),
+    path('logout/', views.logout),
+    path('register/', views.RegisterView.as_view(), name="register"),
+    # path('activar/<uidb64>/<token>', views.activate, name='activate'),
 
     # main urls
 
     path('', views.welcome),
-    path('login/', views.login, name="login"),
-    path('logout/', views.logout),
-    path('about-us/', views.info),
-    path('info-personal/', views.perfil),
-    path('info-personal/actualizar-contraseña/', views.cambiar_contraseña),
-    path('personas/', views.search_view, name="search_view"),
+    # path('about-us/', views.info),
+    # path('info-personal/', views.perfil),
+    # path('info-personal/actualizar-contraseña/', views.cambiar_contraseña),
+    # path('personas/', views.search_view, name="search_view"),
 
     # includes
 

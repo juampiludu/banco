@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from .models import Cuenta
+from utils.is_user_under_age import is_user_under_age
 
 PROVINCE_FIELDS = (
     ('first', '-- Seleccioná tu provincia --'),
@@ -77,14 +78,14 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
-    address = forms.CharField(label="", max_length=140, required=False, widget=forms.TextInput(
+    address = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn eighth',
-            'placeholder': 'Dirección',
+            'placeholder': 'Domicilio',
         }
     ))
 
-    password1 = forms.CharField(label='', widget=forms.TextInput(
+    password1 = forms.CharField(label='', required=True, widget=forms.TextInput(
         attrs={
             'type': 'password',
             'class': 'fadeIn ninth',
@@ -92,7 +93,7 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
-    password2 = forms.CharField(label='', widget=forms.TextInput(
+    password2 = forms.CharField(label='', required=True, widget=forms.TextInput(
         attrs={
             'type': 'password',
             'class': 'fadeIn tenth',
@@ -100,24 +101,43 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
-    province = forms.ChoiceField(choices=PROVINCE_FIELDS, widget=forms.Select(
+    province = forms.ChoiceField(choices=PROVINCE_FIELDS, required=False, widget=forms.Select(
         attrs={
             'class' : 'form-control fadeIn eighth',
         }
     ))
 
-    city = forms.CharField(label="", max_length=140, required=False, widget=forms.TextInput(
+    city = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn seventh',
             'placeholder': 'Ciudad',
         }
     ))
 
-    def clean_firstname(self):
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if Cuenta.objects.filter(email=email).exists():
+            raise forms.ValidationError(f'El email "{email}" ya está en uso')
+        return email
+
+    def clean_first_name(self):
         return self.cleaned_data['first_name'].capitalize()
 
-    def clean_lastname(self):
+    def clean_last_name(self):
         return self.cleaned_data['last_name'].capitalize()
+    
+    def clean_born_date(self):
+        born_date = self.cleaned_data['born_date']
+        print(born_date)
+        if is_user_under_age(born_date):
+            raise forms.ValidationError('Tenés que ser mayor de 18 años para poder crear tu cuenta')
+        return born_date
+    
+    def clean_province(self):
+        province = self.cleaned_data['province']
+        if not province:
+            raise forms.ValidationError("Seleccioná una provincia")
+        return province
 
     class Meta:
         model = Cuenta
@@ -146,10 +166,10 @@ class ActualizarForm(UserChangeForm):
         }
     ))
 
-    address = forms.CharField(label="Dirección", max_length=140, required=False, widget=forms.TextInput(
+    address = forms.CharField(label="Domicilio", max_length=140, required=False, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
-            'placeholder': 'Dirección',
+            'placeholder': 'Domicilio',
         }
     ))
 

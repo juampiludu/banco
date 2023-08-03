@@ -57,7 +57,7 @@ $("#id_city").blur(function() {
 });
 
 $("#id_address").blur(function() {
-  $(this).attr('placeholder', "Dirección");
+  $(this).attr('placeholder', "Domicilio");
 });
 
 $("#id_password1").blur(function() {

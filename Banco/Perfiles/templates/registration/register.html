@@ -2,6 +2,14 @@
 {% load static %}
 {% block mainblock %}
 
+  {% if form.errors %}
+    <div style="margin: 20px;">
+      {% for field in form %}
+      {{ field.errors }}
+      {% endfor %}
+    </div>
+  {% endif %}
+
   <!-- Login Form -->
   <form method="POST" style="margin: 10px;" autocomplete="off">
     {% csrf_token %}
