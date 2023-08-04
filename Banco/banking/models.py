@@ -1,7 +1,7 @@
 from django.db import models
 
 class Banking(models.Model):
-    user = models.ForeignKey("Perfiles.Cuenta", on_delete=models.CASCADE)
+    user = models.OneToOneField('Perfiles.Cuenta', on_delete=models.CASCADE, unique=True)
     cvu = models.CharField(max_length=22, unique=True, editable=False)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 

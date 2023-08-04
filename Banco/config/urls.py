@@ -3,6 +3,7 @@ from django.urls import path, include
 from Perfiles import views
 from Perfiles import form
 from django.contrib.auth import views as auth_views
+from django_email_verification import urls as email_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,13 +12,14 @@ urlpatterns = [
     # login, register and confirmation of account
 
     path('login/', views.LoginView.as_view(), name="login"),
-    path('logout/', views.logout),
+    path('logout/', views.logout, name='logout'),
     path('register/', views.RegisterView.as_view(), name="register"),
-    # path('activar/<uidb64>/<token>', views.activate, name='activate'),
+    # path('activar/', include(email_urls)),
+    path('activar/<token>', views.activate_account, name='activate_account'),
 
     # main urls
 
-    path('', views.welcome),
+    path('', views.welcome, name='landing'),
     # path('about-us/', views.info),
     # path('info-personal/', views.perfil),
     # path('info-personal/actualizar-contraseña/', views.cambiar_contraseña),

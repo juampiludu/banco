@@ -70,11 +70,14 @@ class Cuenta(AbstractBaseUser, PermissionsMixin):
     
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
+    
+    def has_perms(self):
+        return self.is_staff and self.is_superuser
 
 
 @receiver(post_save, sender=get_user_model())
 def user_created(sender, instance, created, **kwargs):        
-    if created:
+    if created and instance.has_perms():
         banking = Banking()
         banking.user = instance
         banking.cvu = generar_cvu()

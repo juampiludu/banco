@@ -25,9 +25,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView as DefaultLoginView
 from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
+from utils.generar_cvu import generar_cvu
+from django_email_verification import send_email, verify_view, verify_token
+from django.db import IntegrityError
 
 
 CuentaModel = get_user_model()
@@ -50,10 +53,38 @@ def info(request):
     notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
     return render(request, "info.html", {'title' : title, 'notifications' : notifications})
 
+@verify_view
+def activate_account(request, token):
+    success, user = verify_token(token)
 
-class LoginView(DefaultLoginView):
+    if request.user != user or request.user.is_authenticated:
+        return redirect('landing')
+
+    try:
+        if success:
+            banking = Banking()
+            banking.user = user
+            banking.cvu = generar_cvu()
+            banking.save()
+    except IntegrityError:
+        pass
+
+    msg = 'Cuenta activada con éxito!'
+    
+    context = {
+        'msg': msg,
+        'success': success
+    }
+
+    return render(request, 'registration/message.html', context)
+
+
+class LoginView(DefaultLoginView, UserPassesTestMixin):
     form_class = LoginForm
     template_name = "login.html"
+
+    def test_func(self):
+        return not self.request.user.is_authenticated
 
 
 class RegisterView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
@@ -70,19 +101,27 @@ class RegisterView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
         user.set_unusable_password()
         user.save()
 
-        current_site = get_current_site(self.request)
-        mail_subject = 'Activá tu cuenta.'
-        email_html = render_to_string('registration/confirm_account.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': default_token_generator.make_token(user)
-        })
-        message = strip_tags(email_html)
-        to_email = form.cleaned_data.get('email')
+        # current_site = get_current_site(self.request)
+        # domain = current_site.domain
+        # protocol = 'https' if self.request.is_secure() else 'http'
 
-        email = EmailMultiAlternatives(mail_subject, message, 'lu.dev.spprt@gmail.com', [to_email])
-        email.attach_alternative(email_html, "text/html")
-        email.send()
+        # activation_token = default_token_generator.make_token(user)
+        # uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        # activation_link = reverse('activate_account', args=[uidb64, activation_token])
+        # activation_url = f"{protocol}://{domain}{activation_link}"
+
+        # mail_subject = 'Activá tu cuenta.'
+        # email_html = render_to_string('registration/confirm_account.html', {
+        #     'user': user,
+        #     'activation_url': activation_url
+        # })
+        # message = strip_tags(email_html)
+        # to_email = form.cleaned_data.get('email')
+
+        # email = EmailMultiAlternatives(mail_subject, message, 'lu.dev.spprt@gmail.com', [to_email])
+        # email.attach_alternative(email_html, "text/html")
+        # email.send()
+
+        send_email(user)
 
         return super().form_valid(form)

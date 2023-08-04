@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_email_verification',
 ]
 
 SITE_ID = 1
@@ -155,3 +156,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #EMAIL_HOST_USER = 'apikey'
 #DEFAULT_FROM_EMAIL  = 'lu.dev.spprt@gmail.com'
 #EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+
+# django-email-verification settings
+
+def verified_callback(user):
+    user.is_active = True
+
+EMAIL_VERIFIED_CALLBACK = verified_callback
+EMAIL_FROM_ADDRESS = 'noreply@aliasaddress.com'
+EMAIL_MAIL_SUBJECT = 'Confirm your email'
+EMAIL_MAIL_HTML = 'registration/confirm_account.html'
+EMAIL_MAIL_PLAIN = 'registration/confirm_account.txt'
+EMAIL_MAIL_TOKEN_LIFE = 60 * 60 * 24 * 3 # (3 days in seconds)
+EMAIL_MAIL_PAGE_TEMPLATE = 'registration/message.html'
+EMAIL_PAGE_DOMAIN = 'http://0.0.0.0:8080/'

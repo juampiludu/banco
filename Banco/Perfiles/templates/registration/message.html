@@ -4,7 +4,13 @@
 
 <div style="margin: 20px;">
     <p>
-        {{msg|safe}}
+        {% if success %}
+        {{msg}}
+        <br/>
+        Ahora podés <a href="{% url 'login' %}">iniciar sesión</a>
+        {% else %}
+        El link de activación es inválido
+        {% endif %}
     </p>
     <br/>
 </div>
