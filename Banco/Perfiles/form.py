@@ -121,10 +121,10 @@ class RegistroForm(UserCreationForm):
         return email
 
     def clean_first_name(self):
-        return self.cleaned_data['first_name'].capitalize()
+        return self.cleaned_data['first_name'].title()
 
     def clean_last_name(self):
-        return self.cleaned_data['last_name'].capitalize()
+        return self.cleaned_data['last_name'].title()
     
     def clean_born_date(self):
         born_date = self.cleaned_data['born_date']

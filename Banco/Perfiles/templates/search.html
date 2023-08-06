@@ -25,26 +25,26 @@
 {% block mainblock %}
 
 <center>
-    {% for i in all_users %}
+    {% for banking in all_bankings %}
     <div class="row" style="margin: 20px;">
         <div class="col-sm-12">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">{{i.user__first_name}} {{i.user__last_name}}</h5>
-              <p class="card-text"><a href="mailto:{{i.user__email}}">{{i.user__email}}</a></p>
-              <p class="card-text">CVU: <strong id="{{i.cvu}}">{{i.cvu}}</strong></p>
-              <button class="btn btn-dark" id="{{i.cvu}}-btn" onclick="copyCvu{{i.cvu}}('{{i.cvu}}')">Copiar CVU</button>
+              <h5 class="card-title">{{banking.user.get_full_name}}</h5>
+              <p class="card-text"><a href="mailto:{{banking.user.email}}">{{banking.user.email}}</a></p>
+              <p class="card-text">CVU: <strong id="{{banking.cvu}}">{{banking.cvu}}</strong></p>
+              <button class="btn btn-dark" id="{{banking.cvu}}-btn" onclick="copyCvu{{banking.cvu}}('{{banking.cvu}}')">Copiar CVU</button>
             </div>
           </div>
         </div>
       </div>
 
       <script>
-        function copyCvu{{i.cvu}}(elementId) {
+        function copyCvu{{banking.cvu}}(elementId) {
   
           var aux = document.createElement("input");
 
-          var btn = document.getElementById("{{i.cvu}}-btn");
+          var btn = document.getElementById("{{banking.cvu}}-btn");
 
           aux.setAttribute("value", document.getElementById(elementId).innerHTML);
 
@@ -70,24 +70,24 @@
 
     {% endfor %}
 
-    {% if all_users.has_other_pages %}
+    {% if all_bankings.has_other_pages %}
 
     <div aria-label="Page navigation example">
       <ul class="pagination" style="justify-content: center;">
-        {% if all_users.has_previous %}
-          <li class="page-item"><a class="page-link" href="?search={{search}}&page={{ all_users.previous_page_number }}">&laquo;</a></li>
+        {% if all_bankings.has_previous %}
+          <li class="page-item"><a class="page-link" href="?search={{search}}&page={{ all_bankings.previous_page_number }}">&laquo;</a></li>
         {% else %}
           <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1"><span>&laquo;</span></a></li>
         {% endif %}
-        {% for i in all_users.paginator.page_range %}
-          {% if all_users.number == i %}
+        {% for i in all_bankings.paginator.page_range %}
+          {% if all_bankings.number == i %}
             <li class="page-item active"><a class="page-link" href="#"><span>{{ i }} <span class="sr-only">(current)</span></span></a></li>
           {% else %}
             <li class="page-item"><a class="page-link" href="?search={{search}}&page={{ i }}">{{ i }}</a></li>
           {% endif %}
         {% endfor %}
-        {% if all_users.has_next %}
-          <li class="page-item"><a class="page-link" href="?search={{search}}&page={{ all_users.next_page_number }}">&raquo;</a></li>
+        {% if all_bankings.has_next %}
+          <li class="page-item"><a class="page-link" href="?search={{search}}&page={{ all_bankings.next_page_number }}">&raquo;</a></li>
         {% else %}
           <li class="page-item disabled"><a class="page-link" href="#"><span>&raquo;</span></a></li>
         {% endif %}

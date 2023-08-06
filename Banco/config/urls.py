@@ -20,10 +20,10 @@ urlpatterns = [
     # main urls
 
     path('', views.welcome, name='landing'),
-    # path('about-us/', views.info),
+    path('about-us/', views.info),
     # path('info-personal/', views.perfil),
     # path('info-personal/actualizar-contraseña/', views.cambiar_contraseña),
-    # path('personas/', views.search_view, name="search_view"),
+    path('personas/', views.SearchUserView.as_view(), name="search_view"),
 
     # includes
 

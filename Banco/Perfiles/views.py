@@ -1,3 +1,5 @@
+from typing import Any, Dict
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as do_logout
 from django.contrib.auth import login as do_login
@@ -31,6 +33,8 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from utils.generar_cvu import generar_cvu
 from django_email_verification import send_email, verify_view, verify_token
 from django.db import IntegrityError
+from utils.bank_constants import bank_constants
+from django.views.generic import ListView
 
 
 CuentaModel = get_user_model()
@@ -68,11 +72,9 @@ def activate_account(request, token):
             banking.save()
     except IntegrityError:
         pass
-
-    msg = 'Cuenta activada con éxito!'
     
     context = {
-        'msg': msg,
+        'msg': bank_constants.ACTIVATED_ACCOUNT,
         'success': success
     }
 
@@ -85,6 +87,11 @@ class LoginView(DefaultLoginView, UserPassesTestMixin):
 
     def test_func(self):
         return not self.request.user.is_authenticated
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = bank_constants.TITLE_LOGIN
+        return context
 
 
 class RegisterView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
@@ -101,27 +108,38 @@ class RegisterView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
         user.set_unusable_password()
         user.save()
 
-        # current_site = get_current_site(self.request)
-        # domain = current_site.domain
-        # protocol = 'https' if self.request.is_secure() else 'http'
-
-        # activation_token = default_token_generator.make_token(user)
-        # uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-        # activation_link = reverse('activate_account', args=[uidb64, activation_token])
-        # activation_url = f"{protocol}://{domain}{activation_link}"
-
-        # mail_subject = 'Activá tu cuenta.'
-        # email_html = render_to_string('registration/confirm_account.html', {
-        #     'user': user,
-        #     'activation_url': activation_url
-        # })
-        # message = strip_tags(email_html)
-        # to_email = form.cleaned_data.get('email')
-
-        # email = EmailMultiAlternatives(mail_subject, message, 'lu.dev.spprt@gmail.com', [to_email])
-        # email.attach_alternative(email_html, "text/html")
-        # email.send()
-
         send_email(user)
 
+        messages.SUCCESS(bank_constants.EMAIL_SENT)
+
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = bank_constants.TITLE_REGISTER
+        return context
+
+
+class SearchUserView(ListView):
+    model = Banking
+    template_name = "search.html"
+    context_object_name = "all_bankings"
+
+    def get_queryset(self):
+        query = self.request.GET.get('search')
+        if query:
+            queryset = Banking.objects.filter(Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query))
+        else:
+            queryset = Banking.objects.all()
+
+        items_per_page = bank_constants.ITEMS_PER_PAGE
+        paginator = Paginator(queryset, items_per_page)
+        page_number = self.request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+        
+        return page_obj
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = bank_constants.TITLE_SEARCH
+        return context

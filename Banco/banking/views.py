@@ -15,12 +15,13 @@ from decimal import Decimal
 from django.core.exceptions import ObjectDoesNotExist
 from utils.exceptions import SameAccount
 from django.utils import timezone
+from utils.bank_constants import bank_constants
 
 
 def cuenta_ingresar(request, banking):
     with transaction.atomic():
         amount = Decimal(request.POST["total_balance"])
-        if amount <= 0:
+        if amount <= 0.01:
             messages.error(request, "La cantidad mínima para ingresar es de $0,01", extra_tags="cuenta")
             return redirect("cuenta")
         banking.balance += amount
@@ -52,7 +53,7 @@ def transferir(request, banking):
         except SameAccount:
             messages.error(request, "No podés transferirte vos mismo", extra_tags="cvu")
         finally:
-            if amount <= 0:
+            if amount <= 0.01:
                 messages.error(request, "La cantidad mínima para transferir es de $0,01", extra_tags="min")
             elif amount > banking.balance:
                 messages.error(request, "Saldo insuficiente", extra_tags="min")
@@ -99,7 +100,7 @@ class TransfersView(View):
     def get(self, request):
         transfers = Transferencias.objects.all().filter(Q(sender=request.user) | Q(receiver=request.user)).order_by('-timestamp')
 
-        items_per_page = 1
+        items_per_page = bank_constants.ITEMS_PER_PAGE
         paginator = Paginator(transfers, items_per_page)
         page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
