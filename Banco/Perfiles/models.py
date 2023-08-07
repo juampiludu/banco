@@ -53,7 +53,7 @@ class Cuenta(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=14, null=True)
     dni = models.CharField(max_length=8, unique=True, null=True)
     province = models.CharField(max_length=50, null=True)
-    city = models.CharField(max_length=250, null=True)
+    localidad = models.CharField(max_length=250, null=True)
     address = models.CharField(max_length=140, null=True)
     date_joined = models.DateField(verbose_name="date joined", default=timezone.now)
     is_active = models.BooleanField(default=False)

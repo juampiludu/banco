@@ -5,3 +5,4 @@ pytz
 sqlparse
 django-allauth
 django-email-verification
+requests

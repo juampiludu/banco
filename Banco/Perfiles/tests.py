@@ -12,7 +12,7 @@ class RegistroFormTest(TestCase):
             'phone': '123456',
             'dni': '222',
             'province': 'cb',
-            'city': 'Mendiolaza',
+            'localidad': 'Mendiolaza',
             'address': 'Norte 61',
             'password1': 'juanjuan1',
             'password2': 'juanjuan1'

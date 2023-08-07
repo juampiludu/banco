@@ -19,7 +19,7 @@
     {{ form.phone }}
     {{ form.dni }}
     {{ form.province }}
-    {{ form.city }}
+    {{ form.localidad }}
     {{ form.address }}
     {{ form.password1 }}
     {{ form.password2 }}
@@ -38,9 +38,22 @@
 
   <script>
 
-    window.onload = function() {
-      var x = document.getElementById("id_province").options[0].disabled = true;
-    };
+  $(document).ready(function() {
+    $('#id_province').change(function() {
+      var provincia_id = $(this).val();
+      var selectLocalidad = $('#id_localidad');
+      selectLocalidad.empty();
+      
+      $.get("{% url 'get_new_localidades' %}", {'provincia_id': provincia_id}, function(data) {
+        var newChoices = data.choices;
+        selectLocalidad.empty();
+
+        $.each(newChoices, function(index, choice) {
+          selectLocalidad.append($('<option>').val(choice[0]).text(choice[1]));
+        });
+      });
+    });
+  });
 
   </script>
 

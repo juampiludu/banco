@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
     <link rel="shortcut icon" href="{% static 'icon.png' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/c8787d6c86.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {% block headblock %}
     {% endblock %}
 </head>
@@ -78,7 +79,9 @@
                     {% endif %}
                   </ul>
                 </li>
+                {% if user.has_privilege %}
                 <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fas fa-user-cog"></i> Administrar</a></li>
+                {% endif %}
                 <li><div class="dropdown-divider"></div></li>
                 <li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
               </ul>

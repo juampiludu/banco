@@ -42,8 +42,8 @@
                       <td>{{ form.province }}</td>
                     </tr>
                     <tr>
-                      <td>Ciudad:</td>
-                      <td>{{ form.city }}</td>
+                      <td>Localidad:</td>
+                      <td>{{ form.localidad }}</td>
                     </tr>
                     <tr>
                       <td>Dirección:</td>
@@ -58,6 +58,12 @@
                     </tr>
                   </tbody>
                 </table>
+
+                {% if form.errors %}
+                    {% for field in form %}
+                        {{ field.errors }}
+                    {% endfor %}
+                {% endif %}
 
                 <button type="submit" id="formSumbitionButton" disabled class="btn btn-dark">Guardar cambios</button>
                 <button type="button" class="btn btn-primary" onclick="window.location='{% url 'cambiar_contraseña' %}'">Cambiar contraseña</button>
@@ -75,10 +81,6 @@
   <br/>
 
   <script>
-
-    var province_select = document.getElementById("id_province");
-    province_select.options[0].disabled = true;
-    province_select.className = 'form-control';
 
     const inputElements = document.querySelectorAll('input')
 
@@ -100,7 +102,7 @@
 
       for (const element of form.elements) {
         if (element.name && ['input', 'select', 'textarea'].includes(element.tagName.toLowerCase())) {
-          var action = element.name == 'province' ? 'change' : 'keyup';
+          var action = element.name == 'direccion' ? 'keyup' : 'change';
           element.addEventListener(action, () => {
             for (const [name, value] of initialFormValues.entries()) {
               if (value !== form.elements[name].value) {
@@ -116,7 +118,37 @@
       }
     }
     
-    areFieldsModified();    
+    areFieldsModified();
+
+    $(document).ready(function() {
+      $('#id_province').change(function() {
+        var provincia_id = $(this).val();
+        var selectLocalidad = $('#id_localidad');
+        selectLocalidad.empty();
+        
+        $.get("{% url 'get_new_localidades' %}", {'provincia_id': provincia_id}, function(data) {
+          var newChoices = data.choices;
+          selectLocalidad.empty();
+  
+          $.each(newChoices, function(index, choice) {
+            selectLocalidad.append($('<option>').val(choice[0]).text(choice[1]));
+          });
+        });
+      });
+    });
+
+    {% if messages %}
+    {% for message in messages %}
+    $(document).ready(function() {
+      Swal.fire({
+        icon: 'success',
+        title: '{{ message }}',
+        showConfirmButton: false,
+        showCloseButton: true
+      })
+    });
+    {% endfor %}
+    {% endif %}
 
   </script>
 

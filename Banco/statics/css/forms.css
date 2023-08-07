@@ -317,7 +317,8 @@ html {
 
   /* SELECT */
 
-  #id_province {
+  #id_province,
+  #id_localidad {
     background-color: #f6f6f6;
     border: none;
     width: 85%;
@@ -333,7 +334,8 @@ html {
     transition: all 0.3s ease-in-out;
   }
 
-  #id_province:focus {
+  #id_province:focus,
+  #id_localidad:focus {
     background-color: white;
     color: #0d0d0d;
     box-shadow: none;
@@ -369,7 +371,8 @@ html {
   .formContentRegister {
     max-width: none !important;
   }
-  .formContentRegister input {
+  .formContentRegister input,
+  .formContentRegister #id_localidad {
     width: 40% !important;
   }
   .formContentRegister #id_province {

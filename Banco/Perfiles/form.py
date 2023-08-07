@@ -1,34 +1,12 @@
+from typing import Any
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from .models import Cuenta
 from utils.is_user_under_age import is_user_under_age
+from utils.georefar import georefar
 
-PROVINCE_FIELDS = (
-    ('first', '-- Seleccioná tu provincia --'),
-    ('ba', 'Buenos Aires'),
-    ('ct', 'Catamarca'),
-    ('cc', 'Chaco'),
-    ('ch', 'Chubut'),
-    ('cb', 'Córdoba'),
-    ('cn', 'Corrientes'),
-    ('er', 'Entre Ríos'),
-    ('fm', 'Formosa'),
-    ('jy', 'Jujuy'),
-    ('lp', 'La Pampa'),
-    ('lr', 'La Rioja'),
-    ('mz', 'Mendoza'),
-    ('mn', 'Misiones'),
-    ('nq', 'Neuquén'),
-    ('rn', 'Río Negro'),
-    ('sa', 'Salta'),
-    ('sj', 'San Juan'),
-    ('sl', 'San Luis'),
-    ('sc', 'Santa Cruz'),
-    ('sf', 'Santa Fe'),
-    ('se', 'Santiago del Estero'),
-    ('tf', 'Tierra del Fuego'),
-    ('tm', 'Tucumán'),
-)
+PROVINCE_FIELDS = georefar.get_provincias()
+LOCALIDAD_FIELDS = georefar.get_localidades(None)
 
 class RegistroForm(UserCreationForm):
 
@@ -101,16 +79,15 @@ class RegistroForm(UserCreationForm):
         }
     ))
 
-    province = forms.ChoiceField(choices=PROVINCE_FIELDS, label='', required=False, widget=forms.Select(
+    province = forms.ChoiceField(choices=PROVINCE_FIELDS, label='', widget=forms.Select(
         attrs={
             'class' : 'fadeIn eighth',
         }
     ))
 
-    city = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
+    localidad = forms.ChoiceField(choices=LOCALIDAD_FIELDS, widget=forms.Select(
         attrs={
             'class': 'fadeIn seventh',
-            'placeholder': 'Ciudad',
         }
     ))
 
@@ -143,6 +120,12 @@ class RegistroForm(UserCreationForm):
         if not province:
             raise forms.ValidationError("Seleccioná una provincia")
         return province
+    
+    def clean_localidad(self):
+        localidad = self.cleaned_data['localidad']
+        if not localidad:
+            raise forms.ValidationError("Seleccioná una localidad")
+        return localidad
 
     class Meta:
         model = Cuenta
@@ -154,7 +137,7 @@ class RegistroForm(UserCreationForm):
             'phone',
             'dni',
             'province',
-            'city',
+            'localidad',
             'address',
             'password1',
             'password2',
@@ -178,12 +161,15 @@ class ActualizarForm(UserChangeForm):
         }
     ))
 
-    province = forms.ChoiceField(choices=PROVINCE_FIELDS)
-
-    city = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
+    province = forms.ChoiceField(choices=PROVINCE_FIELDS, widget=forms.Select(
         attrs={
             'class': 'form-control',
-            'placeholder': 'Ciudad',
+        }
+    ))
+
+    localidad = forms.ChoiceField(choices=LOCALIDAD_FIELDS, widget=forms.Select(
+        attrs={
+            'class': 'form-control',
         }
     ))
 
@@ -192,13 +178,19 @@ class ActualizarForm(UserChangeForm):
         if not province:
             raise forms.ValidationError("Seleccioná una provincia")
         return province
+    
+    def clean_localidad(self):
+        localidad = self.cleaned_data['localidad']
+        if not localidad:
+            raise forms.ValidationError("Seleccioná una localidad")
+        return localidad
 
     class Meta:
         model = Cuenta
         fields = (
             'phone',
             'address',
-            'city',
+            'localidad',
             'province',
             )
 

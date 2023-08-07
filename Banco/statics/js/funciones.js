@@ -56,10 +56,6 @@ $("#id_dni").blur(function() {
   $(this).attr('placeholder', "*DNI");
 });
 
-$("#id_city").blur(function() {
-  $(this).attr('placeholder', "Ciudad");
-});
-
 $("#id_address").blur(function() {
   $(this).attr('placeholder', "Domicilio");
 });

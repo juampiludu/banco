@@ -14,7 +14,6 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name="login"),
     path('logout/', views.logout, name='logout'),
     path('register/', views.RegisterView.as_view(), name="register"),
-    # path('activar/', include(email_urls)),
     path('activar/<token>', views.activate_account, name='activate_account'),
 
     # main urls
@@ -24,6 +23,7 @@ urlpatterns = [
     path('info-personal/', views.UserInfoView.as_view(), name='info_personal'),
     path('info-personal/cambiar-contraseña/', views.UpdatePasswordView.as_view(), name="cambiar_contraseña"),
     path('personas/', views.SearchUserView.as_view(), name="search_view"),
+    path('get-new-localidades/', views.get_new_localidades, name='get_new_localidades'),
 
     # includes
 

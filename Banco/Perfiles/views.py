@@ -1,5 +1,6 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Type
 from django.db.models.query import QuerySet
+from django.forms.models import BaseModelForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as do_logout
 from django.contrib.auth import login as do_login
@@ -36,6 +37,8 @@ from django.db import IntegrityError, models
 from utils.bank_constants import bank_constants
 from django.views.generic import ListView
 from django.contrib.auth.views import PasswordChangeView
+from django.http import JsonResponse
+from utils.georefar import georefar
 
 
 CuentaModel = get_user_model()
@@ -57,6 +60,13 @@ def info(request):
     title = "Sobre Nosotros"
     notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
     return render(request, "info.html", {'title' : title, 'notifications' : notifications})
+
+def get_new_localidades(request):
+    provincia_id = request.GET.get('provincia_id')
+    
+    new_choices = georefar.get_localidades(provincia_id)
+
+    return JsonResponse({'choices': new_choices})
 
 @verify_view
 def activate_account(request, token):
@@ -104,6 +114,16 @@ class RegisterView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         return not self.request.user.is_authenticated
     
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        if self.request.method == 'POST':
+            selected_provincia = form.data['province']
+            updated_localidad_choices = georefar.get_localidades(selected_provincia)
+            form.fields['localidad'].choices = updated_localidad_choices
+        
+        return form
+    
     def form_valid(self, form):
         user = form.save(commit=False)
         user.set_unusable_password()
@@ -111,7 +131,7 @@ class RegisterView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
 
         send_email(user)
 
-        messages.SUCCESS(bank_constants.EMAIL_SENT)
+        messages.add_message(self.request, messages.SUCCESS, bank_constants.EMAIL_SENT)
 
         return super().form_valid(form)
     
@@ -147,24 +167,43 @@ class SearchUserView(ListView):
     
 
 class UserInfoView(LoginRequiredMixin, UpdateView):
-    model = Cuenta
+    model = CuentaModel
     template_name = "perfil.html"
     context_object_name = "user"
     form_class = ActualizarForm
+    success_url = reverse_lazy('info_personal')
 
     def get_object(self, queryset=None):
         return self.request.user
-    
-    def get_success_url(self):
-        return reverse_lazy('info_personal')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = bank_constants.TITLE_PROFILE
         return context
     
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        if self.request.method == 'POST':
+            selected_provincia = form.data['province']
+        else:
+            selected_provincia = form.initial['province']
+
+        updated_localidad_choices = georefar.get_localidades(selected_provincia)
+        form.fields['localidad'].choices = updated_localidad_choices
+        
+        return form
+    
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Datos actualizados correctamente')
+        return super().form_valid(form)
+    
 
 class UpdatePasswordView(PasswordChangeView):
     template_name = "perfil/change_pass.html"
     form_class = CambiarContraForm
     success_url = reverse_lazy('info_personal')
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Contraseña actualizada')
+        return super().form_valid(form)
