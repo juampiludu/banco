@@ -21,8 +21,8 @@ urlpatterns = [
 
     path('', views.welcome, name='landing'),
     path('about-us/', views.info),
-    # path('info-personal/', views.perfil),
-    # path('info-personal/actualizar-contraseña/', views.cambiar_contraseña),
+    path('info-personal/', views.UserInfoView.as_view(), name='info_personal'),
+    path('info-personal/cambiar-contraseña/', views.UpdatePasswordView.as_view(), name="cambiar_contraseña"),
     path('personas/', views.SearchUserView.as_view(), name="search_view"),
 
     # includes

@@ -171,45 +171,33 @@ class ActualizarForm(UserChangeForm):
         }
     ))
 
-    address = forms.CharField(label="Domicilio", max_length=140, required=False, widget=forms.TextInput(
+    address = forms.CharField(label="Domicilio", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
             'placeholder': 'Domicilio',
         }
     ))
 
-    dni = forms.CharField(label="DNI", max_length=8, required=True, widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder': '*DNI',
-            'onkeypress': 'return valida(event);',
-            'type': 'tel',
-        }
-    ))
-
-    born_date = forms.DateField(label="", required=True, initial='2019-01-01', widget=forms.TextInput(
-        attrs={
-            'type': 'date',
-            'class': 'form-control',
-        }
-    ))
-
     province = forms.ChoiceField(choices=PROVINCE_FIELDS)
 
-    city = forms.CharField(label="", max_length=140, required=False, widget=forms.TextInput(
+    city = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
             'placeholder': 'Ciudad',
         }
     ))
 
+    def clean_province(self):
+        province = self.cleaned_data['province']
+        if not province:
+            raise forms.ValidationError("Seleccioná una provincia")
+        return province
+
     class Meta:
         model = Cuenta
         fields = (
             'phone',
             'address',
-            'dni',
-            'born_date',
             'city',
             'province',
             )
@@ -219,7 +207,7 @@ class CambiarContraForm(PasswordChangeForm):
     old_password = forms.CharField(label='Actual contraseña:', widget=forms.TextInput(
         attrs={
             'type': 'password',
-            'class': 'form-control',
+            'class': 'form-control',            
         }
     ))
 
@@ -227,6 +215,7 @@ class CambiarContraForm(PasswordChangeForm):
         attrs={
             'type': 'password',
             'class': 'form-control',
+            'autocomplete': 'off',
         }
     ))
 
@@ -234,6 +223,7 @@ class CambiarContraForm(PasswordChangeForm):
         attrs={
             'type': 'password',
             'class': 'form-control',
+            'autocomplete': 'off',
         }
     ))
 

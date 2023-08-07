@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as do_logout
@@ -26,15 +26,16 @@ from .models import Cuenta
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView as DefaultLoginView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from utils.generar_cvu import generar_cvu
 from django_email_verification import send_email, verify_view, verify_token
-from django.db import IntegrityError
+from django.db import IntegrityError, models
 from utils.bank_constants import bank_constants
 from django.views.generic import ListView
+from django.contrib.auth.views import PasswordChangeView
 
 
 CuentaModel = get_user_model()
@@ -143,3 +144,27 @@ class SearchUserView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = bank_constants.TITLE_SEARCH
         return context
+    
+
+class UserInfoView(LoginRequiredMixin, UpdateView):
+    model = Cuenta
+    template_name = "perfil.html"
+    context_object_name = "user"
+    form_class = ActualizarForm
+
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def get_success_url(self):
+        return reverse_lazy('info_personal')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = bank_constants.TITLE_PROFILE
+        return context
+    
+
+class UpdatePasswordView(PasswordChangeView):
+    template_name = "perfil/change_pass.html"
+    form_class = CambiarContraForm
+    success_url = reverse_lazy('info_personal')

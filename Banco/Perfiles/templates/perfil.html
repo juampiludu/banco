@@ -1,31 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block navblock %}
-<li class="nav-item">
-  <a class="nav-link" href="/">Inicio</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="/cuenta">Cuenta</a>
-</li>
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Actividad
-  </a>
-  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-    <a class="dropdown-item" href="/actividad/transacciones">Transacciones</a>
-    <a class="dropdown-item" href="/actividad/transferencias">Transferencias</a>
-  </div>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="/about-us">Sobre Nosotros</a>
-</li>
-{% endblock %}
-
 {% block mainblock  %}
 
 <br/>
-<form method="POST">
+
+<form method="POST" id="updateForm">
   {%csrf_token%}
   <div class="container">
     <div class="row">
@@ -34,7 +14,7 @@
   
         <div class="panel panel-info">
           <div class="panel-heading">
-            <h3 class="panel-title">{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+            <h3 class="panel-title">{{ user.get_full_name }}</h3>
           </div>
           <div class="panel-body">
             <div class="row">
@@ -42,27 +22,19 @@
                 <table class="table table-user-information">
                   <tbody>
                     <tr>
-                      <td>Miembro desde:</td>
-                      <td>{{ request.user.date_joined }}</td>
+                      <td>Correo:</td>
+                      <td>{{ user.email }}</td>
                     </tr>
                     <tr>
                       <td>Fecha de nacimiento:</td>
                       <td>
-                        {% if request.user.born_date == None %}
-                        {{ form.born_date }}
-                        {% else %}
-                        {{ request.user.born_date }}
-                        {% endif %}
+                        {{ user.born_date }}
                       </td>
                     </tr>
                     <tr>
                       <td>DNI:</td>
                       <td>
-                        {% if request.user.dni == "" %}
-                        {{ form.dni }}
-                        {% else %}
-                        {{ request.user.dni }}
-                        {% endif %}
+                        {{ user.dni }}
                       </td>
                     </tr>
                     <tr>
@@ -77,19 +49,18 @@
                       <td>Dirección:</td>
                       <td>{{ form.address }}</td>
                     </tr>
-                    <tr>
-                      <td>Correo:</td>
-                      <td>{{ request.user.email }}</td>
-                    </tr>
                       <td>Teléfono:</td>
                       <td>{{ form.phone }}</td>
                     </tr>
-                   
+                    <tr>
+                      <td>Miembro desde:</td>
+                      <td>{{ user.date_joined }}</td>
+                    </tr>
                   </tbody>
                 </table>
-                
+
                 <button type="submit" id="formSumbitionButton" disabled class="btn btn-dark">Guardar cambios</button>
-                <button type="button" class="btn btn-primary" onclick="window.location='/info-personal/actualizar-contraseña'">Editar contraseña</button>
+                <button type="button" class="btn btn-primary" onclick="window.location='{% url 'cambiar_contraseña' %}'">Cambiar contraseña</button>
               </div>
             </div>
           </div>
@@ -105,48 +76,47 @@
 
   <script>
 
-    window.onload = function() {
+    var province_select = document.getElementById("id_province");
+    province_select.options[0].disabled = true;
+    province_select.className = 'form-control';
 
-      var province_select = document.getElementById("id_province");
-      province_select.options[0].disabled = true;
-      province_select.className = 'form-control';
+    const inputElements = document.querySelectorAll('input')
 
-      var cityText = document.getElementById("id_city").value;
-      var addressText = document.getElementById("id_address").value;
-      var phoneText = document.getElementById("id_phone").value;
-      var provinceText = document.getElementById("id_province").value;
-      {% if request.user.dni == "" %}
-      var dniText = document.getElementById("id_dni").value;
-      {% endif %}
+    inputElements.forEach((inputElement) => {
+      inputElement.addEventListener('focus', () => {
+        inputElement.select();
+      })
+    })
 
-      $("#id_city, #id_address, #id_phone, #id_province, #id_dni").each(function() {
+    function areFieldsModified() {
+      const form = document.getElementById('updateForm');
+      const initialFormValues = new Map();
+    
+      for (const element of form.elements) {
+        if (element.name && ['input', 'select', 'textarea'].includes(element.tagName.toLowerCase())) {
+          initialFormValues.set(element.name, element.value);
+        }
+      }
 
-        $(this).on('input', function() {
+      for (const element of form.elements) {
+        if (element.name && ['input', 'select', 'textarea'].includes(element.tagName.toLowerCase())) {
+          var action = element.name == 'province' ? 'change' : 'keyup';
+          element.addEventListener(action, () => {
+            for (const [name, value] of initialFormValues.entries()) {
+              if (value !== form.elements[name].value) {
+                $("#formSumbitionButton").removeAttr('disabled');
+                return true;
+              }
+            }
 
-          $("#formSumbitionButton").removeAttr('disabled');
-
-          switch ($(this).val())
-          {
-
-            case cityText:
-            case addressText:
-            case phoneText:
-            case provinceText:
-            {% if request.user.dni == "" %}
-            case dniText:
-            {% endif %}
-
-              $("#formSumbitionButton").attr("disabled", 'disabled');
-              
-              break;
-
-          }
-
-        });
-
-      });
-      
-    };
+            $("#formSumbitionButton").attr("disabled", 'disabled');
+            return false;
+          });
+        }
+      }
+    }
+    
+    areFieldsModified();    
 
   </script>
 

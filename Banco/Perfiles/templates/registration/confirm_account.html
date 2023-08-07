@@ -19,7 +19,11 @@
     </a>
 </p>
 <p>
-    El link expira el día {{ expiry|time:"TIME_FORMAT" }}
+    {% with current_date=date.today %}
+        {% with days_until=(expiry - current_date).days %}
+            El link expira en {{ days_until }} días.
+        {% endwith %}
+    {% endwith %}
 </p>
 <br/>
 <p style="@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap'); font-family: 'Raleway', sans-serif;">
