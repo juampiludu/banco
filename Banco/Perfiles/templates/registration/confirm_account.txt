@@ -1,5 +1,5 @@
-¡Hola, {{ user.first_name }} {{ user.last_name }}! Para confirmar tu cuenta, entrá al link de abajo:
+¡Hola, {{ user.get_full_name }}! Para confirmar tu cuenta, entrá al link de abajo:
 
 {{ link }}
 
-El link expira el día {{ expiry|time:"TIME_FORMAT" }}
+El link expira el día {{ expiry }}.

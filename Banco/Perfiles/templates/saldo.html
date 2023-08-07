@@ -36,14 +36,8 @@
   </div>
   <form method="POST" autocomplete="off">
       {% csrf_token %}
-      <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control {% for message in messages %}{% if 'cuenta' in message.tags %}is-invalid{% endif %}{% endfor %}" 
+      <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control" 
       placeholder="Monto" required onkeypress="return valida(event)">
-      {% for message in messages %}
-      {% if 'cuenta' in message.tags %}
-      <small class="text-danger">{{message}}</small>
-      <br/>
-      {% endif %}
-      {% endfor %}
       <br>
       <button id="btn1" type="submit" class="btn btn-dark" name="cuenta_ingresar">Ingresar</button>
       <button id="btn2" type="submit" class="btn btn-dark" name="cuenta_retirar">Retirar</button>
@@ -65,24 +59,12 @@
       <h3>Transferir dinero:</h3>
       <p>Tu CVU es: <strong>{{ banking.cvu }}</strong></p>
       <p>Monto: 
-        <input class="form-control {% for message in messages %}{% if 'min' in message.tags %}is-invalid{% endif %}{% endfor %}" 
+        <input class="form-control" 
         placeholder="$" maxlength="6" type="tel" id="trans-cant" name="transferir_amount" required onkeypress="return valida(event)">
-        {% for message in messages %}
-        {% if 'min' in message.tags %}
-        <small class="text-danger">{{message}}</small>
-        <br/>
-        {% endif %}
-        {% endfor %}
       </p>
       <p>CVU destinatario: 
-        <input maxlength="22" placeholder="CVU" class="form-control {% for message in messages %}{% if 'cvu' in message.tags %}is-invalid{% endif %}{% endfor %}" 
+        <input maxlength="22" placeholder="CVU" class="form-control" 
         id="trans-cvu" type="tel" name="transferir_cvu" required onkeypress="return valida(event)">
-        {% for message in messages %}
-        {% if 'cvu' in message.tags %}
-        <small class="text-danger">{{message}}</small>
-        <br/>
-        {% endif %}
-        {% endfor %}
       </p>
       <button type="submit" name="transferir" class="btn btn-dark">Transferir</button>
     </form>
@@ -142,5 +124,22 @@
           </div>
         </div>
       </div>
+
+      {% if messages %}
+      <script>
+
+        
+        {% for message in messages %}
+        
+        var smallElement = $('<small class="text-danger">{{ message }}</small><br/>')
+        var inputElement = $('{{ message.extra_tags }}');
+
+        inputElement.addClass('is-invalid');
+        inputElement.after(smallElement);
+
+        {% endfor %}
+
+      </script>
+      {% endif %}
 
 {% endblock %}

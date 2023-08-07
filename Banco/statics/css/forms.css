@@ -360,6 +360,12 @@ html {
   transition: all 0.3s ease-in-out;
 }
 
+#id_province,
+#id_localidad {
+  margin: 5px;
+  padding: 15px 32px;
+}
+
 #id_born_date:focus {
   background-color: white;
   color: #0d0d0d;

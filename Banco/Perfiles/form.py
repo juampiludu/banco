@@ -59,7 +59,7 @@ class RegistroForm(UserCreationForm):
     address = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'fadeIn eighth',
-            'placeholder': 'Domicilio',
+            'placeholder': 'Dirección',
         }
     ))
 
@@ -154,10 +154,10 @@ class ActualizarForm(UserChangeForm):
         }
     ))
 
-    address = forms.CharField(label="Domicilio", max_length=140, required=True, widget=forms.TextInput(
+    address = forms.CharField(label="Dirección", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
-            'placeholder': 'Domicilio',
+            'placeholder': 'Dirección',
         }
     ))
 

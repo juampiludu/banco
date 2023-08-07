@@ -22,7 +22,7 @@ def cuenta_ingresar(request, banking):
     with transaction.atomic():
         amount = Decimal(request.POST["total_balance"])
         if amount <= 0.01:
-            messages.error(request, "La cantidad mínima para ingresar es de $0,01", extra_tags="cuenta")
+            messages.error(request, "La cantidad mínima para ingresar es de $0,01", extra_tags="#ing")
             return redirect("cuenta")
         banking.balance += amount
         Transactions.objects.create(user=request.user, amount=amount, is_ingreso=True, timestamp=timezone.now())
@@ -31,7 +31,7 @@ def cuenta_retirar(request, banking):
     with transaction.atomic():
         amount = Decimal(request.POST["total_balance"])
         if amount > banking.balance:
-            messages.error(request, "Saldo insuficiente", extra_tags="cuenta")
+            messages.error(request, "Saldo insuficiente", extra_tags="#ing")
             return redirect("cuenta")
         banking.balance -= amount
         Transactions.objects.create(user=request.user, amount=amount, is_ingreso=False, timestamp=timezone.now())
@@ -49,14 +49,14 @@ def transferir(request, banking):
             receiver.save()
             Transferencias.objects.create(sender=request.user, receiver=receiver.user, amount=amount, timestamp=timezone.now())
         except ObjectDoesNotExist:
-            messages.error(request, "CVU incorrecto", extra_tags="cvu")
+            messages.error(request, "CVU incorrecto", extra_tags="#trans-cvu")
         except SameAccount:
-            messages.error(request, "No podés transferirte vos mismo", extra_tags="cvu")
+            messages.error(request, "No podés transferirte vos mismo", extra_tags="#trans-cvu")
         finally:
             if amount <= 0.01:
-                messages.error(request, "La cantidad mínima para transferir es de $0,01", extra_tags="min")
+                messages.error(request, "La cantidad mínima para transferir es de $0,01", extra_tags="#trans-cant")
             elif amount > banking.balance:
-                messages.error(request, "Saldo insuficiente", extra_tags="min")
+                messages.error(request, "Saldo insuficiente", extra_tags="#trans-cant")
             return redirect("cuenta")
         
 

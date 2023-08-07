@@ -131,7 +131,7 @@ class RegisterView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
 
         send_email(user)
 
-        messages.add_message(self.request, messages.SUCCESS, bank_constants.EMAIL_SENT)
+        messages.success(self.request, bank_constants.EMAIL_SENT)
 
         return super().form_valid(form)
     
@@ -195,7 +195,7 @@ class UserInfoView(LoginRequiredMixin, UpdateView):
         return form
     
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Datos actualizados correctamente')
+        messages.success(self.request, 'Datos actualizados correctamente')
         return super().form_valid(form)
     
 
@@ -205,5 +205,5 @@ class UpdatePasswordView(PasswordChangeView):
     success_url = reverse_lazy('info_personal')
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Contraseña actualizada')
+        messages.success(self.request, 'Contraseña actualizada')
         return super().form_valid(form)

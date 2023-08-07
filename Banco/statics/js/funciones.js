@@ -57,7 +57,7 @@ $("#id_dni").blur(function() {
 });
 
 $("#id_address").blur(function() {
-  $(this).attr('placeholder', "Domicilio");
+  $(this).attr('placeholder', "Dirección");
 });
 
 $("#id_password1").blur(function() {

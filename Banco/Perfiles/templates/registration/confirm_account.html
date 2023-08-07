@@ -7,7 +7,7 @@
 </h5>
 <br/>
 <p style="@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap'); font-family: 'Raleway', sans-serif;">
-    ¡Hola, {{ user.first_name }} {{ user.last_name }}! Para confirmar tu cuenta, hacé click en el botón de abajo:
+    ¡Hola, {{ user.get_full_name }}! Para confirmar tu cuenta, hacé click en el botón de abajo:
 </p>
 <br/>
 <p>
@@ -19,11 +19,7 @@
     </a>
 </p>
 <p>
-    {% with current_date=date.today %}
-        {% with days_until=(expiry - current_date).days %}
-            El link expira en {{ days_until }} días.
-        {% endwith %}
-    {% endwith %}
+    El link expira el día {{ expiry }}.
 </p>
 <br/>
 <p style="@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap'); font-family: 'Raleway', sans-serif;">

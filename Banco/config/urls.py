@@ -30,7 +30,7 @@ urlpatterns = [
     path('', include('banking.urls')),
     path('', include('user_contact.urls')),
     path('', include('notifications.urls')),
-    path('accounts/', include('allauth.urls')),
+    # path('accounts/', include('allauth.urls')),
 
     # reset password views
 
