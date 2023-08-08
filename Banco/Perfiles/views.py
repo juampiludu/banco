@@ -149,9 +149,9 @@ class SearchUserView(ListView):
     def get_queryset(self):
         query = self.request.GET.get('search')
         if query:
-            queryset = Banking.objects.filter(Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query))
+            queryset = Banking.objects.filter(Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query)).order_by('user__first_name')
         else:
-            queryset = Banking.objects.all()
+            queryset = Banking.objects.all().order_by('user__first_name')
 
         items_per_page = bank_constants.ITEMS_PER_PAGE
         paginator = Paginator(queryset, items_per_page)
@@ -163,6 +163,8 @@ class SearchUserView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = bank_constants.TITLE_SEARCH
+        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
+        context['notifications'] = notifications
         return context
     
 
@@ -179,6 +181,8 @@ class UserInfoView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = bank_constants.TITLE_PROFILE
+        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
+        context['notifications'] = notifications
         return context
     
     def get_form(self, form_class=None):
@@ -207,3 +211,10 @@ class UpdatePasswordView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, 'Contraseña actualizada')
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = bank_constants.TITLE_CHANGE_PASS
+        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
+        context['notifications'] = notifications
+        return context

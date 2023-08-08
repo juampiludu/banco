@@ -18,34 +18,49 @@ from django.utils import timezone
 from utils.bank_constants import bank_constants
 
 
+def parse_string_to_decimal(currency_string):
+    substring = currency_string.replace('$', '').replace('.', '').split(',')
+    decimal_number = Decimal(substring[0] + '.' + substring[1])
+    return decimal_number
+
+
 def create_notificacion(request, receiver_user, amount):
     notif = Notification()
     notif.user = receiver_user
-    notif.text = f"{request.user.get_full_name()} te ha enviado ${amount}"
+    notif.text = f"{request.user.get_full_name()} te ha enviado $ {amount}"
     notif.save()
 
 def cuenta_ingresar(request, banking):
     with transaction.atomic():
-        amount = Decimal(request.POST["total_balance"])
+        amount = parse_string_to_decimal(request.POST["total_balance"])
         if amount <= 0.01:
-            messages.error(request, "La cantidad mínima para ingresar es de $0,01", extra_tags="#ing")
+            messages.error(request, bank_constants.MIN_CANT_ING, extra_tags="#ing")
             return redirect("cuenta")
         banking.balance += amount
         Transactions.objects.create(user=request.user, amount=amount, is_ingreso=True, timestamp=timezone.now())
 
 def cuenta_retirar(request, banking):
     with transaction.atomic():
-        amount = Decimal(request.POST["total_balance"])
+        amount = parse_string_to_decimal(request.POST["total_balance"])
         if amount > banking.balance:
-            messages.error(request, "Saldo insuficiente", extra_tags="#ing")
+            messages.error(request, bank_constants.SALD_INS, extra_tags="#ing")
+            return redirect("cuenta")
+        elif amount <= 0.01:
+            messages.error(request, bank_constants.MIN_CANT_RET, extra_tags="#ing")
             return redirect("cuenta")
         banking.balance -= amount
         Transactions.objects.create(user=request.user, amount=amount, is_ingreso=False, timestamp=timezone.now())
 
 def transferir(request, banking):
     with transaction.atomic():
-        amount = Decimal(request.POST["transferir_amount"])
+        amount = parse_string_to_decimal(request.POST["transferir_amount"])
         receiver_cvu = request.POST["transferir_cvu"]
+        if amount <= 0.01:
+            messages.error(request, bank_constants.MIN_CANT_TRANS, extra_tags="#trans-cant")
+            return redirect("cuenta")
+        elif amount > banking.balance:
+            messages.error(request, bank_constants.SALD_INS, extra_tags="#trans-cant")
+            return redirect("cuenta")
         try:
             receiver = Banking.objects.get(cvu=receiver_cvu)
             if receiver == banking:
@@ -55,22 +70,17 @@ def transferir(request, banking):
             receiver.save()
             Transferencias.objects.create(sender=request.user, receiver=receiver.user, amount=amount, timestamp=timezone.now())
             create_notificacion(request, receiver.user, amount)
+            messages.success(request, bank_constants.TRANS_SUCCESS, extra_tags="trans-success")
         except ObjectDoesNotExist:
-            messages.error(request, "CVU incorrecto", extra_tags="#trans-cvu")
+            messages.error(request, bank_constants.CVU_INC, extra_tags="#trans-cvu")
         except SameAccount:
-            messages.error(request, "No podés transferirte vos mismo", extra_tags="#trans-cvu")
-        finally:
-            if amount <= 0.01:
-                messages.error(request, "La cantidad mínima para transferir es de $0,01", extra_tags="#trans-cant")
-            elif amount > banking.balance:
-                messages.error(request, "Saldo insuficiente", extra_tags="#trans-cant")
-            return redirect("cuenta")
-        
+            messages.error(request, bank_constants.CVU_SAME, extra_tags="#trans-cvu")
 
 class CuentaView(View):
     def get(self, request):
         banking = Banking.objects.get(user=request.user)
-        context = {'banking': banking, 'title': "Cuenta"}
+        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
+        context = {'banking': banking, 'notifications': notifications, 'title': "Cuenta"}
         
         return render(request, "saldo.html", context)
     
@@ -92,13 +102,14 @@ class CuentaView(View):
 class TransactionsView(View):
     def get(self, request):
         transactions = Transactions.objects.all().filter(user=request.user).order_by('-timestamp')
+        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
 
-        items_per_page = 1
+        items_per_page = bank_constants.ITEMS_PER_PAGE
         paginator = Paginator(transactions, items_per_page)
         page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
 
-        context = {'page_obj': page_obj, 'title': "Transacciones"}
+        context = {'page_obj': page_obj, 'notifications': notifications, 'title': "Transacciones"}
 
         return render(request, "transactions.html", context)
     
@@ -106,6 +117,8 @@ class TransactionsView(View):
 class TransfersView(View):
     def get(self, request):
         transfers = Transferencias.objects.all().filter(Q(sender=request.user) | Q(receiver=request.user)).order_by('-timestamp')
+        notifications = Notification.objects.filter(user=self.request.user.id)
+        notifications.delete()
 
         items_per_page = bank_constants.ITEMS_PER_PAGE
         paginator = Paginator(transfers, items_per_page)

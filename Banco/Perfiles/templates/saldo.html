@@ -1,27 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
-
-{% block navblock %}
-<li class="nav-item">
-  <a class="nav-link" href="/">Inicio</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link active" href="/cuenta">Cuenta</a>
-</li>
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Actividad
-  </a>
-  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-    <a class="dropdown-item" href="/actividad/transacciones">Transacciones</a>
-    <a class="dropdown-item" href="/actividad/transferencias">Transferencias</a>
-  </div>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="/about-us">Sobre Nosotros</a>
-</li>
-{% endblock %}
+{% load replace_space %}
 
 {% block mainblock %}
 
@@ -32,12 +12,12 @@
   <h1>Saldo:</h1>
 
   <div id="signo">
-    $ {{ banking.balance|floatformat:'2'|intcomma }}
+    $ {{ banking.balance|floatformat:'2'|intcomma|replace_space }}
   </div>
   <form method="POST" autocomplete="off">
       {% csrf_token %}
-      <input id="ing" maxlength="7" type="tel" name="total_balance" class="form-control" 
-      placeholder="Monto" required onkeypress="return valida(event)">
+      <input id="ing" maxlength="255" pattern="^\$\d{1,3}(.\d{3})*(\,\d+)?$" data-type="currency" name="total_balance" class="form-control" 
+      placeholder="Monto" required>
       <br>
       <button id="btn1" type="submit" class="btn btn-dark" name="cuenta_ingresar">Ingresar</button>
       <button id="btn2" type="submit" class="btn btn-dark" name="cuenta_retirar">Retirar</button>
@@ -60,7 +40,7 @@
       <p>Tu CVU es: <strong>{{ banking.cvu }}</strong></p>
       <p>Monto: 
         <input class="form-control" 
-        placeholder="$" maxlength="6" type="tel" id="trans-cant" name="transferir_amount" required onkeypress="return valida(event)">
+        placeholder="$" maxlength="255" pattern="^\$\d{1,3}(.\d{3})*(\,\d+)?$" data-type="currency" id="trans-cant" name="transferir_amount" required>
       </p>
       <p>CVU destinatario: 
         <input maxlength="22" placeholder="CVU" class="form-control" 
@@ -74,21 +54,120 @@
 
 <br>
 
-{% if messages %}
 <script>
-
   
+  // Jquery Dependency
+
+  $("input[data-type='currency']").on({
+      keyup: function() {
+        formatCurrency($(this));
+      },
+      blur: function() { 
+        formatCurrency($(this), "blur");
+      }
+  });
+
+
+  function formatNumber(n) {
+    // format number 1000000 to 1,234,567
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+  }
+
+
+  function formatCurrency(input, blur) {
+    // appends $ to value, validates decimal side
+    // and puts cursor back in right position.
+    
+    // get input value
+    var input_val = input.val();
+    
+    // don't validate empty input
+    if (input_val === "") { return; }
+    
+    // original length
+    var original_len = input_val.length;
+
+    // initial caret position 
+    var caret_pos = input.prop("selectionStart");
+      
+    // check for decimal
+    if (input_val.indexOf(",") >= 0) {
+
+      // get position of first decimal
+      // this prevents multiple decimals from
+      // being entered
+      var decimal_pos = input_val.indexOf(",");
+
+      // split number by decimal point
+      var left_side = input_val.substring(0, decimal_pos);
+      var right_side = input_val.substring(decimal_pos);
+
+      // add commas to left side of number
+      left_side = formatNumber(left_side);
+
+      // validate right side
+      right_side = formatNumber(right_side);
+      
+      // On blur make sure 2 numbers after decimal
+      if (blur === "blur") {
+        right_side += "00";
+      }
+      
+      // Limit decimal to only 2 digits
+      right_side = right_side.substring(0, 2);
+
+      // join number by .
+      input_val = "$" + left_side + "," + right_side;
+
+    } else {
+      // no decimal entered
+      // add commas to number
+      // remove all non-digits
+      input_val = formatNumber(input_val);
+      input_val = "$" + input_val;
+      
+      // final formatting
+      if (blur === "blur") {
+        input_val += ",00";
+      }
+    }
+    
+    // send updated string to input
+    input.val(input_val);
+
+    // put caret back in the right position
+    var updated_len = input_val.length;
+    caret_pos = updated_len - original_len + caret_pos;
+    input[0].setSelectionRange(caret_pos, caret_pos);
+  }
+  
+  
+  {% if messages %}
   {% for message in messages %}
+
+  {% if message.extra_tags == 'trans-success' %}
+  
+  $(document).ready(function() {
+    Swal.fire({
+      icon: 'success',
+      title: '{{ message }}',
+      showConfirmButton: false,
+      showCloseButton: true
+    })
+  });
+  
+  {% else %}
   
   var smallElement = $('<small class="text-danger">{{ message }}</small><br/>')
   var inputElement = $('{{ message.extra_tags }}');
-
+  
   inputElement.addClass('is-invalid');
   inputElement.after(smallElement);
-
+  
+  {% endif %}
   {% endfor %}
+  {% endif %}
 
 </script>
-{% endif %}
 
 {% endblock %}
