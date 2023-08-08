@@ -23,6 +23,7 @@ urlpatterns = [
     path('info-personal/', views.UserInfoView.as_view(), name='info_personal'),
     path('info-personal/cambiar-contraseña/', views.UpdatePasswordView.as_view(), name="cambiar_contraseña"),
     path('personas/', views.SearchUserView.as_view(), name="search_view"),
+    path('precios-en-surtidor/', views.PrecioSurtidorView.as_view(), name="precios_en_surtidor"),
     path('get-new-localidades/', views.get_new_localidades, name='get_new_localidades'),
 
     # includes

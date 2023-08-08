@@ -140,3 +140,5 @@ dmypy.json
 cython_debug/
 
 migrations/
+
+precios-en-surtidor-resolucin-3142016.csv

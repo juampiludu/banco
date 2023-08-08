@@ -312,7 +312,8 @@ html {
   } 
   
   #icon {
-    width:60%;
+    width: 60%;
+    vertical-align: middle;
   }
 
   /* SELECT */
@@ -389,5 +390,8 @@ html {
     width: 81% !important;
     margin-left: 10% !important;
     margin-right: 10% !important;
+  }
+  .formContentRegister #icon {
+    width: 40% !important;
   }
 }

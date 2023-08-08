@@ -16,6 +16,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from utils.exceptions import SameAccount
 from django.utils import timezone
 from utils.bank_constants import bank_constants
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 
 def parse_string_to_decimal(currency_string):
@@ -76,7 +78,9 @@ def transferir(request, banking):
         except SameAccount:
             messages.error(request, bank_constants.CVU_SAME, extra_tags="#trans-cvu")
 
-class CuentaView(View):
+class CuentaView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
     def get(self, request):
         banking = Banking.objects.get(user=request.user)
         notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
@@ -99,7 +103,9 @@ class CuentaView(View):
         return redirect("cuenta")
 
 
-class TransactionsView(View):
+class TransactionsView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
     def get(self, request):
         transactions = Transactions.objects.all().filter(user=request.user).order_by('-timestamp')
         notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
@@ -114,7 +120,9 @@ class TransactionsView(View):
         return render(request, "transactions.html", context)
     
 
-class TransfersView(View):
+class TransfersView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
     def get(self, request):
         transfers = Transferencias.objects.all().filter(Q(sender=request.user) | Q(receiver=request.user)).order_by('-timestamp')
         notifications = Notification.objects.filter(user=self.request.user.id)

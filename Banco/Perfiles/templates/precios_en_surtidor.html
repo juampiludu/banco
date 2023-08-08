@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block mainblock %}
+
+<br/>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 offset-md-1 text-center">
+        <h2>Precios surtidores</h2>
+
+        <p>Los resultados son el promedio de los precios en cada estación de servicio de la provincia seleccionada a la fecha del día de hoy.</p>
+
+        <form method="POST" id="precioSurtidorForm">
+            {% csrf_token %}
+            <select class="form-select" name="province" id="id_province">
+                <option value="" disabled selected>-- Seleccione provincia --</option>
+                <option value="BUENOS_AIRES">Buenos Aires</option>
+                <option value="CATAMARCA">Catamarca</option>
+                <option value="CHACO">Chaco</option>
+                <option value="CHUBUT">Chubut</option>
+                <option value="CORDOBA">Córdoba</option>
+                <option value="CORRIENTES">Corrientes</option>
+                <option value="ENTRE RIOS">Entre Ríos</option>
+                <option value="FORMOSA">Formosa</option>
+                <option value="JUJUY">Jujuy</option>
+                <option value="LA_PAMPA">La Pampa</option>
+                <option value="LA_RIOJA">La Rioja</option>
+                <option value="MENDOZA">Mendoza</option>
+                <option value="MISIONES">Misiones</option>
+                <option value="NEUQUEN">Neuquén</option>
+                <option value="RIO_NEGRO">Río Negro</option>
+                <option value="SALTA">Salta</option>
+                <option value="SAN_JUAN">San Juan</option>
+                <option value="SAN_LUIS">San Luis</option>
+                <option value="SANTA_CRUZ">Santa Cruz</option>
+                <option value="SANTA_FE">Santa Fe</option>
+                <option value="SANTIAGO_DEL_ESTERO">Santiago del Estero</option>
+                <option value="TIERRA_DEL_FUEGO">Tierra del Fuego, Antártida e Islas del Atlántico Sur</option>
+                <option value="TUCUMAN">Tucumán</option>
+            </select>
+        </form>
+
+        {% if province %}
+
+        <hr>
+
+        <table class="table table-striped table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Empresa</th>
+                <th scope="col">Tipo combustible</th>
+                <th scope="col">Precio</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                <tr>
+                    <td>{{ item.empresabandera }}</td>
+                    <td>{{ item.producto }}</td>
+                    <th scope="row">$ {{ item.precio|floatformat:'2' }}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% endif %}
+
+    </div>
+  </div>
+</div>
+
+<br>
+
+{% endblock %}
+
+{% block scriptblock %}
+
+<script>
+
+    $(document).ready(function() {
+        $('#id_province').val('{{ province }}');
+
+        $('#id_province').on('change', function() {
+            $('#precioSurtidorForm').submit();
+        });
+    });
+
+</script>
+
+{% endblock %}

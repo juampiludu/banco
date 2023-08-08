@@ -6,3 +6,4 @@ sqlparse
 django-allauth
 django-email-verification
 requests
+pandas

@@ -39,6 +39,10 @@ from django.views.generic import ListView
 from django.contrib.auth.views import PasswordChangeView
 from django.http import JsonResponse
 from utils.georefar import georefar
+from django.views import View
+import pandas as pd
+from django.utils import timezone
+from django.contrib.staticfiles import finders
 
 
 CuentaModel = get_user_model()
@@ -92,9 +96,10 @@ def activate_account(request, token):
     return render(request, 'registration/message.html', context)
 
 
-class LoginView(DefaultLoginView, UserPassesTestMixin):
+class LoginView(UserPassesTestMixin, DefaultLoginView):
     form_class = LoginForm
     template_name = "login.html"
+    login_url = reverse_lazy('landing')
 
     def test_func(self):
         return not self.request.user.is_authenticated
@@ -110,6 +115,7 @@ class RegisterView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
     form_class = RegistroForm
     template_name = "registration/register.html"
     success_url = reverse_lazy('login')
+    login_url = reverse_lazy('landing')
 
     def test_func(self):
         return not self.request.user.is_authenticated
@@ -174,6 +180,7 @@ class UserInfoView(LoginRequiredMixin, UpdateView):
     context_object_name = "user"
     form_class = ActualizarForm
     success_url = reverse_lazy('info_personal')
+    login_url = reverse_lazy('login')
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -203,10 +210,11 @@ class UserInfoView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
     
 
-class UpdatePasswordView(PasswordChangeView):
+class UpdatePasswordView(LoginRequiredMixin, PasswordChangeView):
     template_name = "perfil/change_pass.html"
     form_class = CambiarContraForm
     success_url = reverse_lazy('info_personal')
+    login_url = reverse_lazy('login')
 
     def form_valid(self, form):
         messages.success(self.request, 'Contraseña actualizada')
@@ -218,3 +226,43 @@ class UpdatePasswordView(PasswordChangeView):
         notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
         context['notifications'] = notifications
         return context
+    
+
+class PrecioSurtidorView(View):
+    def get(self, request):
+        context = {
+            'title': 'Precios surtidores'
+        }
+        return render(request, 'precios_en_surtidor.html', context)
+    
+    def post(self, request):
+        province = request.POST.get('province')
+
+        sanitized_province = province.replace('_', ' ')
+
+        # NOTE: More info in http://datos.energia.gob.ar/dataset/precios-en-surtidor/archivo/80ac25de-a44a-4445-9215-090cf55cfda5
+        # file: http://datos.energia.gob.ar/dataset/1c181390-5045-475e-94dc-410429be4b17/resource/80ac25de-a44a-4445-9215-090cf55cfda5/download/precios-en-surtidor-resolucin-3142016.csv
+        csv_file_path = finders.find('precios-en-surtidor-resolucin-3142016.csv')
+
+        data = pd.read_csv(csv_file_path)
+
+        data['indice_tiempo'] = pd.to_datetime(data['indice_tiempo'])
+
+        # NOTE: the file has to be updated every month by the owner to match current date (and downloaded every hour to keep it updated!)
+        current_date = timezone.now().strftime('%Y-%m')
+        filtered_data = data[data['indice_tiempo'].dt.strftime('%Y-%m') == current_date]
+
+        specific_province = sanitized_province
+        province_filtered_data = filtered_data[filtered_data['provincia'] == specific_province]
+
+        grouped_data = province_filtered_data.groupby(['empresabandera', 'producto'])['precio'].mean().reset_index()
+
+        data_list = grouped_data.to_dict(orient='records')
+
+        context = {
+            'province': province,
+            'data': data_list,
+            'title': 'Precios surtidores'
+        }
+
+        return render(request, 'precios_en_surtidor.html', context)

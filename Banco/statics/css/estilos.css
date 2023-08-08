@@ -93,8 +93,9 @@ a, p, h1, h2, h3, h4, h5, h6, button, input, small, li {
   margin: 20px;
 }
 
-#carousel-img {
-  height: 600px;
+.carousel img {
+  max-height: 800px;
+  object-fit: cover;
 }
 
 #map {
@@ -153,8 +154,8 @@ a, p, h1, h2, h3, h4, h5, h6, button, input, small, li {
     width: 80%;
   }
 
-  #carousel-img {
-    height: 180px;
+  .carousel img {
+    max-height: 250px;
   }
 
   #map {
