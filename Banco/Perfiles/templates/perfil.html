@@ -102,7 +102,7 @@
 
       for (const element of form.elements) {
         if (element.name && ['input', 'select', 'textarea'].includes(element.tagName.toLowerCase())) {
-          var action = element.name == 'direccion' ? 'keyup' : 'change';
+          var action = element.tagName == 'SELECT' ? 'change' : 'keyup';
           element.addEventListener(action, () => {
             for (const [name, value] of initialFormValues.entries()) {
               if (value !== form.elements[name].value) {

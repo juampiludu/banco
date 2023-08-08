@@ -77,7 +77,7 @@ class Cuenta(AbstractBaseUser, PermissionsMixin):
 
 @receiver(post_save, sender=get_user_model())
 def user_created(sender, instance, created, **kwargs):        
-    if created and instance.has_privilege():
+    if created:
         banking = Banking()
         banking.user = instance
         banking.cvu = generar_cvu()

@@ -3,12 +3,10 @@ from Perfiles.models import Cuenta
 
 class Contacto(models.Model):
 
-    email = models.CharField(max_length=150)
-    nombre = models.CharField(max_length=150)
-    apellido = models.CharField(max_length=150)
+    user = models.ForeignKey(Cuenta, on_delete=models.CASCADE)
     motivo = models.TextField()
-    fecha = models.DateField(auto_now=True)
+    timestamp = models.DateField(auto_now=True)
 
     def __str__(self):
-        return self.email + ": " + self.motivo
+        return f"Mensaje de {self.user.email}"
     

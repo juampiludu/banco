@@ -1,82 +1,82 @@
 $(document).ready(function() {
-  $('[data-toggle="tooltip"]').tooltip();
+  $('[data-bs-toggle="tooltip"]').tooltip();
 });
 
-$("input").focus(function() {
-      $(this).removeAttr('placeholder');
-});
+// $("input").focus(function() {
+//       $(this).removeAttr('placeholder');
+// });
 
-$("#ing").blur(function() {
-      $(this).attr('placeholder', "Monto");
-});
+// $("#ing").blur(function() {
+//       $(this).attr('placeholder', "Monto");
+// });
 
-$("#name").blur(function() {
-      $(this).attr('placeholder', "Nombre");
-});
+// $("#name").blur(function() {
+//       $(this).attr('placeholder', "Nombre");
+// });
 
-$("#lastname").blur(function() {
-      $(this).attr('placeholder', "Apellido");
-});
+// $("#lastname").blur(function() {
+//       $(this).attr('placeholder', "Apellido");
+// });
 
-$("#email").blur(function() {
-      $(this).attr('placeholder', "example@gmail.com");
-});
+// $("#email").blur(function() {
+//       $(this).attr('placeholder', "example@gmail.com");
+// });
 
-$("#search-input").blur(function() {
-  $(this).attr('placeholder', "Buscar personas");
-});
+// $("#search-input").blur(function() {
+//   $(this).attr('placeholder', "Buscar personas");
+// });
 
-$("#trans-cant").blur(function() {
-  $(this).attr('placeholder', "$");
-});
+// $("#trans-cant").blur(function() {
+//   $(this).attr('placeholder', "$");
+// });
 
-$("#trans-cvu").blur(function() {
-  $(this).attr('placeholder', "CVU");
-});
+// $("#trans-cvu").blur(function() {
+//   $(this).attr('placeholder', "CVU");
+// });
 
-/* REGISTER FORM */
+// /* REGISTER FORM */
 
-$("#id_email").blur(function() {
-  $(this).attr('placeholder', "*Correo electrónico");
-});
+// $("#id_email").blur(function() {
+//   $(this).attr('placeholder', "*Correo electrónico");
+// });
 
-$("#id_first_name").blur(function() {
-  $(this).attr('placeholder', "*Nombre");
-});
+// $("#id_first_name").blur(function() {
+//   $(this).attr('placeholder', "*Nombre");
+// });
 
-$("#id_last_name").blur(function() {
-  $(this).attr('placeholder', "*Apellido");
-});
+// $("#id_last_name").blur(function() {
+//   $(this).attr('placeholder', "*Apellido");
+// });
 
-$("#id_phone").blur(function() {
-  $(this).attr('placeholder', "Teléfono");
-});
+// $("#id_phone").blur(function() {
+//   $(this).attr('placeholder', "Teléfono");
+// });
 
-$("#id_dni").blur(function() {
-  $(this).attr('placeholder', "*DNI");
-});
+// $("#id_dni").blur(function() {
+//   $(this).attr('placeholder', "*DNI");
+// });
 
-$("#id_address").blur(function() {
-  $(this).attr('placeholder', "Dirección");
-});
+// $("#id_address").blur(function() {
+//   $(this).attr('placeholder', "Dirección");
+// });
 
-$("#id_password1").blur(function() {
-  $(this).attr('placeholder', "Contraseña");
-});
+// $("#id_password1").blur(function() {
+//   $(this).attr('placeholder', "Contraseña");
+// });
 
-$("#id_password2").blur(function() {
-  $(this).attr('placeholder', "Repita contraseña");
-});
+// $("#id_password2").blur(function() {
+//   $(this).attr('placeholder', "Repita contraseña");
+// });
 
-/* LOGIN */
+// /* LOGIN */
 
-$("#id_username").blur(function() {
-  $(this).attr('placeholder', "Correo electrónico");
-});
+// $("#id_username").blur(function() {
+//   $(this).attr('placeholder', "Correo electrónico");
+// });
 
-$("#id_password").blur(function() {
-  $(this).attr('placeholder', "Contraseña");
-});
+// $("#id_password").blur(function() {
+//   $(this).attr('placeholder', "Contraseña");
+// });
 
 function valida(e){
     tecla = (document.all) ? e.keyCode : e.which;

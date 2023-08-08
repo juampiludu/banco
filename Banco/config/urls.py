@@ -19,7 +19,7 @@ urlpatterns = [
     # main urls
 
     path('', views.welcome, name='landing'),
-    path('about-us/', views.info),
+    path('sobre-nosotros/', views.info, name='sobre_nosotros'),
     path('info-personal/', views.UserInfoView.as_view(), name='info_personal'),
     path('info-personal/cambiar-contraseña/', views.UpdatePasswordView.as_view(), name="cambiar_contraseña"),
     path('personas/', views.SearchUserView.as_view(), name="search_view"),

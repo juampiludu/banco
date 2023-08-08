@@ -10,7 +10,7 @@
   <a class="nav-link active" href="/cuenta">Cuenta</a>
 </li>
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Actividad
   </a>
   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -71,75 +71,24 @@
   </div>
 
 </div>
-<br/>
-<hr>
 
-      <div class="container" id="div1">
-        <h4>Para informar sobre algún error en el sistema, ingrese en el siguiente formulario para contactarnos.</h4>
-        <button type="button" class="btn btn-warning btn-lg" id="btn3">Abrir</button>
-      </div>
+<br>
 
-      <!-- Modal -->
-      <div class="modal fade" id="mostrarmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Centro de Informe</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <form action="{% url 'informe' %}" method="POST" autocomplete="off">
-              {% csrf_token %}
-              <div class="modal-body">
-                <h4>Motivo:</h4>
-                <textarea rows="4" class="form-control" maxlength="500" name="motivo" required id="motivo"></textarea>
-                <br>
-                <button type="submit" class="btn btn-dark" id="btn4">Enviar</button>
-              </div>
-            </form>
-            <div class="modal-footer">
-              <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
-            </div>
-          </div>
-        </div>
-      </div>
+{% if messages %}
+<script>
 
-      <div class="modal fade" id="mostrarmodal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                
-        <div class="modal-dialog modal-lg">
-          
-          <div class="modal-content">
-            
-            <div class="modal-header">
-              <h5 class="modal-title" id="emailMessageTitle">Informe enviado con éxito</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
+  
+  {% for message in messages %}
+  
+  var smallElement = $('<small class="text-danger">{{ message }}</small><br/>')
+  var inputElement = $('{{ message.extra_tags }}');
 
-            <div class="modal-body" id="emailMessageBody">
-              ¡Gracias por enviarnos tu informe! Nos pondremos en contacto con vos mediante correo electrónico en caso de ser necesario.
-            </div>
-          </div>
-        </div>
-      </div>
+  inputElement.addClass('is-invalid');
+  inputElement.after(smallElement);
 
-      {% if messages %}
-      <script>
+  {% endfor %}
 
-        
-        {% for message in messages %}
-        
-        var smallElement = $('<small class="text-danger">{{ message }}</small><br/>')
-        var inputElement = $('{{ message.extra_tags }}');
-
-        inputElement.addClass('is-invalid');
-        inputElement.after(smallElement);
-
-        {% endfor %}
-
-      </script>
-      {% endif %}
+</script>
+{% endif %}
 
 {% endblock %}

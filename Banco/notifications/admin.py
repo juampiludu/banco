@@ -4,4 +4,4 @@ from .models import Notification
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
 
-    list_display = ('user', 'text', 'date')
+    list_display = ('user', 'text', 'timestamp')

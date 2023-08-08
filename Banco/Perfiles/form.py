@@ -150,26 +150,26 @@ class ActualizarForm(UserChangeForm):
             'class': 'form-control',
             'onkeypress': 'return valida(event);',
             'type': 'tel',
-            'placeholder': 'Teléfono',
+            'placeholder': '3541 12-3456',
         }
     ))
 
     address = forms.CharField(label="Dirección", max_length=140, required=True, widget=forms.TextInput(
         attrs={
             'class': 'form-control',
-            'placeholder': 'Dirección',
+            'placeholder': 'Calle N°',
         }
     ))
 
     province = forms.ChoiceField(choices=PROVINCE_FIELDS, widget=forms.Select(
         attrs={
-            'class': 'form-control',
+            'class': 'form-select',
         }
     ))
 
     localidad = forms.ChoiceField(choices=LOCALIDAD_FIELDS, widget=forms.Select(
         attrs={
-            'class': 'form-control',
+            'class': 'form-select',
         }
     ))
 

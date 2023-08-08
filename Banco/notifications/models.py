@@ -5,4 +5,4 @@ class Notification(models.Model):
 
     user = models.ForeignKey(Cuenta, on_delete=models.CASCADE)
     text = models.TextField(default="")
-    date = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)

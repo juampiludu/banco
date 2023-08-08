@@ -18,6 +18,12 @@ from django.utils import timezone
 from utils.bank_constants import bank_constants
 
 
+def create_notificacion(request, receiver_user, amount):
+    notif = Notification()
+    notif.user = receiver_user
+    notif.text = f"{request.user.get_full_name()} te ha enviado ${amount}"
+    notif.save()
+
 def cuenta_ingresar(request, banking):
     with transaction.atomic():
         amount = Decimal(request.POST["total_balance"])
@@ -48,6 +54,7 @@ def transferir(request, banking):
             banking.balance -= amount
             receiver.save()
             Transferencias.objects.create(sender=request.user, receiver=receiver.user, amount=amount, timestamp=timezone.now())
+            create_notificacion(request, receiver.user, amount)
         except ObjectDoesNotExist:
             messages.error(request, "CVU incorrecto", extra_tags="#trans-cvu")
         except SameAccount:
