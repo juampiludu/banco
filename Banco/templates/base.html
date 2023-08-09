@@ -135,36 +135,6 @@
             <iframe style="width:320px;height:260px;border-radius:10px;box-shadow:2px 4px 4px rgb(0 0 0 / 25%);margin:15px;justify-content:center;border:1px solid #bcbcbc" src="https://dolarhoy.com/i/cotizaciones/dolar-mep" frameborder="0"></iframe>
           </div>
           <a href="https://dolarhoy.com/" target="_blank" class="text-secondary"><small>dolarhoy.com</small></a>
-          <!-- <h4>Conversor de Divisas</h4>
-          <br/>
-          <tr>
-            <td>
-              <input type="number" id="fromAmount" value="1" onkeypress="return valida(event);">
-            </td>
-            <td>
-              <select id="from">
-                <option value="ARS">Peso Argentino (ARS)</option>
-                <option value="USD" selected>Dólar Estadounidense (USD)</option>
-                <option value="BRL">Real Brasilero (BRL)</option>
-                <option value="EUR">Euro (EUR)</option>
-              </select>
-            </td>
-          </tr>
-          <br/><br/>
-          <tr>
-            <td>
-              <input type="number" id="toAmount" disabled>
-            </td>
-            <td>
-              <select id="to" onchange="convertCurrency();">
-                <option value="ARS" selected>Peso Argentino (ARS)</option>
-                <option value="USD">Dólar Estadounidense (USD)</option>
-                <option value="BRL">Real Brasilero (BRL)</option>
-                <option value="EUR">Euro (EUR)</option>
-              </select>
-            </td>
-          </tr>
-        </div> -->
         <br/><br/>
         {% if user.is_authenticated %}
         <div class="box">
@@ -225,32 +195,6 @@
     <script src="{% static 'js/funciones.js' %}"></script>
     {% block scriptblock %}
     {% endblock %}
-
-    <!-- <script>
-
-      $(document).ready(function() {
-        $('#fromAmount').on('input', function() {
-          var amount = $(this).val();
-          var from_curr = $('#from').find(':selected').val();
-          var to_curr = $('#to').find(':selected').val();
-          convertCurrency(from_curr, to_curr, amount);
-        });
-      });
-
-      function convertCurrency(from_curr, to_curr, amount) {
-        const endpoint = 'convert';
-        const access_key = '';
-
-        $.ajax({
-          url: 'http://api.exchangeratesapi.io/v1/' + endpoint + '?access_key=' + access_key +'&from=' + from_curr + '&to=' + to_curr + '&amount=' + amount,
-          dataType: 'jsonp',
-          success: function(json) {
-            console.log(json.result)
-          }
-        });
-      }
-
-    </script> -->
 
 </body>
 </html>

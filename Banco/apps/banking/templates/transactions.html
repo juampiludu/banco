@@ -10,6 +10,20 @@
     <br/>
     <p class="text-muted">Actividad / Transacciones</p>
 
+    {% if not page_obj %}
+      
+    <br>
+    <center>
+      <p class="text-muted">No hiciste ninguna transacción</p>
+      <p class="text-muted">
+        Andá a <a href="{% url 'banking' %}">banking</a> para realizar transacciones
+      </p>
+    </center>
+    <br>
+    <br>
+
+    {% else %}
+
     {% for transaction in page_obj %}
 
       {% if transaction.is_ingreso %}
@@ -65,6 +79,8 @@
       {% endif %}
     </ul>
   </nav>
+  {% endif %}
+
   {% endif %}
 
 </div>

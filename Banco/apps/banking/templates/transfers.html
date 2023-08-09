@@ -10,6 +10,17 @@
     <br/>
     <p class="text-muted">Actividad / Transferencias</p>
 
+    {% if not page_obj %}
+      
+    <br>
+    <center>
+      <p class="text-muted">No recibiste ninguna transferencia</p>
+    </center>
+    <br>
+    <br>
+
+    {% else %}
+
     {% for transfer in page_obj %}
 
     {% if transfer.sender == request.user %}
@@ -71,6 +82,8 @@
       {% endif %}
     </ul>
   </nav>
+  {% endif %}
+  
   {% endif %}
 
 </div>
