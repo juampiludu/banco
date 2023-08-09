@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block mainblock %}
+
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'img/img.png' %}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'img/img2.png' %}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'img/img3.png' %}" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+<div class="container" id="divhome">
+  <div class="divhome-in">
+    <h2 id="subtit">BM Exclusive Banking</h2>
+    <div>
+      <br>
+      <h6>Accedé a ventajas únicas y beneficios preferenciales, con los más altos estándares de atención y servicio.</h6>
+      <ul>
+        <br>
+        <li>Atención personalizada y prioridad en sucursales</li>
+        <li>Servicio Exclusive Concierge</li>
+        <li>Accesos preferenciales en aeropuertos</li>
+        <li>Beneficios y experiencias únicas</li>
+        <li>Uníte a los {{all_users.count}} usuarios registrados</li>
+      </ul>
+    </div>
+    <br>
+    <button type="button" class="btn btn-outline-dark" onclick="window.location='/cuenta'">Ver más</button>
+  </div>
+</div>
+
+
+{% endblock %}

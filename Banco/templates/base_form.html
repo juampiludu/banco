@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es-Ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} | Banco de Mendiolaza</title>
+    <link rel="shortcut icon" href="{% static 'img/icon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/arrow.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/c8787d6c86.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="wrapper-arrow">
+      <div class="item fadeIn first">
+        <button id="arrow-btn" onclick="window.location.href='{% url 'landing' %}'">
+          <i class="fa fa-long-arrow-left arrow1" aria-hidden="true"></i>
+           Volver al inicio
+        </button>
+      </div>
+    </div>
+    <div class="wrapper fadeInDown">
+        <div id="formContent" class="{% block onlyforregister %}{% endblock %}">
+          <!-- Tabs Titles -->
+      
+          <br/>
+
+          <!-- Icon -->
+          <div class="fadeIn first">
+            <h5 id="titulo">
+                <img src="{% static 'img/logo-no-background.png' %}" id="icon" alt="Banco de Mendiolaza" />
+            </h5>
+          </div>
+
+          <br/>
+
+          {% block mainblock %}
+          {% endblock %}
+      
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+      <script src="{% static 'js/funciones.js' %}"></script>
+</body>
+</html>

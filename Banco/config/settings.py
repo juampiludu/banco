@@ -28,10 +28,10 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
 
-    'Perfiles',
-    'banking',
-    'user_contact',
-    'notifications',
+    'apps.cuentas',
+    'apps.banking',
+    'apps.user_contact',
+    'apps.notifications',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -78,7 +78,7 @@ TEMPLATES = [
     },
 ]
 
-AUTH_USER_MODEL = 'Perfiles.Cuenta'
+AUTH_USER_MODEL = 'cuentas.Cuenta'
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -144,7 +144,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'statics'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 SECURE_SSL_REDIRECT = False
@@ -170,4 +170,4 @@ EMAIL_MAIL_HTML = 'registration/confirm_account.html'
 EMAIL_MAIL_PLAIN = 'registration/confirm_account.txt'
 EMAIL_MAIL_TOKEN_LIFE = 60 * 60 * 24 * 3 # (3 days in seconds)
 EMAIL_MAIL_PAGE_TEMPLATE = 'registration/message.html'
-EMAIL_PAGE_DOMAIN = 'http://localhost:8080/'
+EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8080/'

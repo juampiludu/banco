@@ -1,0 +1,256 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="es-Ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{title}} | Banco de Mendiolaza</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+    <link rel="shortcut icon" href="{% static 'img/icon.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/c8787d6c86.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% block headblock %}
+    {% endblock %}
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'landing' %}">
+          <img src="{% static 'img/icon3.svg' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+          BDM
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="{% url 'banking' %}">Banking</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Actividad
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'transacciones' %}">Transacciones</a></li>
+                <li><a class="dropdown-item" href="{% url 'transferencias' %}">Transferencias</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{request.user.first_name}}
+                {% if notifications %}
+                ({{ notifications.count }})
+                {% endif %}
+              </a>
+              <ul class="dropdown-menu">
+                {% if user.has_privilege %}
+                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Administrar</a></li>
+                {% endif %}
+                <li><a class="dropdown-item" href="{% url 'info_personal' %}">Info. Personal</a></li>
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#">
+                    Notificaciones
+                    ({{ notifications.count|default:'0' }})
+                  </a>
+                  <ul class="dropdown-menu">
+                    {% if notifications %}
+                      {% for notification in notifications %}
+                      <li><a class="dropdown-item" href="{% url 'notif_seen' id=notification.id %}">
+                        {{ notification.text }}
+                        <br/>
+                        <small id="notifDate">{{ notification.timestamp|naturaltime }}</small>
+                      </a></li>
+                        {% if not notifications.count == 1 %}
+                        <li><div class="dropdown-divider"></div></li>
+                        {% endif %}
+                        {% endfor %}
+                    {% else %}
+                    <li><a class="dropdown-item">No hay notificaciones</a></li>
+                    {% endif %}
+                  </ul>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Salir</a></li>
+              </ul>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="{% url 'sobre_nosotros' %}">Sobre nosotros</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="{% url 'precios_en_surtidor' %}">Precios surtidores</a>
+            </li>
+          </ul>
+          {% if user.is_authenticated %}
+          <form class="d-flex" autocomplete="off" action="{% url 'search_view' %}" role="search">
+            <input class="form-control me-2" type="search" name="search" placeholder="Buscar usuarios" aria-label="Search">
+            <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+          </form>
+          {% else %}
+          <a class="nav-link text-light" href="{% url 'login' %}">
+            Acceder
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    
+      {% block mainblock %}
+      {% endblock %}
+
+
+      <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="logoutModalTitle">Salir</h5>
+            </div>
+            <div class="modal-body">
+              ¿Está seguro que desea salir de Banco de Mendiolaza?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" onclick="window.location.href='{% url 'logout' %}'" class="btn btn-danger">Salir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <footer id="sticky-footer" class="py-4 bg-dark text-white">
+      <br/><br/>
+      <div class="container text-center">
+        <div class="box">
+          <div>
+            <iframe style="width:320px;height:260px;border-radius:10px;box-shadow:2px 4px 4px rgb(0 0 0 / 25%);margin:15px;justify-content:center;border:1px solid #bcbcbc" src="https://dolarhoy.com/i/cotizaciones/dolar-blue" frameborder="0"></iframe>
+            <iframe style="width:320px;height:260px;border-radius:10px;box-shadow:2px 4px 4px rgb(0 0 0 / 25%);margin:15px;justify-content:center;border:1px solid #bcbcbc" src="https://dolarhoy.com/i/cotizaciones/dolar-bancos-y-casas-de-cambio" frameborder="0"></iframe>
+            <iframe style="width:320px;height:260px;border-radius:10px;box-shadow:2px 4px 4px rgb(0 0 0 / 25%);margin:15px;justify-content:center;border:1px solid #bcbcbc" src="https://dolarhoy.com/i/cotizaciones/dolar-mep" frameborder="0"></iframe>
+          </div>
+          <a href="https://dolarhoy.com/" target="_blank" class="text-secondary"><small>dolarhoy.com</small></a>
+          <!-- <h4>Conversor de Divisas</h4>
+          <br/>
+          <tr>
+            <td>
+              <input type="number" id="fromAmount" value="1" onkeypress="return valida(event);">
+            </td>
+            <td>
+              <select id="from">
+                <option value="ARS">Peso Argentino (ARS)</option>
+                <option value="USD" selected>Dólar Estadounidense (USD)</option>
+                <option value="BRL">Real Brasilero (BRL)</option>
+                <option value="EUR">Euro (EUR)</option>
+              </select>
+            </td>
+          </tr>
+          <br/><br/>
+          <tr>
+            <td>
+              <input type="number" id="toAmount" disabled>
+            </td>
+            <td>
+              <select id="to" onchange="convertCurrency();">
+                <option value="ARS" selected>Peso Argentino (ARS)</option>
+                <option value="USD">Dólar Estadounidense (USD)</option>
+                <option value="BRL">Real Brasilero (BRL)</option>
+                <option value="EUR">Euro (EUR)</option>
+              </select>
+            </td>
+          </tr>
+        </div> -->
+        <br/><br/>
+        {% if user.is_authenticated %}
+        <div class="box">
+          <p>Para informar sobre algún error en el sistema, ingrese en el siguiente formulario para contactarnos.</p>
+          <button type="button" class="btn btn-warning btn-sm" id="btn3">Abrir</button>
+        </div>
+        <br/><br/>
+        {% endif %}
+        <small class="text-white-50">Copyright &copy; 2023 Banco de Mendiolaza</small>
+      </div>
+      <br/>
+    </footer>
+
+    {% if user.is_authenticated %}
+    <!-- Modal -->
+    <div class="modal fade" id="mostrarmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Centro de Informe</h5>
+          </div>
+          <form action="{% url 'informe' %}" method="POST" autocomplete="off">
+            {% csrf_token %}
+            <div class="modal-body">
+              <h4>Motivo:</h4>
+              <textarea rows="4" class="form-control" maxlength="500" name="motivo" required id="motivo"></textarea>
+              <br>
+              <button type="submit" class="btn btn-dark" id="btn4">Enviar</button>
+            </div>
+          </form>
+          <div class="modal-footer">
+            <a href="#" data-bs-dismiss="modal" class="btn btn-danger">Cerrar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="mostrarmodal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              
+      <div class="modal-dialog modal-lg">
+        
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <h5 class="modal-title" id="emailMessageTitle">Informe enviado con éxito</h5>
+          </div>
+
+          <div class="modal-body" id="emailMessageBody">
+            ¡Gracias por enviarnos tu informe! Nos pondremos en contacto con vos mediante correo electrónico en caso de ser necesario.
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+    <script src="{% static 'js/funciones.js' %}"></script>
+    {% block scriptblock %}
+    {% endblock %}
+
+    <!-- <script>
+
+      $(document).ready(function() {
+        $('#fromAmount').on('input', function() {
+          var amount = $(this).val();
+          var from_curr = $('#from').find(':selected').val();
+          var to_curr = $('#to').find(':selected').val();
+          convertCurrency(from_curr, to_curr, amount);
+        });
+      });
+
+      function convertCurrency(from_curr, to_curr, amount) {
+        const endpoint = 'convert';
+        const access_key = '';
+
+        $.ajax({
+          url: 'http://api.exchangeratesapi.io/v1/' + endpoint + '?access_key=' + access_key +'&from=' + from_curr + '&to=' + to_curr + '&amount=' + amount,
+          dataType: 'jsonp',
+          success: function(json) {
+            console.log(json.result)
+          }
+        });
+      }
+
+    </script> -->
+
+</body>
+</html>
