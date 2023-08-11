@@ -76,14 +76,18 @@ def get_new_localidades(request):
 def activate_account(request, token):
     success, user = verify_token(token)
 
-    try:
-        if success:
-            banking = Banking()
-            banking.user = user
-            banking.cvu = generar_cvu()
-            banking.save()
-    except IntegrityError:
-        pass
+    if success:
+        banking = Banking()
+        banking.user = user
+
+        while True:
+            try:
+                banking.cvu = generar_cvu()
+                break
+            except IntegrityError:
+                continue
+
+        banking.save()
     
     context = {
         'msg': bank_constants.ACTIVATED_ACCOUNT,
