@@ -1,39 +1,21 @@
-from typing import Any, Dict, Optional, Type
-from django.db.models.query import QuerySet
-from django.forms.models import BaseModelForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as do_logout
-from django.contrib.auth import login as do_login
-from django.contrib.auth import authenticate
-from django.contrib.auth.forms import AuthenticationForm
 from .form import RegistroForm, ActualizarForm, CambiarContraForm, LoginForm
-from django.contrib.auth import update_session_auth_hash
-from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
 from apps.banking.models import Banking
-from django.core import serializers
-from datetime import datetime
 from django.core.paginator import Paginator
 from django.db.models import Q
-from apps.notifications.models import Notification
 
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMultiAlternatives
-from django.utils.html import strip_tags
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .models import Cuenta
 from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView as DefaultLoginView
 from django.views.generic.edit import CreateView, UpdateView
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from utils.generar_cvu import generar_cvu
 from django_email_verification import send_email, verify_view, verify_token
-from django.db import IntegrityError, models
+from django.db import IntegrityError
 from utils.bank_constants import bank_constants
 from django.views.generic import ListView
 from django.contrib.auth.views import PasswordChangeView
@@ -51,8 +33,7 @@ CuentaModel = get_user_model()
 def welcome(request):
     title = "Inicio"
     all_users = Cuenta.objects.all()
-    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
-    return render(request, "welcome.html", {'title' : title, 'all_users' : all_users, 'notifications' : notifications})
+    return render(request, "welcome.html", {'title' : title, 'all_users' : all_users})
 
 def logout(request):
     if not request.user.is_authenticated:
@@ -62,8 +43,7 @@ def logout(request):
 
 def info(request):
     title = "Sobre Nosotros"
-    notifications = Notification.objects.filter(user=request.user.id).order_by('-id')
-    return render(request, "info.html", {'title' : title, 'notifications' : notifications})
+    return render(request, "info.html", {'title' : title})
 
 def get_new_localidades(request):
     provincia_id = request.GET.get('provincia_id')
@@ -170,8 +150,6 @@ class SearchUserView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = bank_constants.TITLE_SEARCH
-        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
-        context['notifications'] = notifications
         return context
     
 
@@ -189,8 +167,6 @@ class UserInfoView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = bank_constants.TITLE_PROFILE
-        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
-        context['notifications'] = notifications
         return context
     
     def get_form(self, form_class=None):
@@ -224,8 +200,6 @@ class UpdatePasswordView(LoginRequiredMixin, PasswordChangeView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = bank_constants.TITLE_CHANGE_PASS
-        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
-        context['notifications'] = notifications
         return context
     
 

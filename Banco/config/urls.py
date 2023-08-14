@@ -27,7 +27,7 @@ urlpatterns = [
     path('contact/', include('apps.user_contact.urls')),
     path('notificaciones/', include('apps.notifications.urls')),
     path('cuentas/', include('apps.cuentas.urls')),
-    # path('accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.urls')),
 
     # reset password views
 

@@ -83,8 +83,7 @@ class CuentaView(LoginRequiredMixin, View):
 
     def get(self, request):
         banking = Banking.objects.get(user=request.user)
-        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
-        context = {'banking': banking, 'notifications': notifications, 'title': "Banking"}
+        context = {'banking': banking, 'title': "Banking"}
         
         return render(request, "saldo.html", context)
     
@@ -108,14 +107,13 @@ class TransactionsView(LoginRequiredMixin, View):
 
     def get(self, request):
         transactions = Transactions.objects.all().filter(user=request.user).order_by('-timestamp')
-        notifications = Notification.objects.filter(user=self.request.user.id).order_by('-id')
 
         items_per_page = bank_constants.ITEMS_PER_PAGE
         paginator = Paginator(transactions, items_per_page)
         page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
 
-        context = {'page_obj': page_obj, 'notifications': notifications, 'title': "Transacciones"}
+        context = {'page_obj': page_obj, 'title': "Transacciones"}
 
         return render(request, "transactions.html", context)
     
