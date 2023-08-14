@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load socialaccount %}
 
 {% block mainblock  %}
 
@@ -66,7 +67,10 @@
                 {% endif %}
 
                 <button type="submit" id="formSumbitionButton" disabled class="btn btn-dark">Guardar cambios</button>
-                <button type="button" class="btn btn-primary" onclick="window.location='{% url 'cambiar_contraseña' %}'">Cambiar contraseña</button>
+                {% get_social_accounts user as accounts %}
+                {% if not accounts %} 
+                    <button type="button" class="btn btn-primary" onclick="window.location='{% url 'cambiar_contraseña' %}'">Cambiar contraseña</button>
+                {% endif %}
               </div>
             </div>
           </div>

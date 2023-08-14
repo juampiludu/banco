@@ -245,3 +245,85 @@ class LoginForm(AuthenticationForm):
             'name': 'password',
         }
     ))
+
+
+class CompletarRegistroForm(UserChangeForm):
+
+    born_date = forms.DateField(label="", required=True, widget=forms.TextInput(
+        attrs={
+            'type': 'date',
+            'class': 'fadeIn fisrt',
+        }
+    ))
+
+    phone = forms.CharField(label="", max_length=14, required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'fadeIn second',
+            'placeholder': 'Teléfono',
+            'onkeypress': 'return valida(event);',
+            'type': 'tel',
+        }
+    ))
+
+    dni = forms.CharField(label="", max_length=8, required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'fadeIn third',
+            'placeholder': '*DNI',
+            'onkeypress': 'return valida(event);',
+            'type': 'tel',
+        }
+    ))
+
+    province = forms.ChoiceField(choices=PROVINCE_FIELDS, label='', widget=forms.Select(
+        attrs={
+            'class' : 'fadeIn fourth',
+        }
+    ))
+
+    localidad = forms.ChoiceField(choices=LOCALIDAD_FIELDS, widget=forms.Select(
+        attrs={
+            'class': 'fadeIn fifth',
+        }
+    ))
+
+    address = forms.CharField(label="", max_length=140, required=True, widget=forms.TextInput(
+        attrs={
+            'class': 'fadeIn seventh',
+            'placeholder': 'Dirección',
+        }
+    ))
+    
+    def clean_born_date(self):
+        born_date = self.cleaned_data['born_date']
+        if is_user_under_age(born_date):
+            raise forms.ValidationError('Tenés que ser mayor de 18 años para poder crear tu cuenta')
+        return born_date
+    
+    def clean_dni(self):
+        dni = self.cleaned_data['dni']
+        if Cuenta.objects.filter(dni=dni).exists():
+            raise forms.ValidationError(f'El DNI "{dni}" ya está registrado. Tal vez te hayas registrado previamente')
+        return dni
+    
+    def clean_province(self):
+        province = self.cleaned_data['province']
+        if not province:
+            raise forms.ValidationError("Seleccioná una provincia")
+        return province
+    
+    def clean_localidad(self):
+        localidad = self.cleaned_data['localidad']
+        if not localidad:
+            raise forms.ValidationError("Seleccioná una localidad")
+        return localidad
+
+    class Meta:
+        model = Cuenta
+        fields = (
+            'born_date',
+            'phone',
+            'dni',
+            'province',
+            'localidad',
+            'address',
+        )

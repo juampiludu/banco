@@ -1,6 +1,7 @@
+from typing import Any, Optional
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as do_logout
-from .form import RegistroForm, ActualizarForm, CambiarContraForm, LoginForm
+from .form import RegistroForm, ActualizarForm, CambiarContraForm, LoginForm, CompletarRegistroForm
 from django.contrib import messages
 from apps.banking.models import Banking
 from django.core.paginator import Paginator
@@ -15,16 +16,20 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from utils.generar_cvu import generar_cvu
 from django_email_verification import send_email, verify_view, verify_token
-from django.db import IntegrityError
+from django.db import IntegrityError, models
 from utils.bank_constants import bank_constants
 from django.views.generic import ListView
 from django.contrib.auth.views import PasswordChangeView
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from utils.georefar import georefar
 from django.views import View
 import pandas as pd
 from django.utils import timezone
 from django.contrib.staticfiles import finders
+from allauth.account.signals import user_signed_up
+from django.dispatch import receiver
+from utils.create_banking import create_banking
+from allauth.socialaccount.models import SocialAccount
 
 
 CuentaModel = get_user_model()
@@ -57,17 +62,7 @@ def activate_account(request, token):
     success, user = verify_token(token)
 
     if success:
-        banking = Banking()
-        banking.user = user
-
-        while True:
-            try:
-                banking.cvu = generar_cvu()
-                break
-            except IntegrityError:
-                continue
-
-        banking.save()
+        create_banking(user)
     
     context = {
         'msg': bank_constants.ACTIVATED_ACCOUNT,
@@ -75,6 +70,14 @@ def activate_account(request, token):
     }
 
     return render(request, 'registration/message.html', context)
+
+@receiver(user_signed_up)
+def user_signed_up_(request, user, **kwargs):
+    user.is_active = True
+    user.save()
+
+def is_social(self):
+    return SocialAccount.objects.filter(user=self.request.user).exists()
 
 
 class LoginView(UserPassesTestMixin, DefaultLoginView):
@@ -159,7 +162,6 @@ class UserInfoView(LoginRequiredMixin, UpdateView):
     context_object_name = "user"
     form_class = ActualizarForm
     success_url = reverse_lazy('info_personal')
-    login_url = reverse_lazy('login')
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -193,6 +195,11 @@ class UpdatePasswordView(LoginRequiredMixin, PasswordChangeView):
     success_url = reverse_lazy('info_personal')
     login_url = reverse_lazy('login')
 
+    def get(self, request, *args, **kwargs):
+        if is_social(self):
+            return redirect('info_personal')
+        return super().get(request, *args, **kwargs)
+
     def form_valid(self, form):
         messages.success(self.request, 'Contraseña actualizada')
         return super().form_valid(form)
@@ -202,6 +209,42 @@ class UpdatePasswordView(LoginRequiredMixin, PasswordChangeView):
         context['title'] = bank_constants.TITLE_CHANGE_PASS
         return context
     
+
+class CompletarRegistroView(LoginRequiredMixin, UpdateView):
+    model = CuentaModel
+    template_name = "registration/completar_registro.html"
+    form_class = CompletarRegistroForm
+    context_object_name = "user"
+    success_url = reverse_lazy('landing')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = bank_constants.TITLE_COMP_REGISTRO
+        return context
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        if self.request.method == 'POST':
+            selected_provincia = form.data['province']
+        else:
+            selected_provincia = form.initial['province']
+
+        updated_localidad_choices = georefar.get_localidades(selected_provincia)
+        form.fields['localidad'].choices = updated_localidad_choices
+        
+        return form
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Tu cuenta ha sido creada con éxito')
+        self.request.user.profile_completed = True
+        self.request.user.save()
+        create_banking(self.request.user)
+        return super().form_valid(form)
+
 
 class PrecioSurtidorView(View):
     def get(self, request):

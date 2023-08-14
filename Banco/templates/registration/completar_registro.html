@@ -1,0 +1,57 @@
+{% extends 'base_form.html' %}
+{% load static %}
+{% block onlyforregister %}formContentRegister{% endblock %}
+{% block mainblock %}
+
+  {% if form.errors %}
+  {% for field in form %}
+  {{ field.errors }}
+  {% endfor %}
+  {% endif %}
+
+  <!-- Login Form -->
+  <form method="POST" style="margin: 10px;" autocomplete="off">
+    {% csrf_token %}
+    {{ form.born_date }}
+    {{ form.phone }}
+    {{ form.dni }}
+    {{ form.province }}
+    {{ form.localidad }}
+    {{ form.address }}
+    <br/><br/>
+    <ul class="fadeIn eleventh">
+      <li>Todos los campos son obligatorios.</li> 
+      <li>El campo de fecha corresponde a fecha de nacimiento.</li>
+      <li>Aseguráte de ingresar bien los datos marcados con (*) porque después no se pueden modificar (incluida fecha de nacimiento).</li>   
+    </ul>
+    <input type="submit" class="fadeIn tenth" value="Confirmar">
+  </form>
+
+  <div id="formFooter">
+    <a class="underlineHover" href="{% url 'logout' %}">Salir</a>
+  </div>
+
+  <script>
+
+  $(document).ready(function() {
+    $('#id_province').change(function() {
+      var provincia_id = $(this).val();
+      var selectLocalidad = $('#id_localidad');
+      selectLocalidad.empty();
+      
+      $.get("{% url 'get_new_localidades' %}", {'provincia_id': provincia_id}, function(data) {
+        var newChoices = data.choices;
+        selectLocalidad.empty();
+
+        $.each(newChoices, function(index, choice) {
+          selectLocalidad.append($('<option>').val(choice[0]).text(choice[1]));
+        });
+      });
+    });
+
+    $('.wrapper-arrow').remove();
+  });
+
+  </script>
+
+{% endblock mainblock %}

@@ -7,6 +7,7 @@ from apps.banking.models import Banking
 from utils.generar_cvu import generar_cvu
 from django.utils import timezone
 from django.contrib.auth.models import PermissionsMixin
+from utils.create_banking import create_banking
 
 
 class CuentaManager(BaseUserManager):
@@ -59,6 +60,7 @@ class Cuenta(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    profile_completed = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
@@ -77,10 +79,7 @@ class Cuenta(AbstractBaseUser, PermissionsMixin):
 
 @receiver(post_save, sender=get_user_model())
 def user_created(sender, instance, created, **kwargs):        
-    if created:
-        banking = Banking()
-        banking.user = instance
-        banking.cvu = generar_cvu()
-        banking.save()
+    if created and instance.has_privilege():
+        create_banking(instance)
 
 post_save.connect(user_created, sender=get_user_model())

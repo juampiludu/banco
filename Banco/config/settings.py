@@ -60,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'apps.cuentas.middleware.CompletarRegistroMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -165,6 +167,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 def verified_callback(user):
     user.is_active = True
+    user.profile_completed = True
 
 EMAIL_VERIFIED_CALLBACK = verified_callback
 EMAIL_FROM_ADDRESS = 'noreply@aliasaddress.com'

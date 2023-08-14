@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
 from .models import Banking, Transactions, Transferencias
-from apps.cuentas.models import Cuenta
 from random import randrange
 from datetime import datetime
 from django.contrib import messages
@@ -10,7 +9,7 @@ from django.db.models import Q
 from apps.notifications.models import Notification
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.views import View
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from decimal import Decimal
 from django.core.exceptions import ObjectDoesNotExist
 from utils.exceptions import SameAccount
@@ -18,13 +17,13 @@ from django.utils import timezone
 from utils.bank_constants import bank_constants
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from utils.generar_cvu import generar_cvu
 
 
 def parse_string_to_decimal(currency_string):
     substring = currency_string.replace('$', '').replace('.', '').split(',')
     decimal_number = Decimal(substring[0] + '.' + substring[1])
     return decimal_number
-
 
 def create_notificacion(request, receiver_user, amount):
     notif = Notification()
