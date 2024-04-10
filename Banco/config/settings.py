@@ -177,3 +177,5 @@ EMAIL_MAIL_PLAIN = 'registration/confirm_account.txt'
 EMAIL_MAIL_TOKEN_LIFE = 60 * 60 * 24 * 3 # (3 days in seconds)
 EMAIL_MAIL_PAGE_TEMPLATE = 'registration/message.html'
 EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8080/'
+
+SESSION_COOKIE_AGE = 10
